@@ -20,7 +20,7 @@ public class RenderUtil {
 
         glEnable(GL_FRAMEBUFFER_SRGB);
 
-        Transform.setPerspective(45.0f, 0.1f, 1000.0f);
+        Transform.setPerspective(45.0f, 0.1f, 10000.0f);
     }
 
     public static String getOpenGLVersion() {

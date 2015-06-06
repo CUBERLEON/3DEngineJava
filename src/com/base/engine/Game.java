@@ -7,7 +7,7 @@ public class Game {
     private Transform m_transform;
 
     public Game() {
-        m_mesh = ResourceLoader.loadMesh("cube.obj");
+        m_mesh = ResourceLoader.loadMesh("Rubik's Cube.obj");
         m_shader = new Shader();
         m_transform = new Transform();
 
@@ -39,9 +39,9 @@ public class Game {
     public void update() {
         tmp += Time.getDelta();
 
-        m_transform.setTranslation(0, 0, -1.0f);
+        m_transform.setTranslation(0, 0, -200);
         m_transform.setRotationRad(0, (float) (Math.PI*Math.sin(tmp)), 0);
-        m_transform.setScale(1, 1, 1);
+        m_transform.setScale(0.3f, 0.3f, 0.3f);
 
         m_shader.setUniformM("transform", m_transform.getPerspectiveTransformM());
     }

@@ -2,6 +2,10 @@ package com.base.engine;
 
 public class Vector3f {
 
+    public static final Vector3f xAxis = new Vector3f(1, 0, 0);
+    public static final Vector3f yAxis = new Vector3f(0, 1, 0);
+    public static final Vector3f zAxis = new Vector3f(0, 0, 1);
+
     private float m_x;
     private float m_y;
     private float m_z;
