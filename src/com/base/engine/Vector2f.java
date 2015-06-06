@@ -27,6 +27,11 @@ public class Vector2f {
         return this;
     }
 
+    public Vector2f getNormalized() {
+        float length = length();
+        return new Vector2f(m_x/length, m_y/length);
+    }
+
     public Vector2f rotate(float angle) {
         double rad = Math.toRadians(angle);
         double sin = Math.sin(rad);

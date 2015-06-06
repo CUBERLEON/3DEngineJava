@@ -64,12 +64,12 @@ public class ResourceLoader {
                         else values = new String[]{tokens[i]};
 
                         switch (values.length) {
-                            case 1: indices.add(Integer.valueOf(values[0]) - 1);
+                            case 1: indices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 break;
-                            case 2: indices.add(Integer.valueOf(values[0]) - 1);
+                            case 2: indices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 //vertex normal
                                 break;
-                            case 3: indices.add(Integer.valueOf(values[0]) - 1);
+                            case 3: indices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 //texture vertex
                                 //vertex normal
                                 break;

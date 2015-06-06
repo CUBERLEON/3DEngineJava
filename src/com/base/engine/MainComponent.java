@@ -107,7 +107,7 @@ public class MainComponent {
     }
 
     public void setFPSLimit(int fpsLimit) {
-        this.m_fpsLimit = fpsLimit;
+        m_fpsLimit = fpsLimit;
     }
 
     public static void main(String[] args) {

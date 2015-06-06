@@ -22,7 +22,21 @@ public class Camera {
     }
 
     public void move(Vector3f dir, float value) {
-        m_position.add(dir.normalize().mul(value));
+        m_position = m_position.add(dir.getNormalized().mul(value));
+    }
+
+    public void rotateY(float angle) {
+        Vector3f horizon = Vector3f.yAxis.cross(m_forward);
+
+        m_forward.rotate(Vector3f.yAxis, angle).normalize();
+        m_up = m_forward.cross(horizon).normalize();
+    }
+
+    public void rotateX(float angle) {
+        Vector3f horizon = Vector3f.yAxis.cross(m_forward);
+
+        m_forward.rotate(horizon, -angle).normalize();
+        m_up = m_forward.cross(horizon).normalize();
     }
 
     public Vector3f getLeft() {
@@ -46,7 +60,7 @@ public class Camera {
     }
 
     public void setForward(Vector3f forward) {
-        this.m_forward = forward;
+        m_forward = forward;
     }
 
     public Vector3f getUp() {
@@ -54,6 +68,6 @@ public class Camera {
     }
 
     public void setUp(Vector3f up) {
-        this.m_up = up;
+        m_up = up;
     }
 }

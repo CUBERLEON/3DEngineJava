@@ -29,6 +29,11 @@ public class Quaternion {
         return this;
     }
 
+    public Quaternion getNormalized() {
+        float length = length();
+        return new Quaternion(m_x/length, m_y/length, m_z/length, m_w/length);
+    }
+
     public Quaternion mul(Quaternion r) {
         float w_ = m_w * r.getW() - m_x * r.getX() - m_y * r.getY() - m_z * r.getZ();
         float x_ = m_x * r.getW() + m_w * r.getX() + m_y * r.getZ() - m_z * r.getY();
@@ -48,6 +53,13 @@ public class Quaternion {
     }
 
     public Quaternion conjugate() {
+        m_x = -m_x;
+        m_y = -m_y;
+        m_z = -m_z;
+        return this;
+    }
+
+    public Quaternion getConjugated() {
         return new Quaternion(-m_x, -m_y, -m_z, m_w);
     }
 
