@@ -6,10 +6,15 @@ public class Transform {
     private Vector3f m_rotation; //angles in radians
     private Vector3f m_scale;
 
+    private static float m_zNear;
+    private static float m_zFar;
+    private static float m_FOV;
+    private static Matrix4f m_perspective;
+
     public Transform() {
         m_translation = new Vector3f(0, 0, 0);
         m_rotation = new Vector3f(0, 0, 0);
-        m_scale = new Vector3f(0, 0, 0);
+        m_scale = new Vector3f(1, 1, 1);
     }
 
     public Matrix4f getTransformM() {
@@ -18,6 +23,27 @@ public class Transform {
         Matrix4f scale = new Matrix4f().initScale(m_scale);
 
         return translation.mul(rotation.mul(scale));
+    }
+
+    public Matrix4f getPerspectiveTransformM() {
+        if (m_perspective == null) {
+            System.err.println("Error: perspective matrix wasn't initialized!");
+            new Exception().printStackTrace();
+            System.exit(1);
+        }
+
+        return m_perspective.mul(getTransformM());
+    }
+
+    public static void setPerspective(float fov, float zNear, float zFar) {
+        m_FOV = fov;
+        m_zNear = zNear;
+        m_zFar = zFar;
+        updatePerspective();
+    }
+
+    public static void updatePerspective() {
+        m_perspective = new Matrix4f().initPerspective(m_FOV, Window.getWidth(), Window.getHeight(), m_zNear, m_zFar);
     }
 
     public Vector3f getTranslation() {

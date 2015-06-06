@@ -5,27 +5,19 @@ public class MainComponent {
     private int m_fpsLimit;
     private long m_fpsRefreshTime;
 
-    private int m_width;
-    private int m_height;
-    private String m_title;
-
     private Game m_game;
 
     private boolean m_isRunning;
 
-    public MainComponent() {
+    public MainComponent(int width, int height, String title) {
         m_fpsLimit = 60;
         m_fpsRefreshTime = (long)(1.0 * Time.SECOND);
 
-        m_width = 800;
-        m_height = 600;
-        m_title = "3D Engine";
-
-        Window.createWindow(m_width, m_height, m_title);
+        Window.createWindow(width, height, title);
         RenderUtil.initGraphics();
+        System.out.println(RenderUtil.getOpenGLVersion());
 
         m_game = new Game();
-        System.out.println(RenderUtil.getOpenGLVersion());
 
         m_isRunning = false;
     }
@@ -110,20 +102,16 @@ public class MainComponent {
         Window.dispose();
     }
 
-    public void changeResolution(int width, int height) {
-        if (width == m_width && height == m_height)
-            return;
+    public int getFPSLimit() {
+        return m_fpsLimit;
+    }
 
-        m_width = width;
-        m_height = height;
-        stop();
-        Window.dispose();
-        Window.createWindow(m_width, m_height, m_title);
-        start();
+    public void setFPSLimit(int fpsLimit) {
+        this.m_fpsLimit = fpsLimit;
     }
 
     public static void main(String[] args) {
-        MainComponent engine = new MainComponent();
+        MainComponent engine = new MainComponent(800, 600, "3D Engine");
         engine.start();
     }
 }

@@ -28,11 +28,16 @@ public class Window {
     }
 
     public static void render() {
-        Display.update();
+        if (Display.isCreated())
+            Display.update();
     }
 
     public static boolean isCloseRequested() {
         return Display.isCloseRequested();
+    }
+
+    public static boolean isCreated() {
+        return Display.isCreated();
     }
 
     public static int getWidth() {
@@ -45,5 +50,27 @@ public class Window {
 
     public static String getTitle() {
         return Display.getTitle();
+    }
+
+    public static void changeResolution(int width, int height) {
+        if (width == getWidth() && height == getHeight())
+            return;
+
+        String title = getTitle();
+
+        Window.dispose();
+        Window.createWindow(width, height, title);
+        RenderUtil.initGraphics();
+    }
+
+    public static void changeTitle(String title) {
+        if (title.equals(getTitle()))
+            return;
+
+        int width = getWidth();
+        int height = getHeight();
+
+        Window.dispose();
+        Window.createWindow(width, height, title);
     }
 }

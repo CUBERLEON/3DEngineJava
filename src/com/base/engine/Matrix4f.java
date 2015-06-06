@@ -80,15 +80,28 @@ public class Matrix4f {
         return this;
     }
 
+    public Matrix4f initPerspective(float fov, float width, float height, float zNear, float zFar) {
+        float aspectRatio = width / height;
+        float tanHalfFOV = (float) Math.tan(Math.toRadians(fov/2.0f));
+        float zRange = zNear - zFar;
+
+        m[0][0] = 1.0f/(tanHalfFOV * aspectRatio); m[0][1] = 0;               m[0][2] = 0;                   m[0][3] = 0;
+        m[1][0] = 0;                               m[1][1] = 1.0f/tanHalfFOV; m[1][2] = 0;                   m[1][3] = 0;
+        m[2][0] = 0;                               m[2][1] = 0;               m[2][2] = (zFar+zNear)/zRange; m[2][3] = 2.0f*zFar*zNear/zRange;
+        m[3][0] = 0;                               m[3][1] = 0;               m[3][2] = -1;                   m[3][3] = 0;
+
+        return this;
+    }
+
     public Matrix4f mul(Matrix4f r) {
         Matrix4f res = new Matrix4f();
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 res.set(i, j, m[i][0] * r.get(0, j) +
-                        m[i][1] * r.get(1, j) +
-                        m[i][2] * r.get(2, j) +
-                        m[i][3] * r.get(3, j));
+                              m[i][1] * r.get(1, j) +
+                              m[i][2] * r.get(2, j) +
+                              m[i][3] * r.get(3, j));
             }
         }
 

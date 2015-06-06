@@ -82,7 +82,8 @@ public class ResourceLoader {
 
             meshReader.close();
 
-            //System.out.println(indices.size());
+            if (vertices.size() == 0 || indices.size() == 0)
+                throw new Exception("Error: " + fileName + " data was corrupted!");
 
             Vertex[] verticesData = new Vertex[vertices.size()];
             Integer[] indicesData = new Integer[indices.size()];

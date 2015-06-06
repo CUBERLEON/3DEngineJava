@@ -7,9 +7,19 @@ public class Game {
     private Transform m_transform;
 
     public Game() {
-        m_mesh = ResourceLoader.loadMesh("EAGLE_1.OBJ");
+        m_mesh = ResourceLoader.loadMesh("cube.obj");
         m_shader = new Shader();
         m_transform = new Transform();
+
+        Vertex[] vertices = new Vertex[] { new Vertex(new Vector3f(-1, -1, 0)),
+                new Vertex(new Vector3f(0, 1, 0)),
+                new Vertex(new Vector3f(1, -1, 0)),
+                new Vertex(new Vector3f(0, 0, 1))};
+        int[] indices = new int[] { 0, 1, 2,
+                                    1, 0, 3,
+                                    2, 1, 3,
+                                    0, 2, 3};
+        //m_mesh.addVertices(vertices, indices);
 
         m_shader.addVertexShader(ResourceLoader.loadShader("basic.vs"));
         m_shader.addFragmentShader(ResourceLoader.loadShader("basic.fs"));
@@ -29,11 +39,11 @@ public class Game {
     public void update() {
         tmp += Time.getDelta();
 
-        m_transform.setTranslation((float)Math.cos(tmp)/2.0f, -0.5f, 0);
+        m_transform.setTranslation(0, 0, -1.0f);
         m_transform.setRotationRad(0, (float) (Math.PI*Math.sin(tmp)), 0);
-        m_transform.setScale(3.0f, 3.0f, 3.0f);
+        m_transform.setScale(1, 1, 1);
 
-        m_shader.setUniformM("transform", m_transform.getTransformM());
+        m_shader.setUniformM("transform", m_transform.getPerspectiveTransformM());
     }
 
     public void render() {
