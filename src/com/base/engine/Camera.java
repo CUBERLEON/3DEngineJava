@@ -25,18 +25,33 @@ public class Camera {
         m_position = m_position.add(dir.getNormalized().mul(value));
     }
 
-    public void rotateY(float angle) {
-        Vector3f horizon = Vector3f.yAxis.cross(m_forward);
-
-        m_forward.rotate(Vector3f.yAxis, angle).normalize();
-        m_up = m_forward.cross(horizon).normalize();
-    }
-
     public void rotateX(float angle) {
-        Vector3f horizon = Vector3f.yAxis.cross(m_forward);
+        Vector3f horizon = Vector3f.yAxis.cross(m_forward).normalize();
 
         m_forward.rotate(horizon, -angle).normalize();
         m_up = m_forward.cross(horizon).normalize();
+//        Vector3f left = getLeft();
+//
+//        m_forward.rotate(left, -angle).normalize();
+//        m_up = m_forward.cross(left).normalize();
+    }
+
+    public void rotateY(float angle) {
+        Vector3f horizon = Vector3f.yAxis.cross(m_forward).normalize();
+
+        m_forward.rotate(Vector3f.yAxis, angle).normalize();
+        m_up = m_forward.cross(horizon).normalize();
+//        m_forward.rotate(m_up, angle).normalize();
+    }
+
+    public void rotateZ(float angle) {
+        m_up.rotate(m_forward, -angle).normalize();
+    }
+
+    public void reset() {
+        m_position = new Vector3f(0, 0, 0);
+        m_forward = new Vector3f(0, 0, -1);
+        m_up = new Vector3f(0, 1, 0);
     }
 
     public Vector3f getLeft() {

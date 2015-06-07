@@ -27,14 +27,17 @@ public class Mesh {
     }
 
     public void draw() {
+        glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glVertexAttribPointer(1, Vertex.SIZE, GL_FLOAT, false, Vertex.SIZE * 4, 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, Vertex.SIZE * 4, 0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, false, Vertex.SIZE * 4, 3 * 4);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
         glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, 0);
 
+        glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
     }
 }

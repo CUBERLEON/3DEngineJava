@@ -16,6 +16,10 @@ public class Vector3f {
         this.m_z = z;
     }
 
+    public Vector3f(Vector3f r) {
+        this(r.getX(), r.getY(), r.getZ());
+    }
+
     public float length() {
         return (float) Math.sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
     }
@@ -56,6 +60,14 @@ public class Vector3f {
         m_z = m.getZ();
 
         return this;
+    }
+
+    public Vector3f getRotated(Vector3f axis, float angle) {
+        return new Vector3f(this).rotate(axis, angle);
+    }
+
+    public Vector3f abs() {
+        return new Vector3f(Math.abs(m_x), Math.abs(m_y), Math.abs(m_z));
     }
 
     public Vector3f add(Vector3f r) {

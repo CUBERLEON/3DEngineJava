@@ -1,8 +1,11 @@
 #version 330
 
-in vec4 color;
+in vec2 f_texCoord;
+
 out vec4 fragmentColor;
 
+uniform sampler2D f_sampler;
+
 void main() {
-	fragmentColor = color;
+	fragmentColor = texture2D(f_sampler, f_texCoord);
 }

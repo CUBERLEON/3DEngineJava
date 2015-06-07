@@ -1,12 +1,13 @@
 #version 330
 
-layout (location = 1) in vec3 pos;
+layout (location = 0) in vec3 v_position;
+layout (location = 1) in vec2 v_texCoord;
 
-out vec4 color;
+out vec2 f_texCoord;
 
-uniform mat4 transform;
+uniform mat4 v_transform;
 
 void main() {
-	color = clamp(abs(vec4(0.01*pos, 1.0)), 0.0, 1.0);
-	gl_Position = transform * vec4(pos, 1.0);
+	f_texCoord = v_texCoord;
+	gl_Position = v_transform * vec4(v_position, 1.0);
 }

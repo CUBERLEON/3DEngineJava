@@ -1,6 +1,10 @@
 package com.base.engine;
 
+import org.newdawn.slick.opengl.TextureLoader;
+
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -95,6 +99,21 @@ public class ResourceLoader {
             res.addVertices(verticesData, Util.toIntArray(indicesData));
 
             return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        return null;
+    }
+
+    public static Texture loadTexture(String fileName) {
+        String[] splitArray = fileName.split("\\.");
+        String ext = splitArray[splitArray.length - 1].toLowerCase();
+
+        try {
+            int id = TextureLoader.getTexture(ext, new FileInputStream(new File("./res/textures/" + fileName))).getTextureID();
+            return new Texture(id);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);

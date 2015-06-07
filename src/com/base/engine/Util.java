@@ -38,6 +38,8 @@ public class Util {
             buffer.put(vertices[i].getPosition().getX());
             buffer.put(vertices[i].getPosition().getY());
             buffer.put(vertices[i].getPosition().getZ());
+            buffer.put(vertices[i].getTexCoord().getX());
+            buffer.put(vertices[i].getTexCoord().getY());
         }
 
         buffer.flip();

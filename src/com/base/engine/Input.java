@@ -175,4 +175,12 @@ public class Input {
     public static Vector2f getMousePosition() {
         return new Vector2f(Mouse.getX(), Mouse.getY());
     }
+
+    public static void setMousePosition(Vector2f pos) {
+        Mouse.setCursorPosition((int)pos.getX(), (int)pos.getY());
+    }
+
+    public static void setCursor(boolean enabled) {
+        Mouse.setGrabbed(!enabled);
+    }
 }
