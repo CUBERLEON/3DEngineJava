@@ -2,6 +2,12 @@ package com.base.engine;
 
 public class BasicShader extends Shader {
 
+    private static BasicShader m_instance = new BasicShader();
+
+    public static BasicShader getInstance() {
+        return m_instance;
+    }
+
     public BasicShader() {
         super();
 

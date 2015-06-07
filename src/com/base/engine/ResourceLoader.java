@@ -41,7 +41,12 @@ public class ResourceLoader {
         }
 
         ArrayList<Vertex> vertices = new ArrayList<>();
-        ArrayList<Integer> indices = new ArrayList<>();
+        ArrayList<Vertex> texCoords = new ArrayList<>();
+        ArrayList<Vertex> normals = new ArrayList<>();
+
+        ArrayList<Integer> vertIndices = new ArrayList<>();
+        ArrayList<Integer> texIndices = new ArrayList<>();
+        ArrayList<Integer> normIndices = new ArrayList<>();
 
         try {
             BufferedReader meshReader = new BufferedReader(new FileReader("./res/models/" + fileName));
@@ -68,32 +73,40 @@ public class ResourceLoader {
                         else values = new String[]{tokens[i]};
 
                         switch (values.length) {
-                            case 1: indices.add(Math.abs(Integer.valueOf(values[0])) - 1);
+                            case 1: vertIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 break;
-                            case 2: indices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                //vertex normal
+                            case 2: vertIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
+                                    normIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 break;
-                            case 3: indices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                //texture vertex
-                                //vertex normal
+                            case 3: vertIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
+                                    texIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
+                                    normIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 break;
                             default:
                                 throw new Exception("Error: " + fileName + " faces data was corrupted!");
                         }
                     }
+                } if (tokens[0].equals("vt") && tokens.length == 4) {
+                    texCoords.add(new Vertex(new Vector3f(Float.valueOf(tokens[1]),
+                                                          Float.valueOf(tokens[2]),
+                                                          Float.valueOf(tokens[3]))));
+                } if (tokens[0].equals("vn") && tokens.length == 4) {
+                    normals.add(new Vertex(new Vector3f(Float.valueOf(tokens[1]),
+                                                        Float.valueOf(tokens[2]),
+                                                        Float.valueOf(tokens[3]))));
                 }
             }
 
             meshReader.close();
 
-            if (vertices.size() == 0 || indices.size() == 0)
+            if (vertices.size() == 0 || vertIndices.size() == 0)
                 throw new Exception("Error: " + fileName + " data was corrupted!");
 
             Vertex[] verticesData = new Vertex[vertices.size()];
-            Integer[] indicesData = new Integer[indices.size()];
+            Integer[] indicesData = new Integer[vertIndices.size()];
 
             vertices.toArray(verticesData);
-            indices.toArray(indicesData);
+            vertIndices.toArray(indicesData);
 
             Mesh res = new Mesh();
             res.addVertices(verticesData, Util.toIntArray(indicesData));
