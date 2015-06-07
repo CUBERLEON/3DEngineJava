@@ -41,4 +41,8 @@ public class RenderUtil {
         else
             glDisable(GL_TEXTURE_2D);
     }
+
+    public static void unbindTextures() {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
 }
