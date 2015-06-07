@@ -36,10 +36,13 @@ public class Vector2f {
         return new Vector2f(m_x/length, m_y/length);
     }
 
-    public Vector2f rotate(float angle) {
-        float rad = (float) Math.toRadians(angle);
-        float sin = (float) Math.sin(rad);
-        float cos = (float) Math.cos(rad);
+    public Vector2f rotateDeg(float angle) {
+        return rotateRad((float) Math.toRadians(angle));
+    }
+
+    public Vector2f rotateRad(float angle) {
+        float sin = (float) Math.sin(angle);
+        float cos = (float) Math.cos(angle);
 
         m_x = m_x * cos - m_y * sin;
         m_y = m_x * sin + m_y * cos;
@@ -47,8 +50,12 @@ public class Vector2f {
         return this;
     }
 
-    public Vector2f getRotated(float angle) {
-        return new Vector2f(this).rotate(angle);
+    public Vector2f getRotatedDeg(float angle) {
+        return new Vector2f(this).rotateDeg(angle);
+    }
+
+    public Vector2f getRotatedRad(float angle) {
+        return new Vector2f(this).rotateRad(angle);
     }
 
     public Vector2f abs() {

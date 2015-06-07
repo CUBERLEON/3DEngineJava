@@ -39,6 +39,9 @@ public class MainComponent {
         long unprocessedTime = 0;
 
         while (m_isRunning) {
+            if (Window.isCloseRequested())
+                stop();
+
             long endTime = Time.getTime();
             long passedTime = endTime - startTime;
             startTime = endTime;
@@ -48,19 +51,17 @@ public class MainComponent {
 
             boolean render = false;
 
+            Time.setDelta((double)passedTime / (double)Time.SECOND);
+            m_game.input();
+            Input.update();
+
             if (unprocessedTime >= frameTime) {
                 long sceneTime = frameTime * (unprocessedTime / frameTime);
                 unprocessedTime -= sceneTime;
 
                 render = true;
 
-                if (Window.isCloseRequested())
-                    stop();
-
                 Time.setDelta((double)sceneTime / (double)Time.SECOND);
-
-                m_game.input();
-                Input.update();
                 m_game.update();
             }
 

@@ -43,7 +43,11 @@ public class Vector3f {
         return new Vector3f(m_x/length, m_y/length, m_z/length);
     }
 
-    public Vector3f rotate(Vector3f axis, float angle) {
+    public Vector3f rotateDeg(Vector3f axis, float angle) {
+        return rotateRad(axis, (float)Math.toDegrees(angle));
+    }
+
+    public Vector3f rotateRad(Vector3f axis, float angle) {
         float sinHalfAngle = (float) Math.sin(angle / 2);
         float cosHalfAngle = (float) Math.cos(angle / 2);
 
@@ -62,8 +66,12 @@ public class Vector3f {
         return this;
     }
 
-    public Vector3f getRotated(Vector3f axis, float angle) {
-        return new Vector3f(this).rotate(axis, angle);
+    public Vector3f getRotatedRad(Vector3f axis, float angle) {
+        return new Vector3f(this).rotateRad(axis, angle);
+    }
+
+    public Vector3f getRotatedDeg(Vector3f axis, float angle) {
+        return new Vector3f(this).rotateDeg(axis, angle);
     }
 
     public Vector3f abs() {

@@ -26,6 +26,7 @@ public class Game {
         m_mesh.addVertices(vertices, indices);
 
         Transform.setCamera(m_camera);
+        Input.setCursor(false);
 
         m_shader.addVertexShader(ResourceLoader.loadShader("basic.vs"));
         m_shader.addFragmentShader(ResourceLoader.loadShader("basic.fs"));
@@ -35,32 +36,7 @@ public class Game {
     }
 
     public void input() {
-        float moveValue = (float) (2.0f * Time.getDelta());
-        float rotateValue = (float) (2.0f * Time.getDelta());
-
-        if (Input.getKey(Input.KEY_W))
-            m_camera.move(m_camera.getForward(), moveValue);
-        if (Input.getKey(Input.KEY_S))
-            m_camera.move(m_camera.getForward(), -moveValue);
-        if (Input.getKey(Input.KEY_A))
-            m_camera.move(m_camera.getLeft(), moveValue);
-        if (Input.getKey(Input.KEY_D))
-            m_camera.move(m_camera.getRight(), moveValue);
-
-        if (Input.getKey(Input.KEY_UP))
-            m_camera.rotateX(rotateValue);
-        if (Input.getKey(Input.KEY_DOWN))
-            m_camera.rotateX(-rotateValue);
-        if (Input.getKey(Input.KEY_LEFT))
-            m_camera.rotateY(rotateValue);
-        if (Input.getKey(Input.KEY_RIGHT))
-            m_camera.rotateY(-rotateValue);
-        if (Input.getKey(Input.KEY_Q))
-            m_camera.rotateZ(rotateValue);
-        if (Input.getKey(Input.KEY_E))
-            m_camera.rotateZ(-rotateValue);
-        if (Input.getKeyDown(Input.KEY_R))
-            m_camera.reset();
+        m_camera.input();
     }
 
     private float tmp = 0.0f;
