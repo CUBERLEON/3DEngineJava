@@ -9,28 +9,29 @@ public class Game {
     private Camera m_camera;
 
     public Game() {
-        //m_mesh = ResourceLoader.loadMesh("Rubik's Cube.obj");
-        m_mesh = new Mesh();
+        m_mesh = ResourceLoader.loadMesh("models/cube/cube.obj");
+//        m_mesh = new Mesh();
         m_shader = PhongShader.getInstance();
-        m_material = new Material(ResourceLoader.loadTexture("test.png"), new Vector3f(1, 1, 1));
+        m_material = new Material(ResourceLoader.loadTexture("models/cube/default.png"), new Vector3f(1, 1, 1), 0.3f, 16);
+//        m_material = new Material(ResourceLoader.loadTexture("models/test/test.png"), new Vector3f(1, 1, 1), 1, 16);
         m_transform = new Transform();
         m_camera = new Camera();
 
         Transform.setCamera(m_camera);
         Input.setCursor(false);
 
-        Vertex[] vertices = new Vertex[] { new Vertex(new Vector3f(0, 0, -2), new Vector2f(0.0f, 0.0f)),
-                                           new Vertex(new Vector3f(-(float)Math.sqrt(3), 0, 1), new Vector2f(1.0f, 0.0f)),
-                                           new Vertex(new Vector3f((float)Math.sqrt(3), 0, 1), new Vector2f(0.5f, (float)Math.sqrt(3)/2)),
-                                           new Vertex(new Vector3f(0, (float)Math.sqrt(8), 0), new Vector2f(0.5f, (float)Math.sqrt(3)/6))};
-        int[] indices = new int[] { 2, 1, 0,
-                                    3, 0, 1,
-                                    3, 1, 2,
-                                    3, 2, 0};
-        m_mesh.addVertices(vertices, indices, true);
+//        Vertex[] vertices = new Vertex[] { new Vertex(new Vector3f(0, 0, -2), new Vector2f(0.0f, 0.0f)),
+//                                           new Vertex(new Vector3f(-(float)Math.sqrt(3), 0, 1), new Vector2f(1.0f, 0.0f)),
+//                                           new Vertex(new Vector3f((float)Math.sqrt(3), 0, 1), new Vector2f(0.5f, (float)Math.sqrt(3)/2)),
+//                                           new Vertex(new Vector3f(0, (float)Math.sqrt(8), 0), new Vector2f(0.5f, (float)Math.sqrt(3)/6))};
+//        int[] indices = new int[] { 2, 1, 0,
+//                                    3, 0, 1,
+//                                    3, 1, 2,
+//                                    3, 2, 0};
+//        m_mesh.addVertices(vertices, indices, true);
 
         PhongShader.setAmbientLight(new Vector3f(0.01f, 0.01f, 0.01f));
-        PhongShader.setDirectionalLight(new DirectionalLight(new BaseLight(new Vector3f(1, 1, 1), 0.5f), new Vector3f(0, -1, -1)));
+        PhongShader.setDirectionalLight(new DirectionalLight(new BaseLight(new Vector3f(1, 1, 1), 0.3f), new Vector3f(0, 0, -1)));
     }
 
     public void input() {
@@ -44,7 +45,7 @@ public class Game {
         tmp += Time.getDelta();
 
         m_transform.setTranslation(0, 0, -8);
-        m_transform.setRotationRad(0/*(float) (Math.PI*Math.sin(tmp))*/, (float) (Math.PI * Math.sin(tmp)), 0);
+        //m_transform.setRotationRad(0/*(float) (Math.PI*Math.sin(tmp))*/, (float) (Math.PI * Math.sin(tmp)), 0);
         m_transform.setScale(1.0f, 1.0f, 1.0f);
     }
 

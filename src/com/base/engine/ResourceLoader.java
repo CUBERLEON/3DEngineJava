@@ -1,5 +1,6 @@
 package com.base.engine;
 
+import com.obj.*;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import java.io.BufferedReader;
@@ -49,7 +50,7 @@ public class ResourceLoader {
         ArrayList<Integer> normIndices = new ArrayList<>();
 
         try {
-            BufferedReader meshReader = new BufferedReader(new FileReader("./res/models/" + fileName));
+            BufferedReader meshReader = new BufferedReader(new FileReader("./res/" + fileName));
 
             String line;
             while ((line = meshReader.readLine()) != null) {
@@ -99,6 +100,8 @@ public class ResourceLoader {
 
             meshReader.close();
 
+            //WavefrontObject obj = new WavefrontObject("./res/" + fileName);
+
             if (vertices.size() == 0 || vertIndices.size() == 0)
                 throw new Exception("Error: " + fileName + " data was corrupted!");
 
@@ -109,7 +112,7 @@ public class ResourceLoader {
             vertIndices.toArray(indicesData);
 
             Mesh res = new Mesh();
-            res.addVertices(verticesData, Util.toIntArray(indicesData));
+            res.addVertices(verticesData, Util.toIntArray(indicesData), true);
 
             return res;
         } catch (Exception e) {
@@ -125,7 +128,7 @@ public class ResourceLoader {
         String ext = splitArray[splitArray.length - 1].toLowerCase();
 
         try {
-            int id = TextureLoader.getTexture(ext, new FileInputStream(new File("./res/textures/" + fileName))).getTextureID();
+            int id = TextureLoader.getTexture(ext, new FileInputStream(new File("./res/" + fileName))).getTextureID();
             return new Texture(id);
         } catch (Exception e) {
             e.printStackTrace();

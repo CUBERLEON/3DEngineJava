@@ -21,11 +21,18 @@ public class PhongShader extends Shader {
 
         addUniform("v_transform");
         addUniform("v_projectedTransform");
+        addUniform("f_eyePosition");
+
         addUniform("f_baseColor");
+
         addUniform("f_ambientLight");
+
         addUniform("f_directionalLight.base.color");
         addUniform("f_directionalLight.base.intensity");
         addUniform("f_directionalLight.direction");
+
+        addUniform("f_specularIntensity");
+        addUniform("f_specularPower");
     }
 
     public void updateUniforms(Matrix4f world, Matrix4f projected, Material material) {
@@ -36,9 +43,15 @@ public class PhongShader extends Shader {
 
         setUniformM4F("v_transform", world);
         setUniformM4F("v_projectedTransform", projected);
+        setUniformV3F("f_eyePosition", Transform.getCamera().getPosition());
+
         setUniformV3F("f_baseColor", material.getColor());
+
         setUniformV3F("f_ambientLight", m_ambientLight);
         setUniform("f_directionalLight", m_directionalLight);
+
+        setUniformF("f_specularIntensity", material.getSpecularIntensity());
+        setUniformF("f_specularPower", material.getSpecularPower());
     }
 
     public void setUniform(String uniformName, DirectionalLight value) {
