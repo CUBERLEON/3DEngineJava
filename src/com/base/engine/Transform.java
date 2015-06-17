@@ -9,7 +9,7 @@ public class Transform {
     private static float m_zNear;
     private static float m_zFar;
     private static float m_FOV;
-    private static Matrix4f m_perspective;
+    private static Matrix4f m_projection;
     private static Camera m_camera;
 
     public Transform() {
@@ -26,14 +26,14 @@ public class Transform {
         return translation.mul(rotation.mul(scale));
     }
 
-    public Matrix4f getPerspectiveTransformM() {
-        if (m_perspective == null) {
-            System.err.println("Error: perspective matrix wasn't initialized!");
+    public Matrix4f getProjectedTransformM() {
+        if (m_projection == null) {
+            System.err.println("Error: projection matrix wasn't initialized!");
             new Exception().printStackTrace();
             System.exit(1);
         }
         if (m_camera == null) {
-            System.err.println("Error: camera wasn't created!");
+            System.err.println("Error: camera wasn't set to transform!");
             new Exception().printStackTrace();
             System.exit(1);
         }
@@ -41,18 +41,18 @@ public class Transform {
         Matrix4f cameraRotation = new Matrix4f().initCamera(m_camera.getForward(), m_camera.getUp());
         Matrix4f cameraTranslation = new Matrix4f().initTranslation(m_camera.getPosition().mul(-1));
 
-        return m_perspective.mul(cameraRotation.mul(cameraTranslation.mul(getTransformM())));
+        return m_projection.mul(cameraRotation.mul(cameraTranslation.mul(getTransformM())));
     }
 
-    public static void setPerspective(float fov, float zNear, float zFar) {
+    public static void setProjection(float fov, float zNear, float zFar) {
         m_FOV = fov;
         m_zNear = zNear;
         m_zFar = zFar;
-        updatePerspective();
+        updateProjection();
     }
 
-    public static void updatePerspective() {
-        m_perspective = new Matrix4f().initPerspective(m_FOV, Window.getWidth(), Window.getHeight(), m_zNear, m_zFar);
+    public static void updateProjection() {
+        m_projection = new Matrix4f().initProjection(m_FOV, Window.getWidth(), Window.getHeight(), m_zNear, m_zFar);
     }
 
     public static Camera getCamera() {

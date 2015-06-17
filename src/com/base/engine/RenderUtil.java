@@ -24,11 +24,11 @@ public class RenderUtil {
         glCullFace(GL_BACK);
         glEnable(GL_CULL_FACE);
 
-        glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_FRAMEBUFFER_SRGB);
 
-        Transform.setPerspective(45.0f, 0.1f, 10000.0f);
+        Transform.setProjection(45.0f, 0.1f, 100.0f);
     }
 
     public static String getOpenGLVersion() {

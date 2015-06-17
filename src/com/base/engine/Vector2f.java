@@ -2,6 +2,8 @@ package com.base.engine;
 
 public class Vector2f {
 
+    public static final int SIZE = 2;
+
     private float m_x;
     private float m_y;
 

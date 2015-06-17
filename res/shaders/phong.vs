@@ -2,12 +2,16 @@
 
 layout (location = 0) in vec3 v_position;
 layout (location = 1) in vec2 v_texCoord;
+layout (location = 2) in vec3 v_normal;
 
 out vec2 f_texCoord;
+out vec3 f_normal;
 
 uniform mat4 v_transform;
+uniform mat4 v_projectedTransform;
 
 void main() {
 	f_texCoord = v_texCoord;
-	gl_Position = v_transform * vec4(v_position, 1.0);
+	f_normal = normalize(v_transform * vec4(v_normal, 0)).xyz;
+	gl_Position = v_projectedTransform * vec4(v_position, 1.0);
 }

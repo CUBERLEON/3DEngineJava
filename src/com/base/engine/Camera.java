@@ -25,7 +25,7 @@ public class Camera {
 
         m_isLocked = false;
         m_sensitivity = 6.0f;
-        m_speed = 4.0f;
+        m_speed = 6.0f;
     }
     public void input() {
         if (!m_isLocked) {
@@ -58,9 +58,9 @@ public class Camera {
         }
 
         if (Input.getKey(Input.KEY_Q))
-            rotateZDeg(rotateValue);
+            rotateZDeg(2*rotateValue);
         if (Input.getKey(Input.KEY_E))
-            rotateZDeg(-rotateValue);
+            rotateZDeg(-2*rotateValue);
 
         if (Input.getKeyDown(Input.KEY_R))
             reset();
