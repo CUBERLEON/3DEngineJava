@@ -1,0 +1,17 @@
+# Wavefront material library
+# Tue Aug 03 07:54:03 1999
+# Created with Viewpoint Interchange www.viewpoint.com
+
+newmtl eg1_eye
+  Ka 0 0 0
+  Kd 0 0 0
+  Ks 0 0 0
+  illum 2
+  map_Kd images\eye_brn3.TIF
+
+newmtl eg1_body
+  Ka 0 0 0
+  Kd 0 0 0
+  Ks 0 0 0
+  illum 2
+  map_Kd images\eagle1.tif
