@@ -1,7 +1,9 @@
 package com.base.engine;
 
+import org.lwjgl.opengl.GL32;
+
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.*;
 
 public class RenderUtil {
 
@@ -25,10 +27,11 @@ public class RenderUtil {
         glEnable(GL_CULL_FACE);
 
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_FRAMEBUFFER_SRGB);
+        glEnable(GL_DEPTH_CLAMP);
 
-        Transform.setProjection(45.0f, 0.1f, 100.0f);
+        glEnable(GL_TEXTURE_2D);
+
+        Transform.setProjection(45.0f, 0.1f, 1000.0f);
     }
 
     public static String getOpenGLVersion() {

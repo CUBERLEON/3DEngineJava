@@ -13,7 +13,7 @@ uniform mat4 v_projectedTransform;
 
 void main() {
 	f_texCoord = v_texCoord;
-	f_normalInterpolated = normalize(v_transform * vec4(v_normal, 0)).xyz;
+	f_normalInterpolated = (v_transform * vec4(v_normal, 0)).xyz;
 	f_worldPosition = (v_transform * vec4(v_position, 1)).xyz;
 	gl_Position = v_projectedTransform * vec4(v_position, 1.0);
 }

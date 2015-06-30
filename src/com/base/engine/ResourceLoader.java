@@ -1,6 +1,5 @@
 package com.base.engine;
 
-import com.obj.*;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import java.io.BufferedReader;
@@ -31,12 +30,12 @@ public class ResourceLoader {
         return shaderSource.toString();
     }
 
-    public static Mesh loadMesh(String fileName) {
-        String[] splitArray = fileName.split("\\.");
-        String ext = splitArray[splitArray.length - 1].toLowerCase();
+    public static Mesh loadMesh(String filePath) {
+        String[] splitArray = filePath.split("\\.");
+        String ext = splitArray[splitArray.length - 1].toUpperCase();
 
-        if (!(ext.equals("obj"))) {
-            System.err.println("Error: " + ext + " mesh format isn't supported!");
+        if (!(ext.equals("OBJ"))) {
+            System.err.println("ERROR: " + ext + " mesh format isn't supported!");
             new Exception().printStackTrace();
             System.exit(1);
         }
@@ -50,7 +49,7 @@ public class ResourceLoader {
         ArrayList<Integer> normIndices = new ArrayList<>();
 
         try {
-            BufferedReader meshReader = new BufferedReader(new FileReader("./res/" + fileName));
+            BufferedReader meshReader = new BufferedReader(new FileReader("./res/" + filePath));
 
             String line;
             while ((line = meshReader.readLine()) != null) {
@@ -84,7 +83,7 @@ public class ResourceLoader {
                                     normIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 break;
                             default:
-                                throw new Exception("Error: " + fileName + " faces data was corrupted!");
+                                throw new Exception("ERROR: " + filePath + " faces data was corrupted!");
                         }
                     }
                 } if (tokens[0].equals("vt") && tokens.length == 4) {
@@ -100,10 +99,8 @@ public class ResourceLoader {
 
             meshReader.close();
 
-            //WavefrontObject obj = new WavefrontObject("./res/" + fileName);
-
             if (vertices.size() == 0 || vertIndices.size() == 0)
-                throw new Exception("Error: " + fileName + " data was corrupted!");
+                throw new Exception("ERROR: " + filePath + " data was corrupted!");
 
             Vertex[] verticesData = new Vertex[vertices.size()];
             Integer[] indicesData = new Integer[vertIndices.size()];

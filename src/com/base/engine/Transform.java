@@ -28,12 +28,12 @@ public class Transform {
 
     public Matrix4f getProjectedTransformM() {
         if (m_projection == null) {
-            System.err.println("Error: projection matrix wasn't initialized!");
+            System.err.println("ERROR: projection matrix wasn't initialized!");
             new Exception().printStackTrace();
             System.exit(1);
         }
         if (m_camera == null) {
-            System.err.println("Error: camera wasn't set to transform!");
+            System.err.println("ERROR: camera wasn't set to transform!");
             new Exception().printStackTrace();
             System.exit(1);
         }

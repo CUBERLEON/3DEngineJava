@@ -25,7 +25,7 @@ public class Camera {
 
         m_isLocked = false;
         m_sensitivity = 6.0f;
-        m_speed = 6.0f;
+        m_speed = 3.0f;
     }
     public void input() {
         if (!m_isLocked) {
@@ -83,18 +83,6 @@ public class Camera {
 //        m_up = m_forward.cross(left).normalize();
     }
 
-    public void rotateXDeg(float angle) {
-        rotateXRad((float) Math.toRadians(angle));
-    }
-
-    public void rotateYDeg(float angle) {
-        rotateYRad((float) Math.toRadians(angle));
-    }
-
-    public void rotateZDeg(float angle) {
-        rotateZRad((float) Math.toRadians(angle));
-    }
-
     public void rotateYRad(float angle) {
         Vector3f horizon = Vector3f.yAxis.cross(m_forward).normalize();
 
@@ -105,6 +93,18 @@ public class Camera {
 
     public void rotateZRad(float angle) {
         m_up.rotateRad(m_forward, -angle).normalize();
+    }
+
+    public void rotateXDeg(float angle) {
+        rotateXRad((float) Math.toRadians(angle));
+    }
+
+    public void rotateYDeg(float angle) {
+        rotateYRad((float) Math.toRadians(angle));
+    }
+
+    public void rotateZDeg(float angle) {
+        rotateZRad((float) Math.toRadians(angle));
     }
 
     public void reset() {

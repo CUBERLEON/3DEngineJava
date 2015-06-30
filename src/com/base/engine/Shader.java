@@ -28,7 +28,7 @@ public class Shader {
         int uniformLocation = glGetUniformLocation(m_program, name);
 
         if (uniformLocation == -1) {
-            System.err.println("Error: Could not find uniform: " + name);
+            System.err.println("ERROR: Could not find uniform: " + name);
             new Exception().printStackTrace();
             System.exit(1);
         }
