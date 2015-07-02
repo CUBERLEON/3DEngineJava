@@ -96,7 +96,7 @@ public class Matrix4f {
     public Matrix4f initCamera(Vector3f forward, Vector3f up) {
         Vector3f f = forward.getNormalized();
         Vector3f u = up.getNormalized();
-        Vector3f r = f.cross(u).normalize();
+        Vector3f r = f.getCross(u).normalize();
 
         m[0][0] = r.getX(); m[0][1] = r.getY(); m[0][2] = r.getZ(); m[0][3] = 0;
         m[1][0] = u.getX(); m[1][1] = u.getY(); m[1][2] = u.getZ(); m[1][3] = 0;

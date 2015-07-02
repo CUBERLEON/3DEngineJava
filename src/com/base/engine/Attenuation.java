@@ -7,9 +7,9 @@ public class Attenuation {
     private float m_exponent;
 
     public Attenuation(float constant, float linear, float exponent) {
-        m_constant = constant;
-        m_linear = linear;
-        m_exponent = exponent;
+        m_constant = Math.max(0, constant);
+        m_linear = Math.max(0, linear);
+        m_exponent = Math.max(0, exponent);
     }
 
     public float getConstant() {
@@ -17,7 +17,7 @@ public class Attenuation {
     }
 
     public void setConstant(float constant) {
-        this.m_constant = constant;
+        this.m_constant = Math.max(0, constant);
     }
 
     public float getLinear() {
@@ -25,7 +25,7 @@ public class Attenuation {
     }
 
     public void setLinear(float linear) {
-        this.m_linear = linear;
+        this.m_linear = Math.max(0, linear);
     }
 
     public float getExponent() {
@@ -33,6 +33,6 @@ public class Attenuation {
     }
 
     public void setExponent(float exponent) {
-        this.m_exponent = exponent;
+        this.m_exponent = Math.max(0, exponent);
     }
 }

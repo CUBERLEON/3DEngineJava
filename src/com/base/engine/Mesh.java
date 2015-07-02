@@ -61,14 +61,14 @@ public class Mesh {
             int i1 = indices[i + 1];
             int i2 = indices[i + 2];
 
-            Vector3f v1 = vertices[i1].getPosition().sub(vertices[i0].getPosition());
-            Vector3f v2 = vertices[i2].getPosition().sub(vertices[i0].getPosition());
+            Vector3f v1 = vertices[i1].getPosition().getSub(vertices[i0].getPosition());
+            Vector3f v2 = vertices[i2].getPosition().getSub(vertices[i0].getPosition());
 
-            Vector3f normal = v1.cross(v2).normalize();
+            Vector3f normal = v1.getCross(v2).normalize();
 
-            vertices[i0].setNormal(vertices[i0].getNormal().add(normal));
-            vertices[i1].setNormal(vertices[i1].getNormal().add(normal));
-            vertices[i2].setNormal(vertices[i2].getNormal().add(normal));
+            vertices[i0].setNormal(vertices[i0].getNormal().getAdd(normal));
+            vertices[i1].setNormal(vertices[i1].getNormal().getAdd(normal));
+            vertices[i2].setNormal(vertices[i2].getNormal().getAdd(normal));
         }
 
         for (int i = 0; i < vertices.length; i++) {

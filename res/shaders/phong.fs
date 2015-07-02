@@ -9,27 +9,30 @@ in vec3 f_worldPosition;
 
 out vec4 fragColor;
 
-struct BaseLight {
-	vec3 color;
-	float intensity;
-};
-
-struct DirectionalLight {
-	BaseLight base;
-	vec3 direction;
-};
-
 struct Attenuation {
 	float constant;
 	float linear;
 	float exponent;
 };
 
+struct DirectionalLight {
+	vec3 color;
+	float intensity;
+	vec3 direction;
+};
+
 struct PointLight {
-	BaseLight base;
+	vec3 color;
+	float intensity;
 	Attenuation attenuation;
 	vec3 position;
 	float range;
+};
+
+struct SpotLight {
+	vec3 color;
+	float intensity;
+	float cutoff;
 };
 
 uniform sampler2D f_sampler;
@@ -44,14 +47,14 @@ uniform float f_specularIntensity;
 uniform float f_specularPower;
 uniform vec3 f_eyePosition;
 
-vec4 calcLight(BaseLight base, vec3 direction, vec3 normal) {
+vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal) {
 	float diffuseFactor = dot(normal, -direction);
 
 	vec4 diffuseColor = vec4(0, 0, 0, 0);
 	vec4 specularColor = vec4(0, 0, 0, 0);
 
-	if (diffuseFactor > 0) {
-		diffuseColor = vec4(base.color, 1) * base.intensity * diffuseFactor;
+	if (diffuseFactor > 0 && intensity > 0 ) {
+		diffuseColor = vec4(color, 1) * intensity * diffuseFactor;
 
 		vec3 directionToEye = normalize(f_eyePosition - f_worldPosition);
 		vec3 reflectedDirection = normalize(reflect(direction, normal));
@@ -65,17 +68,17 @@ vec4 calcLight(BaseLight base, vec3 direction, vec3 normal) {
 		blinnTerm = cosAngleIncidence != 0.0 ? blinnTerm : 0.0;
 		blinnTerm = pow(blinnTerm, f_specularPower);
 		
-		specularColor = vec4(base.color, 1) * f_specularIntensity * blinnTerm; //blinn-phong specular lighting
+		specularColor = vec4(color, 1) * f_specularIntensity * blinnTerm; //blinn-phong specular lighting
 */
 		float specularFactor = pow(cosAngleIncidence, f_specularPower);
-		specularColor = vec4(base.color, 1) * f_specularIntensity * specularFactor; //phong specular lighting
+		specularColor = vec4(color, 1) * f_specularIntensity * specularFactor; //phong specular lighting
 	}
 
 	return diffuseColor + specularColor;
 }
 
 vec4 calcDirectionalLight(DirectionalLight directionalLight, vec3 normal) {
-	return calcLight(directionalLight.base, directionalLight.direction, normal);
+	return calcLight(directionalLight.color, directionalLight.intensity, directionalLight.direction, normal);
 }
 
 vec4 calcPointLight(PointLight pointLight, vec3 normal) {
@@ -87,7 +90,7 @@ vec4 calcPointLight(PointLight pointLight, vec3 normal) {
 
 	lightDirection = normalize(lightDirection);
 
-	vec4 color = calcLight(pointLight.base, lightDirection, normal);
+	vec4 color = calcLight(pointLight.color, pointLight.intensity, lightDirection, normal);
 
 	float attenuation = max(0.00001, pointLight.attenuation.constant +
 									 pointLight.attenuation.linear * distanceToPoint +

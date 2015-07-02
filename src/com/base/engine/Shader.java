@@ -28,7 +28,7 @@ public class Shader {
         int uniformLocation = glGetUniformLocation(m_program, name);
 
         if (uniformLocation == -1) {
-            System.err.println("ERROR: Could not find uniform: " + name);
+            System.err.println("Fatal ERROR: Could not find uniform: " + name);
             new Exception().printStackTrace();
             System.exit(1);
         }
@@ -96,13 +96,14 @@ public class Shader {
         int shader = glCreateShader(type);
 
         if (shader == 0) {
-            System.err.println("Shader creation failed: could not find valid memory location when adding shader program");
+            System.err.println("Fatal ERROR: Shader creation failed! Could not find valid memory location when adding shader program");
             System.exit(1);
         }
 
         glShaderSource(shader, text);
         glCompileShader(shader);
         if (glGetShader(shader, GL_COMPILE_STATUS) == 0) {
+            System.err.println("Fatal ERROR: Shader compilation failed!");
             System.err.println(glGetShaderInfoLog(shader, 1024));
             System.exit(1);
         }

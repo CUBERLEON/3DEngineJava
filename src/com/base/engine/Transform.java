@@ -28,18 +28,18 @@ public class Transform {
 
     public Matrix4f getProjectedTransformM() {
         if (m_projection == null) {
-            System.err.println("ERROR: projection matrix wasn't initialized!");
+            System.err.println("Fatal ERROR: projection matrix wasn't initialized!");
             new Exception().printStackTrace();
             System.exit(1);
         }
         if (m_camera == null) {
-            System.err.println("ERROR: camera wasn't set to transform!");
+            System.err.println("Fatal ERROR: camera wasn't set to transform!");
             new Exception().printStackTrace();
             System.exit(1);
         }
 
         Matrix4f cameraRotation = new Matrix4f().initCamera(m_camera.getForward(), m_camera.getUp());
-        Matrix4f cameraTranslation = new Matrix4f().initTranslation(m_camera.getPosition().mul(-1));
+        Matrix4f cameraTranslation = new Matrix4f().initTranslation(m_camera.getPosition().getMul(-1));
 
         return m_projection.mul(cameraRotation.mul(cameraTranslation.mul(getTransformM())));
     }

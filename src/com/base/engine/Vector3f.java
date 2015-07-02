@@ -33,6 +33,13 @@ public class Vector3f {
     public Vector3f normalize() {
         float length = length();
 
+        if (length == 0) {
+            System.err.println("ERROR: division by zero while normalizing Vector3f.");
+            new Exception().printStackTrace();
+
+            return this;
+        }
+
         m_x /= length;
         m_y /= length;
         m_z /= length;
@@ -41,8 +48,7 @@ public class Vector3f {
     }
 
     public Vector3f getNormalized() {
-        float length = length();
-        return new Vector3f(m_x/length, m_y/length, m_z/length);
+        return new Vector3f(this).normalize();
     }
 
     public Vector3f rotateDeg(Vector3f axis, float angle) {
@@ -77,39 +83,125 @@ public class Vector3f {
     }
 
     public Vector3f abs() {
-        return new Vector3f(Math.abs(m_x), Math.abs(m_y), Math.abs(m_z));
+        m_x = Math.abs(m_x);
+        m_y = Math.abs(m_y);
+        m_z = Math.abs(m_z);
+
+        return this;
+    }
+
+    public Vector3f getAbs() {
+        return new Vector3f(this).abs();
     }
 
     public Vector3f add(Vector3f r) {
-        return new Vector3f(m_x + r.getX(), m_y + r.getY(), m_z + r.getZ());
+        m_x += r.getX();
+        m_y += r.getY();
+        m_z += r.getZ();
+
+        return this;
     }
 
     public Vector3f add(float r) {
-        return new Vector3f(m_x + r, m_y + r, m_z + r);
+        m_x += r;
+        m_y += r;
+        m_z += r;
+
+        return this;
+    }
+
+    public Vector3f getAdd(Vector3f r) {
+        return new Vector3f(this).add(r);
+    }
+
+    public Vector3f getAdd(float r) {
+        return new Vector3f(this).add(r);
     }
 
     public Vector3f sub(Vector3f r) {
-        return new Vector3f(m_x - r.getX(), m_y - r.getY(), m_z - r.getZ());
+        m_x -= r.getX();
+        m_y -= r.getY();
+        m_z -= r.getZ();
+
+        return this;
     }
 
     public Vector3f sub(float r) {
-        return new Vector3f(m_x - r, m_y - r, m_z - r);
+        m_x -= r;
+        m_y -= r;
+        m_z -= r;
+
+        return this;
+    }
+
+    public Vector3f getSub(Vector3f r) {
+        return new Vector3f(this).sub(r);
+    }
+
+    public Vector3f getSub(float r) {
+        return new Vector3f(this).sub(r);
     }
 
     public Vector3f mul(Vector3f r) {
-        return new Vector3f(m_x * r.getX(), m_y * r.getY(), m_z * r.getZ());
+        m_x *= r.getX();
+        m_y *= r.getY();
+        m_z *= r.getZ();
+
+        return this;
     }
 
     public Vector3f mul(float r) {
-        return new Vector3f(m_x * r, m_y * r, m_z * r);
+        m_x *= r;
+        m_y *= r;
+        m_z *= r;
+
+        return this;
+    }
+
+    public Vector3f getMul(Vector3f r) {
+        return new Vector3f(this).mul(r);
+    }
+
+    public Vector3f getMul(float r) {
+        return new Vector3f(this).mul(r);
     }
 
     public Vector3f div(Vector3f r) {
-        return new Vector3f(m_x / r.getX(), m_y / r.getY(), m_z / r.getZ());
+        if (r.getX() == 0 || r.getY() == 0 || r.getZ() == 0) {
+            System.err.println("ERROR: division by zero while dividing Vector3f by Vector3f.");
+            new Exception().printStackTrace();
+
+            return this;
+        }
+
+        m_x /= r.getX();
+        m_y /= r.getY();
+        m_z /= r.getZ();
+
+        return this;
     }
 
     public Vector3f div(float r) {
-        return new Vector3f(m_x / r, m_y / r, m_z / r);
+        if (r == 0) {
+            System.err.println("ERROR: division by zero while dividing Vector3f by float.");
+            new Exception().printStackTrace();
+
+            return this;
+        }
+
+        m_x /= r;
+        m_y /= r;
+        m_z /= r;
+
+        return this;
+    }
+
+    public Vector3f getDiv(Vector3f r) {
+        return new Vector3f(this).div(r);
+    }
+
+    public Vector3f getDiv(float r) {
+        return new Vector3f(this).div(r);
     }
 
     public Vector3f cross(Vector3f r) {
@@ -117,7 +209,15 @@ public class Vector3f {
         float y_ = m_z * r.getX() - m_x * r.getZ();
         float z_ = m_x * r.getY() - m_y * r.getX();
 
-        return new Vector3f(x_, y_, z_);
+        m_x = x_;
+        m_y = y_;
+        m_z = z_;
+
+        return this;
+    }
+
+    public Vector3f getCross(Vector3f r) {
+        return new Vector3f(this).cross(r);
     }
 
     public float getX() {

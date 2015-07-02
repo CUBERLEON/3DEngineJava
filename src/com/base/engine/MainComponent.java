@@ -4,7 +4,7 @@ public class MainComponent {
 
     private int m_fpsLimit;
     private long m_fpsRefreshTime;
-    private boolean m_fpsIsUnlimited;
+    private boolean m_fpsUnlimited;
 
     private Game m_game;
 
@@ -13,7 +13,7 @@ public class MainComponent {
     public MainComponent(int width, int height, String title) {
         m_fpsLimit = 100;
         m_fpsRefreshTime = (long)(1.0 * Time.SECOND);
-        m_fpsIsUnlimited = false;
+        m_fpsUnlimited = false;
 
         Window.createWindow(width, height, title);
         RenderUtil.initGraphics();
@@ -73,7 +73,7 @@ public class MainComponent {
                 frames = 0;
             }
 
-            if (render || m_fpsIsUnlimited) {
+            if (render || m_fpsUnlimited) {
                 render();
                 frames++;
             } else {

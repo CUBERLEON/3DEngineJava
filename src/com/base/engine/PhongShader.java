@@ -10,10 +10,9 @@ public class PhongShader extends Shader {
 
     public static final int MAX_POINT_LIGHTS = 4;
 
-    private static Vector3f m_ambientLight = new Vector3f(0.05f, 0.05f, 0.05f);
-    private static DirectionalLight m_directionalLight = new DirectionalLight(new BaseLight(new Vector3f(1, 1, 1), 0), new Vector3f(0, 0, 0));
+    private static Vector3f m_ambientLight = new Vector3f(0.02f, 0.02f, 0.02f);
+    private static DirectionalLight m_directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), 0, new Vector3f(-1, -1, 0));
     private static PointLight[] m_pointLights = new PointLight[0];
-    private static int m_pointLightsCount = 0;
 
     public PhongShader() {
         super();
@@ -31,13 +30,13 @@ public class PhongShader extends Shader {
 
         addUniform("f_ambientLight");
 
-        addUniform("f_directionalLight.base.color");
-        addUniform("f_directionalLight.base.intensity");
+        addUniform("f_directionalLight.color");
+        addUniform("f_directionalLight.intensity");
         addUniform("f_directionalLight.direction");
 
         for (int i = 0; i < MAX_POINT_LIGHTS; i++) {
-            addUniform("f_pointLights[" + i + "].base.color");
-            addUniform("f_pointLights[" + i + "].base.intensity");
+            addUniform("f_pointLights[" + i + "].color");
+            addUniform("f_pointLights[" + i + "].intensity");
             addUniform("f_pointLights[" + i + "].attenuation.constant");
             addUniform("f_pointLights[" + i + "].attenuation.linear");
             addUniform("f_pointLights[" + i + "].attenuation.exponent");
@@ -65,26 +64,23 @@ public class PhongShader extends Shader {
         setUniformV3F("f_ambientLight", m_ambientLight);
         setUniform("f_directionalLight", m_directionalLight);
 
-        for (int i = 0; i < m_pointLightsCount; i++)
+        for (int i = 0; i < m_pointLights.length; i++)
             setUniform("f_pointLights[" + i + "]", m_pointLights[i]);
-        setUniformI("f_pointLightsCount", m_pointLightsCount);
+        setUniformI("f_pointLightsCount", m_pointLights.length);
 
         setUniformF("f_specularIntensity", material.getSpecularIntensity());
         setUniformF("f_specularPower", material.getSpecularPower());
     }
 
-    public void setUniform(String uniformName, BaseLight value) {
+    public void setUniform(String uniformName, DirectionalLight value) {
         setUniformV3F(uniformName + ".color", value.getColor());
         setUniformF(uniformName + ".intensity", value.getIntensity());
-    }
-
-    public void setUniform(String uniformName, DirectionalLight value) {
-        setUniform(uniformName + ".base", value.getBase());
         setUniformV3F(uniformName + ".direction", value.getDirection());
     }
 
     public void setUniform(String uniformName, PointLight value) {
-        setUniform(uniformName + ".base", value.getBase());
+        setUniformV3F(uniformName + ".color", value.getColor());
+        setUniformF(uniformName + ".intensity", value.getIntensity());
         setUniformF(uniformName + ".attenuation.constant", value.getAttenuation().getConstant());
         setUniformF(uniformName + ".attenuation.linear", value.getAttenuation().getLinear());
         setUniformF(uniformName + ".attenuation.exponent", value.getAttenuation().getExponent());
@@ -114,20 +110,15 @@ public class PhongShader extends Shader {
 
     public static void setPointLights(PointLight[] pointLights) {
         if (pointLights.length > MAX_POINT_LIGHTS) {
-            System.err.println("ERROR: Phong shader cannot handle " + pointLights.length + " Point Lights (max = " + MAX_POINT_LIGHTS + ")");
+            System.err.println("Fatal ERROR: Phong shader cannot handle " + pointLights.length + " Point Lights (max = " + MAX_POINT_LIGHTS + ")");
             new Exception().printStackTrace();
             System.exit(1);
         }
 
         m_pointLights = pointLights;
-        m_pointLightsCount = pointLights.length;
     }
 
     public static int getPointLightsCount() {
-        return m_pointLightsCount;
-    }
-
-    public static void setPointLightsCount(int pointLightsCount) {
-        m_pointLightsCount = pointLightsCount;
+        return m_pointLights.length;
     }
 }

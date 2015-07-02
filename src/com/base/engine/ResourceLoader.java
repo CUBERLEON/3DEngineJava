@@ -23,6 +23,7 @@ public class ResourceLoader {
 
             shaderReader.close();
         } catch (Exception e) {
+            System.err.println("Fatal ERROR: Loading shader '" + fileName + "' failed!");
             e.printStackTrace();
             System.exit(1);
         }
@@ -35,7 +36,7 @@ public class ResourceLoader {
         String ext = splitArray[splitArray.length - 1].toUpperCase();
 
         if (!(ext.equals("OBJ"))) {
-            System.err.println("ERROR: " + ext + " mesh format isn't supported!");
+            System.err.println("Fatal ERROR: " + ext + " mesh format isn't supported!");
             new Exception().printStackTrace();
             System.exit(1);
         }
@@ -83,7 +84,7 @@ public class ResourceLoader {
                                     normIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
                                 break;
                             default:
-                                throw new Exception("ERROR: " + filePath + " faces data was corrupted!");
+                                throw new Exception("Fatal ERROR: " + filePath + " faces data was corrupted!");
                         }
                     }
                 } if (tokens[0].equals("vt") && tokens.length == 4) {
@@ -100,7 +101,7 @@ public class ResourceLoader {
             meshReader.close();
 
             if (vertices.size() == 0 || vertIndices.size() == 0)
-                throw new Exception("ERROR: " + filePath + " data was corrupted!");
+                throw new Exception("Fatal ERROR: " + filePath + " data was corrupted!");
 
             Vertex[] verticesData = new Vertex[vertices.size()];
             Integer[] indicesData = new Integer[vertIndices.size()];
@@ -128,6 +129,7 @@ public class ResourceLoader {
             int id = TextureLoader.getTexture(ext, new FileInputStream(new File("./res/" + fileName))).getTextureID();
             return new Texture(id);
         } catch (Exception e) {
+            System.err.println("Fatal ERROR: Loading texture '" + fileName + "' failed!");
             e.printStackTrace();
             System.exit(1);
         }

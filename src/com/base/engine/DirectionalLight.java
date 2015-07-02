@@ -2,20 +2,30 @@ package com.base.engine;
 
 public class DirectionalLight {
 
-    BaseLight m_base;
-    Vector3f m_direction;
+    private Vector3f m_color;
+    private float m_intensity;
+    private Vector3f m_direction;
 
-    public DirectionalLight(BaseLight base, Vector3f direction) {
-        m_base = base;
+    public DirectionalLight(Vector3f color, float intensity, Vector3f direction) {
+        m_color = color;
+        m_intensity = intensity;
         m_direction = direction.getNormalized();
     }
 
-    public BaseLight getBase() {
-        return m_base;
+    public Vector3f getColor() {
+        return m_color;
     }
 
-    public void setBase(BaseLight base) {
-        this.m_base = base;
+    public void setColor(Vector3f color) {
+        this.m_color = color;
+    }
+
+    public float getIntensity() {
+        return m_intensity;
+    }
+
+    public void setIntensity(float intensity) {
+        this.m_intensity = intensity;
     }
 
     public Vector3f getDirection() {

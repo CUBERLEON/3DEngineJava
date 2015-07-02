@@ -27,6 +27,13 @@ public class Vector2f {
     public Vector2f normalize() {
         float length = length();
 
+        if (length == 0) {
+            System.err.println("ERROR: division by zero while normalizing a Vector2f.");
+            new Exception().printStackTrace();
+
+            return this;
+        }
+
         m_x /= length;
         m_y /= length;
 
@@ -34,8 +41,7 @@ public class Vector2f {
     }
 
     public Vector2f getNormalized() {
-        float length = length();
-        return new Vector2f(m_x/length, m_y/length);
+        return new Vector2f(this).normalize();
     }
 
     public Vector2f rotateDeg(float angle) {
@@ -61,38 +67,116 @@ public class Vector2f {
     }
 
     public Vector2f abs() {
-        return new Vector2f(Math.abs(m_x), Math.abs(m_y));
+        m_x = Math.abs(m_x);
+        m_y = Math.abs(m_y);
+
+        return this;
+    }
+
+    public Vector2f getAbs() {
+        return new Vector2f(this).abs();
     }
 
     public Vector2f add(Vector2f r) {
-        return new Vector2f(m_x + r.getX(), m_y + r.getY());
+        m_x += r.getX();
+        m_y += r.getY();
+
+        return this;
     }
 
     public Vector2f add(float r) {
-        return new Vector2f(m_x + r, m_y + r);
+        m_x += r;
+        m_y += r;
+
+        return this;
     }
 
-    public Vector2f mul(Vector2f r) {
-        return new Vector2f(m_x * r.getX(), m_y * r.getY());
+    public Vector2f getAdd(Vector2f r) {
+        return new Vector2f(this).add(r);
     }
 
-    public Vector2f mul(float r) {
-        return new Vector2f(m_x * r, m_y * r);
+    public Vector2f getAdd(float r) {
+        return new Vector2f(this).add(r);
     }
 
-    public Vector2f div(Vector2f r) {
-        return new Vector2f(m_x / r.getX(), m_y / r.getY());
-    }
-
-    public Vector2f div(float r) {
-        return new Vector2f(m_x / r, m_y / r);
-    }
     public Vector2f sub(Vector2f r) {
-        return new Vector2f(m_x - r.getX(), m_y - r.getY());
+        m_x -= r.getX();
+        m_y -= r.getY();
+
+        return this;
     }
 
     public Vector2f sub(float r) {
-        return new Vector2f(m_x - r, m_y - r);
+        m_x -= r;
+        m_y -= r;
+
+        return this;
+    }
+
+    public Vector2f getSub(Vector2f r) {
+        return new Vector2f(this).sub(r);
+    }
+
+    public Vector2f getSub(float r) {
+        return new Vector2f(this).sub(r);
+    }
+
+    public Vector2f mul(Vector2f r) {
+        m_x *= r.getX();
+        m_y *= r.getY();
+
+        return this;
+    }
+
+    public Vector2f mul(float r) {
+        m_x *= r;
+        m_y *= r;
+
+        return this;
+    }
+
+    public Vector2f getMul(Vector2f r) {
+        return new Vector2f(this).mul(r);
+    }
+
+    public Vector2f getMul(float r) {
+        return new Vector2f(this).mul(r);
+    }
+
+    public Vector2f div(Vector2f r) {
+        if (r.getX() == 0 || r.getY() == 0) {
+            System.err.println("ERROR: division by zero while dividing Vector2f by Vector2f.");
+            new Exception().printStackTrace();
+
+            return this;
+        }
+
+        m_x /= r.getX();
+        m_y /= r.getY();
+
+        return this;
+    }
+
+    public Vector2f div(float r) {
+        if (r == 0) {
+            System.err.println("ERROR: division by zero while dividing Vector2f by float.");
+            new Exception().printStackTrace();
+
+            return this;
+        }
+
+        m_x /= r;
+        m_y /= r;
+
+        return this;
+    }
+
+    public Vector2f getDiv(Vector2f r) {
+        return new Vector2f(this).div(r);
+    }
+
+    public Vector2f getDiv(float r) {
+        return new Vector2f(this).div(r);
     }
 
     public String toString() {
