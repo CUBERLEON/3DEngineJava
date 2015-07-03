@@ -46,7 +46,7 @@ public class Camera {
 
         m_isLocked = false;
         m_sensitivity = 6.0f;
-        m_speed = 5.0f;
+        m_speed = 6.0f;
     }
     public void input() {
         if (!m_isLocked) {

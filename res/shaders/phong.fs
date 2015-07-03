@@ -1,6 +1,7 @@
 #version 330
 
 const int MAX_POINT_LIGHTS = 4;
+const int MAX_SPOT_LIGHTS = 4;
 
 in vec2 f_texCoord;
 in vec3 f_normalInterpolated;
@@ -30,8 +31,8 @@ struct PointLight {
 };
 
 struct SpotLight {
-	vec3 color;
-	float intensity;
+	PointLight pointLight;
+	vec3 direction;
 	float cutoff;
 };
 
@@ -39,9 +40,14 @@ uniform sampler2D f_sampler;
 
 uniform vec3 f_baseColor;
 uniform vec3 f_ambientLight;
+
 uniform DirectionalLight f_directionalLight;
+
 uniform PointLight f_pointLights[MAX_POINT_LIGHTS];
-uniform int f_pointLightsCount; 
+uniform int f_pointLightsCount;
+
+uniform SpotLight f_spotLights[MAX_SPOT_LIGHTS];
+uniform int f_spotLightsCount;
 
 uniform float f_specularIntensity;
 uniform float f_specularPower;
@@ -53,7 +59,7 @@ vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal) {
 	vec4 diffuseColor = vec4(0, 0, 0, 0);
 	vec4 specularColor = vec4(0, 0, 0, 0);
 
-	if (diffuseFactor > 0 && intensity > 0 ) {
+	if (diffuseFactor > 0 && intensity > 0) {
 		diffuseColor = vec4(color, 1) * intensity * diffuseFactor;
 
 		vec3 directionToEye = normalize(f_eyePosition - f_worldPosition);
@@ -99,6 +105,20 @@ vec4 calcPointLight(PointLight pointLight, vec3 normal) {
 	return color / attenuation;
 }
 
+vec4 calcSpotLight(SpotLight spotLight, vec3 normal) {
+	vec3 lightDirection = normalize(f_worldPosition - spotLight.pointLight.position);
+	float spotFactor = dot(lightDirection, spotLight.direction);
+
+	vec4 color = vec4(0, 0, 0, 0);
+
+	if (spotFactor > spotLight.cutoff && spotLight.cutoff < 1.0) {
+		color = calcPointLight(spotLight.pointLight, normal) *
+				(1.0 - (1.0 - spotFactor) / (1.0 - spotLight.cutoff));
+	}
+
+	return color;
+}
+
 void main() {
 	f_normal = normalize(f_normalInterpolated);
 
@@ -107,6 +127,9 @@ void main() {
 
 	for (int i = 0; i < f_pointLightsCount; i++)
 		totalLight += calcPointLight(f_pointLights[i], f_normal);
+
+	for (int i = 0; i < f_spotLightsCount; i++)
+		totalLight += calcSpotLight(f_spotLights[i], f_normal);
 
 	vec4 color = vec4(f_baseColor, 1);
 

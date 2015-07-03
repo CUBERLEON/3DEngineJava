@@ -9,7 +9,7 @@ public class Vertex {
     private Vector3f m_normal;
 
     public Vertex(Vector3f position) {
-        this(position, new Vector2f(0, 0), new Vector3f(0, 0, 0));
+        this(position, new Vector2f(-1, -1), new Vector3f(0, 0, 0));
     }
 
     public Vertex(Vector3f position, Vector2f texCoord) {

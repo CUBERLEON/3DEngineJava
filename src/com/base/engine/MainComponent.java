@@ -11,7 +11,7 @@ public class MainComponent {
     private boolean m_isRunning;
 
     public MainComponent(int width, int height, String title) {
-        m_fpsLimit = 100;
+        m_fpsLimit = 60;
         m_fpsRefreshTime = (long)(1.0 * Time.SECOND);
         m_fpsUnlimited = false;
 
@@ -53,18 +53,20 @@ public class MainComponent {
 
             boolean render = false;
 
-            Time.setDelta((double)passedTime / (double)Time.SECOND);
-            m_game.input();
-            Input.update();
+//            Time.setDelta((double)passedTime / (double)Time.SECOND);
+//            m_game.input();
+//            Input.update();
 
             if (unprocessedTime >= frameTime) {
                 long sceneTime = frameTime * (unprocessedTime / frameTime);
                 unprocessedTime -= sceneTime;
+                Time.setDelta((double)sceneTime / (double)Time.SECOND);
 
                 render = true;
 
-                Time.setDelta((double)sceneTime / (double)Time.SECOND);
+                m_game.input();
                 m_game.update();
+                Input.update();
             }
 
             if (fpsTime >= m_fpsRefreshTime) {
