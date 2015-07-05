@@ -1,4 +1,9 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.Matrix4f;
+import com.base.engine.core.Util;
+import com.base.engine.core.Vector2f;
+import com.base.engine.core.Vector3f;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,7 +19,7 @@ public class Shader {
 
     public Shader() {
         m_program = glCreateProgram();
-        m_uniforms = new HashMap<String, Integer>();
+        m_uniforms = new HashMap<>();
 
         if (m_program == 0) {
             System.err.println("Shader creation failed: could not find valid memory location in constructor");

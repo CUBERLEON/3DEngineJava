@@ -3,9 +3,8 @@
 const int MAX_POINT_LIGHTS = 4;
 const int MAX_SPOT_LIGHTS = 4;
 
-in vec2 f_texCoord;
-in vec3 f_normalInterpolated;
-vec3 f_normal;
+in vec2 f_textureCoord;
+in vec3 f_normalInterpolated; vec3 f_normal;
 in vec3 f_worldPosition;
 
 out vec4 fragColor;
@@ -36,9 +35,15 @@ struct SpotLight {
 	float cutoff;
 };
 
+//texture
 uniform sampler2D f_sampler;
 
+//material
 uniform vec3 f_baseColor;
+uniform float f_specularIntensity;
+uniform float f_specularPower;
+
+//lights
 uniform vec3 f_ambientLight;
 
 uniform DirectionalLight f_directionalLight;
@@ -49,8 +54,7 @@ uniform int f_pointLightsCount;
 uniform SpotLight f_spotLights[MAX_SPOT_LIGHTS];
 uniform int f_spotLightsCount;
 
-uniform float f_specularIntensity;
-uniform float f_specularPower;
+//additional variables
 uniform vec3 f_eyePosition;
 
 vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal) {
@@ -80,8 +84,7 @@ vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal) {
 		specularColor = vec4(color, 1) * f_specularIntensity * specularFactor; //phong specular lighting
 	}
 
-	return diffuseColor + specularColor;
-}
+    return diffuseColor + specularColor; }
 
 vec4 calcDirectionalLight(DirectionalLight directionalLight, vec3 normal) {
 	return calcLight(directionalLight.color, directionalLight.intensity, directionalLight.direction, normal);
@@ -111,7 +114,7 @@ vec4 calcSpotLight(SpotLight spotLight, vec3 normal) {
 
 	vec4 color = vec4(0, 0, 0, 0);
 
-	if (spotFactor > spotLight.cutoff && spotLight.cutoff < 1.0) {
+	if (spotFactor > spotLight.cutoff && spotLight.cutoff != 1.0) {
 		color = calcPointLight(spotLight.pointLight, normal) *
 				(1.0 - (1.0 - spotFactor) / (1.0 - spotLight.cutoff));
 	}
@@ -122,7 +125,14 @@ vec4 calcSpotLight(SpotLight spotLight, vec3 normal) {
 void main() {
 	f_normal = normalize(f_normalInterpolated);
 
+	vec4 color = vec4(f_baseColor, 1);
+
+	vec4 textureColor = texture(f_sampler, f_textureCoord);
+	if (textureColor != vec4(0, 0, 0, 0))
+		color *= textureColor;
+
 	vec4 totalLight = vec4(f_ambientLight, 1);
+	
 	totalLight += calcDirectionalLight(f_directionalLight, f_normal);
 
 	for (int i = 0; i < f_pointLightsCount; i++)
@@ -130,12 +140,6 @@ void main() {
 
 	for (int i = 0; i < f_spotLightsCount; i++)
 		totalLight += calcSpotLight(f_spotLights[i], f_normal);
-
-	vec4 color = vec4(f_baseColor, 1);
-
-	vec4 texColor = texture(f_sampler, f_texCoord);
-	if (texColor != vec4(0, 0, 0, 0))
-		color *= texColor;
 
 	fragColor = color * totalLight;
 }

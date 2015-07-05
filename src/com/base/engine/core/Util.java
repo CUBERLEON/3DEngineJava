@@ -1,10 +1,11 @@
-package com.base.engine;
+package com.base.engine.core;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import com.base.engine.rendering.Vertex;
 import org.lwjgl.BufferUtils;
 
 public class Util {
@@ -63,7 +64,7 @@ public class Util {
     }
 
     public static String[] removeEmptyStrings(String[] data) {
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
 
         for(int i = 0; i < data.length; i++)
             if(!data[i].equals(""))

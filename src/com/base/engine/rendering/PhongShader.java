@@ -1,4 +1,8 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.Matrix4f;
+import com.base.engine.core.Transform;
+import com.base.engine.core.Vector3f;
 
 public class PhongShader extends Shader {
 
@@ -11,7 +15,7 @@ public class PhongShader extends Shader {
     public static final int MAX_POINT_LIGHTS = 4;
     public static final int MAX_SPOT_LIGHTS = 4;
 
-    private static Vector3f m_ambientLight = new Vector3f(0.02f, 0.02f, 0.02f);
+    private static Vector3f m_ambientLight = new Vector3f(0.0f, 0.0f, 0.0f);
     private static DirectionalLight m_directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), 0, new Vector3f(-1, -1, -1));
     private static PointLight[] m_pointLights = new PointLight[0];
     private static SpotLight[] m_spotLights = new SpotLight[0];

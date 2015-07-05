@@ -1,4 +1,6 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.Vector3f;
 
 public class PointLight {
 
@@ -8,7 +10,7 @@ public class PointLight {
     private Vector3f m_position;
     private float m_range;
 
-    PointLight(Vector3f color, float intensity, Attenuation attenuation, Vector3f position) {
+    public PointLight(Vector3f color, float intensity, Attenuation attenuation, Vector3f position) {
         m_color = color;
         m_intensity = intensity;
         m_attenuation = attenuation;
@@ -16,7 +18,7 @@ public class PointLight {
         updateRange();
     }
 
-    PointLight(Vector3f color, float intensity, Attenuation attenuation, Vector3f position, float range) {
+    public PointLight(Vector3f color, float intensity, Attenuation attenuation, Vector3f position, float range) {
         m_color = color;
         m_intensity = intensity;
         m_attenuation = attenuation;

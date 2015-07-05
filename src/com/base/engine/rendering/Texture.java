@@ -1,4 +1,4 @@
-package com.base.engine;
+package com.base.engine.rendering;
 
 import org.newdawn.slick.opengl.TextureLoader;
 
@@ -32,8 +32,7 @@ public class Texture {
         String ext = splitArray[splitArray.length - 1].toLowerCase();
 
         try {
-            int id = TextureLoader.getTexture(ext, new FileInputStream(new File("./res/" + fileName))).getTextureID();
-            return id;
+            return TextureLoader.getTexture(ext, new FileInputStream(new File("./res/" + fileName))).getTextureID();
         } catch (Exception e) {
             System.err.println("Fatal ERROR: Loading texture '" + fileName + "' failed!");
             e.printStackTrace();

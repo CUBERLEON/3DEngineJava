@@ -1,6 +1,9 @@
-package com.base.engine;
+package com.base.game;
 
-public class Game {
+import com.base.engine.core.*;
+import com.base.engine.rendering.*;
+
+public class TestGame implements Game {
 
     private Mesh m_mesh1;
     private Mesh m_mesh2;
@@ -9,16 +12,15 @@ public class Game {
     private Transform m_transform;
     private Camera m_camera;
     private DirectionalLight m_directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), 0.3f, new Vector3f(0, -1, -1));
-    private PointLight m_pointLights[] = new PointLight[] { new PointLight(new Vector3f(1, 1, 0), 2.0f, new Attenuation(0, 0, 1), new Vector3f(0, 1.7f, 0)),
-                                                            new PointLight(new Vector3f(0, 1, 1), 2.0f, new Attenuation(0, 0, 1), new Vector3f(1.7f, 1.7f, 0))};
-    private SpotLight m_spotLights[] = new SpotLight[] { new SpotLight(new PointLight(new Vector3f(1, 1, 1), 2.0f, new Attenuation(1.5f, 0, 0.15f), new Vector3f(3, 3, 5)),
-                                                                       new Vector3f(-1, -1, 0), (float)Math.cos(Math.toRadians(15.0f)))};
+    private PointLight m_pointLights[] = new PointLight[] { new PointLight(new Vector3f(1, 1, 0), 2.0f, new Attenuation(0, 0, 1), new Vector3f(0.0f, 2.0f, -2.0f)),
+            new PointLight(new Vector3f(0, 1, 1), 2.0f, new Attenuation(0, 0, 1), new Vector3f(2.0f, 2.0f, 0.0f))};
+    private SpotLight m_spotLights[] = new SpotLight[] { new SpotLight(new PointLight(new Vector3f(1, 1, 1), 1.0f, new Attenuation(0.5f, 0.15f, 0), new Vector3f(3, 3, 5)),
+            new Vector3f(-1, -1, 0), (float)Math.cos(Math.toRadians(15.0f)))};
 
-    public Game() {
-        m_mesh2 = new Mesh("models/test/teapot.obj");
+    public void init() {
         m_shader = PhongShader.getInstance();
         m_material = new Material(new Texture("models/cube/default.png"),
-                                  new Vector3f(1, 1, 1), 1.0f, 8);
+                new Vector3f(1, 1, 1), 1.0f, 8);
         m_transform = new Transform();
         m_camera = new Camera(new Vector3f(1, 1, 1), new Vector3f(-1.0f, -1.0f, -1.0f));
 
@@ -29,18 +31,19 @@ public class Game {
         float fieldWidth = 10.0f;
 
         Vertex[] vertices = new Vertex[] { 	new Vertex( new Vector3f(-fieldWidth, 0.0f, -fieldDepth), new Vector2f(0.0f, 0.0f)),
-                                            new Vertex( new Vector3f(-fieldWidth, 0.0f, fieldDepth * 3), new Vector2f(0.0f, 1.0f)),
-                                            new Vertex( new Vector3f(fieldWidth * 3, 0.0f, -fieldDepth), new Vector2f(1.0f, 0.0f)),
-                                            new Vertex( new Vector3f(fieldWidth * 3, 0.0f, fieldDepth * 3), new Vector2f(1.0f, 1.0f))};
+                new Vertex( new Vector3f(-fieldWidth, 0.0f, fieldDepth * 3), new Vector2f(0.0f, 1.0f)),
+                new Vertex( new Vector3f(fieldWidth * 3, 0.0f, -fieldDepth), new Vector2f(1.0f, 0.0f)),
+                new Vertex( new Vector3f(fieldWidth * 3, 0.0f, fieldDepth * 3), new Vector2f(1.0f, 1.0f))};
 
         int indices[] = { 0, 1, 2,
-                          2, 1, 3};
+                2, 1, 3};
         m_mesh1 = new Mesh(vertices, indices, true);
+        m_mesh2 = new Mesh("models/angel/angel.obj");
 
-        PhongShader.setAmbientLight(new Vector3f(0, 0, 0));
+        PhongShader.setAmbientLight(new Vector3f(0.02f, 0.02f, 0.02f));
         PhongShader.setDirectionalLight(m_directionalLight);
         PhongShader.setPointLights(m_pointLights);
-        PhongShader.setSpotLights(m_spotLights);
+        //PhongShader.setSpotLights(m_spotLights);
     }
 
     private int k = 0;
@@ -80,7 +83,7 @@ public class Game {
         m_spotLights[0].getPointLight().setPosition(m_camera.getPosition());
 
 //        m_transform.setTranslation(0, -0.5f, -3);
-        m_transform.setRotationDeg(0, 90, 0);
+//        m_transform.setRotationDeg(0, 90, 0);
 //        m_transform.setRotationRad((float) (Math.PI*Math.sin(tmp)), 0, 0);
 //        m_transform.setScale(0.3f, 0.3f, 0.3f);
     }

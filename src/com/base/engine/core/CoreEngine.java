@@ -1,8 +1,16 @@
-package com.base.engine;
+package com.base.engine.core;
 
-public class MainComponent {
+import com.base.game.Game;
+import com.base.engine.rendering.RenderUtil;
+import com.base.engine.rendering.Window;
 
-    private int m_fpsLimit;
+public class CoreEngine {
+
+    private int m_width;
+    private int m_height;
+    private String m_title;
+
+    private double m_fpsLimit;
     private long m_fpsRefreshTime;
     private boolean m_fpsUnlimited;
 
@@ -10,25 +18,45 @@ public class MainComponent {
 
     private boolean m_isRunning;
 
-    public MainComponent(int width, int height, String title) {
-        m_fpsLimit = 60;
+    public CoreEngine(Game game, double fpsLimit, boolean fpsUnlimited) {
+        m_width = 800;
+        m_height = 600;
+        m_title = "No title";
+
+        m_fpsLimit = fpsLimit;
         m_fpsRefreshTime = (long)(1.0 * Time.SECOND);
-        m_fpsUnlimited = false;
+        m_fpsUnlimited = fpsUnlimited;
 
-        Window.createWindow(width, height, title);
-        RenderUtil.initGraphics();
-        System.out.println(RenderUtil.getOpenGLVersion());
-
-        m_game = new Game();
-
+        m_game = game;
         m_isRunning = false;
     }
 
+    private void initRenderingEngine() {
+        System.out.println(RenderUtil.getOpenGLVersion());
+        RenderUtil.initGraphics();
+    }
+
+    public void createWindow(int width, int height, String title) {
+        m_width = width;
+        m_height = height;
+        m_title = title;
+
+        Window.createWindow(width, height, title);
+        initRenderingEngine();
+    }
+
     public void start() {
+        if (!Window.isCreated()) {
+            System.err.println("Error: trying to start Core Engine when Window wasn't created!");
+            new Exception().printStackTrace();
+            return;
+        }
+
         if (m_isRunning)
             return;
 
         m_isRunning = true;
+        m_game.init();
         run();
     }
 
@@ -37,7 +65,7 @@ public class MainComponent {
         long fpsTime = 0;
 
         long startTime = Time.getTime();
-        long frameTime = Time.SECOND / (long) m_fpsLimit;
+        long frameTime = (long)(Time.SECOND / m_fpsLimit);
         long unprocessedTime = 0;
 
         while (m_isRunning) {
@@ -60,7 +88,7 @@ public class MainComponent {
             if (unprocessedTime >= frameTime) {
                 long sceneTime = frameTime * (unprocessedTime / frameTime);
                 unprocessedTime -= sceneTime;
-                Time.setDelta((double)sceneTime / (double)Time.SECOND);
+                Time.setDelta(sceneTime / (double)Time.SECOND);
 
                 render = true;
 
@@ -70,7 +98,7 @@ public class MainComponent {
             }
 
             if (fpsTime >= m_fpsRefreshTime) {
-                System.out.printf("%.2f\n", (double)frames/((double)fpsTime/(double)Time.SECOND));
+                System.out.printf("%.2f\n", frames/(fpsTime/(double)Time.SECOND));
                 fpsTime = 0;
                 frames = 0;
             }
@@ -107,16 +135,27 @@ public class MainComponent {
         Window.dispose();
     }
 
-    public int getFPSLimit() {
+    public double getFPSLimit() {
         return m_fpsLimit;
     }
 
-    public void setFPSLimit(int limit) {
+    public void setFPSLimit(double limit) {
         this.m_fpsLimit = limit;
     }
 
-    public static void main(String[] args) {
-        MainComponent engine = new MainComponent(800, 600, "3D Engine");
-        engine.start();
+    public double getFPSRefreshTime() {
+        return m_fpsRefreshTime / (double)Time.SECOND;
+    }
+
+    public void setFPSRefreshTime(double fpsRefreshTime) {
+        m_fpsRefreshTime = (long)(fpsRefreshTime * Time.SECOND);
+    }
+
+    public boolean isFPSUnlimited() {
+        return m_fpsUnlimited;
+    }
+
+    public void setFPSUnlimited(boolean fpsUnlimited) {
+        m_fpsUnlimited = fpsUnlimited;
     }
 }

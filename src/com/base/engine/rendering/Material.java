@@ -1,4 +1,6 @@
-package com.base.engine;
+package com.base.engine.rendering;
+
+import com.base.engine.core.Vector3f;
 
 public class Material {
 
@@ -7,15 +9,15 @@ public class Material {
     private float m_specularIntensity;
     private float m_specularPower;
 
-    Material(Texture texture) {
+    public Material(Texture texture) {
         this(texture, new Vector3f(1, 1, 1));
     }
 
-    Material(Texture texture, Vector3f color) {
+    public Material(Texture texture, Vector3f color) {
         this(texture, color, 0.3f, 16);
     }
 
-    Material(Texture texture, Vector3f color, float specularIntensity, float specularPower) {
+    public Material(Texture texture, Vector3f color, float specularIntensity, float specularPower) {
         m_texture = texture;
         m_color = color;
         m_specularIntensity = specularIntensity;

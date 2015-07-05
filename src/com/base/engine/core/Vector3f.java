@@ -1,4 +1,4 @@
-package com.base.engine;
+package com.base.engine.core;
 
 public class Vector3f {
 
@@ -218,6 +218,10 @@ public class Vector3f {
 
     public Vector3f getCross(Vector3f r) {
         return new Vector3f(this).cross(r);
+    }
+
+    public String toString() {
+        return "(" + m_x + " " + m_y + " " + m_z + ")";
     }
 
     public float getX() {
