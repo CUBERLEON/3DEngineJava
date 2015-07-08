@@ -17,8 +17,12 @@ public class Window {
             Keyboard.create();
             Mouse.create();
         } catch (LWJGLException e) {
+            System.err.println("Fatal Error: window creation failed!");
             e.printStackTrace();
+            System.exit(1);
         }
+
+        System.out.println("INFO: Window " + width + "x" + height + " was successfully created");
     }
 
     public static void dispose() {
@@ -52,16 +56,16 @@ public class Window {
         return Display.getTitle();
     }
 
-    public static void changeResolution(int width, int height) {
-        if (width == getWidth() && height == getHeight())
-            return;
-
-        String title = getTitle();
-
-        Window.dispose();
-        Window.createWindow(width, height, title);
-        RenderUtil.initGraphics();
-    }
+//    public static void changeResolution(int width, int height) {
+//        if (width == getWidth() && height == getHeight())
+//            return;
+//
+//        String title = getTitle();
+//
+//        Window.dispose();
+//        Window.createWindow(width, height, title);
+//        RenderUtil.initGraphics();
+//    }
 
     public static void changeTitle(String title) {
         if (title.equals(getTitle()))

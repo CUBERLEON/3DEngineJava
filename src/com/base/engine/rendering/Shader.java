@@ -1,9 +1,6 @@
 package com.base.engine.rendering;
 
-import com.base.engine.core.Matrix4f;
-import com.base.engine.core.Util;
-import com.base.engine.core.Vector2f;
-import com.base.engine.core.Vector3f;
+import com.base.engine.core.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -16,6 +13,8 @@ public class Shader {
 
     private int m_program;
     private HashMap<String, Integer> m_uniforms;
+
+    private static RenderingEngine m_renderingEngine;
 
     public Shader() {
         m_program = glCreateProgram();
@@ -43,7 +42,7 @@ public class Shader {
         m_uniforms.put(name, uniformLocation);
     }
 
-    public void updateUniforms(Matrix4f world, Matrix4f perspective, Material material) {}
+    public void updateUniforms(Transform transform, Material material) {}
 
     public void setUniformI(String uniformName, int value) {
         glUniform1i(m_uniforms.get(uniformName), value);
@@ -149,5 +148,13 @@ public class Shader {
         }
 
         return shaderSource.toString();
+    }
+
+    protected static RenderingEngine getRenderingEngine() {
+        return m_renderingEngine;
+    }
+
+    public static void setRenderingEngine(RenderingEngine renderingEngine) {
+        m_renderingEngine = renderingEngine;
     }
 }

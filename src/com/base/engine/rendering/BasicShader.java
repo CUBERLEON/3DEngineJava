@@ -1,6 +1,7 @@
 package com.base.engine.rendering;
 
 import com.base.engine.core.Matrix4f;
+import com.base.engine.core.Transform;
 
 public class BasicShader extends Shader {
 
@@ -18,17 +19,17 @@ public class BasicShader extends Shader {
 
         compileShader();
 
-        addUniform("v_transform");
+        addUniform("v_modelViewProjectionTransform");
         addUniform("f_color");
     }
 
-    public void updateUniforms(Matrix4f world, Matrix4f perspective, Material material) {
-        if (material.getTexture() != null)
-            material.getTexture().bind();
-        else
-            RenderUtil.unbindTextures();
+    public void updateUniforms(Transform transform, Material material) {
+//        Matrix4f modelTransform = transform.getModelTransform();
+        Matrix4f modelViewProjectionTransform = transform.getModelViewProjectionTransform(getRenderingEngine().getMainCamera());
 
-        setUniformM4F("v_transform", perspective);
+        material.getTexture().bind();
+
+        setUniformM4F("v_modelViewProjectionTransform", modelViewProjectionTransform);
         setUniformV3F("f_color", material.getColor());
     }
 }

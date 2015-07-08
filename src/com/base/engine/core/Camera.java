@@ -5,51 +5,44 @@ import com.base.engine.rendering.Window;
 public class Camera {
 
     private Vector3f m_position;
-    private Vector3f m_positionInitial;
-
     private Vector3f m_forward;
-    private Vector3f m_forwardInitial;
-
     private Vector3f m_up;
-    private Vector3f m_upInitial;
 
     private boolean m_isLocked;
 
     private float m_sensitivity;
     private float m_speed;
 
-    public Camera() {
-        this(new Vector3f(0, 0, 0), new Vector3f(0, 0, -1), new Vector3f(0, 1, 0));
+    private Matrix4f m_projectionTransform;
+
+    public Camera(float fov, float aspectRatio, float zNear, float zFar) {
+        this(new Vector3f(5, 5, 5), new Vector3f(-1, -1, -1), new Vector3f(-1, 2, -1), fov, aspectRatio, zNear, zFar);
     }
 
-    public Camera(Vector3f position) {
-        this(position, new Vector3f(0, 0, -1), new Vector3f(0, 1, 0));
-    }
-
-    public Camera(Vector3f position, Vector3f forward) {
-        this(position, forward, new Vector3f(0, 1, 0)); //up direction is undefined
-
-        Vector3f horizon = Vector3f.yAxis.getCross(m_forward).normalize();
-        m_up = m_forward.getCross(horizon).normalize();
-        m_upInitial = new Vector3f(m_up);
-    }
-
-    public Camera(Vector3f position, Vector3f forward, Vector3f up) {
+    public Camera(Vector3f position, Vector3f forward, Vector3f up, float fov, float aspectRatio, float zNear, float zFar) {
         m_position = position;
         m_forward = forward;
         m_up = up;
 
-        m_positionInitial = new Vector3f(m_position);
-        m_forwardInitial = new Vector3f(m_forward);
-        m_upInitial = new Vector3f(m_up);
-
-        m_forward.normalize();
-        m_up.normalize();
+        m_forward.getNormalized();
+        m_up.getNormalized();
 
         m_isLocked = false;
-        m_sensitivity = 6.0f;
+        m_sensitivity = 8.0f;
         m_speed = 6.0f;
+
+        m_projectionTransform = new Matrix4f().initPerspective(fov, aspectRatio, zNear, zFar);
     }
+
+    public Matrix4f getViewProjectionTransform() {
+        Matrix4f cameraRotation = new Matrix4f().initRotation(m_forward, m_up);
+        Matrix4f cameraTranslation = new Matrix4f().initTranslation(m_position.getMul(-1));
+
+        Matrix4f viewTransform = cameraRotation.getMul(cameraTranslation);
+
+        return m_projectionTransform.getMul(viewTransform);
+    }
+
     public void input() {
         if (!m_isLocked) {
             float moveValue = (float) (m_speed * Time.getDelta());
@@ -64,7 +57,7 @@ public class Camera {
                 move(getRight(), moveValue);
         }
 
-        float rotateValue = m_sensitivity * 0.01f;
+        float rotateValue = m_sensitivity / 10000;
         Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
         Vector2f delta = Input.getMousePosition().getSub(center);
 
@@ -72,9 +65,9 @@ public class Camera {
         boolean rotY = delta.getY() != 0;
 
         if (rotX)
-            rotateYDeg(-rotateValue * delta.getX());
+            rotateYRad(-rotateValue * delta.getX());
         if (rotY)
-            rotateXDeg(rotateValue * delta.getY());
+            rotateXRad(rotateValue * delta.getY());
 
         if (rotX || rotY) {
             Input.setMousePosition(center);
@@ -83,10 +76,8 @@ public class Camera {
         if (Input.getKey(Input.KEY_Q))
             rotateZDeg(2*rotateValue);
         if (Input.getKey(Input.KEY_E))
-            rotateZDeg(-2*rotateValue);
+            rotateZDeg(-2 * rotateValue);
 
-        if (Input.getKeyDown(Input.KEY_R))
-            reset();
         if (Input.getKeyDown(Input.KEY_L))
             setLockedStatus(!m_isLocked);
     }
@@ -128,12 +119,6 @@ public class Camera {
 
     public void rotateZDeg(float angle) {
         rotateZRad((float) Math.toRadians(angle));
-    }
-
-    public void reset() {
-        m_position = new Vector3f(m_positionInitial);
-        m_forward = new Vector3f(m_forwardInitial);
-        m_up = new Vector3f(m_upInitial);
     }
 
     public Vector3f getLeft() {
@@ -202,32 +187,4 @@ public class Camera {
     public void setSensitivity(float sensitivity) {
         this.m_sensitivity = Math.max(0.5f, sensitivity);
     }
-
-    public Vector3f getPositionInitial() {
-        return m_positionInitial;
-    }
-
-    public void setPositionInitial(Vector3f position) {
-        this.m_positionInitial = position;
-    }
-
-    public Vector3f getForwardInitial() {
-        return m_forwardInitial;
-    }
-
-    public void setForwardInitial(Vector3f forward) {
-        m_forwardInitial = forward.getNormalized();
-
-        Vector3f horizon = Vector3f.yAxis.getCross(m_forwardInitial).normalize();
-        m_upInitial = m_forwardInitial.getCross(horizon).normalize();
-    }
-
-    public Vector3f getUpInitial() {
-        return m_upInitial;
-    }
-
-    public void setUpInitial(Vector3f up) {
-        m_upInitial = up.getNormalized();
-    }
-
 }

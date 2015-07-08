@@ -1,13 +1,13 @@
 #version 330
 
 layout (location = 0) in vec3 v_position;
-layout (location = 1) in vec2 v_texCoord;
+layout (location = 1) in vec2 v_textureCoord;
 
-out vec2 f_texCoord;
+out vec2 f_textureCoord;
 
-uniform mat4 v_transform;
+uniform mat4 v_modelViewProjectionTransform;
 
 void main() {
-	f_texCoord = v_texCoord;
-	gl_Position = v_transform * vec4(v_position, 1.0);
+	f_textureCoord = v_textureCoord;
+	gl_Position = v_modelViewProjectionTransform * vec4(v_position, 1.0);
 }

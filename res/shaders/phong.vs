@@ -8,12 +8,12 @@ out vec2 f_textureCoord;
 out vec3 f_normalInterpolated;
 out vec3 f_worldPosition;
 
-uniform mat4 v_transform;
-uniform mat4 v_projectedTransform;
+uniform mat4 v_modelTransform;
+uniform mat4 v_modelViewProjectionTransform;
 
 void main() {
 	f_textureCoord = v_textureCoord;
-	f_normalInterpolated = normalize(v_transform * vec4(v_normal, 0)).xyz;
-	f_worldPosition = (v_transform * vec4(v_position, 1)).xyz;
-	gl_Position = v_projectedTransform * vec4(v_position, 1.0);
+	f_normalInterpolated = normalize(v_modelTransform * vec4(v_normal, 0)).xyz;
+	f_worldPosition = (v_modelTransform * vec4(v_position, 1)).xyz;
+	gl_Position = v_modelViewProjectionTransform * vec4(v_position, 1.0);
 }

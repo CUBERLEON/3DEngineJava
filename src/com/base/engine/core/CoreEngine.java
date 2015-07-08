@@ -1,53 +1,43 @@
 package com.base.engine.core;
 
-import com.base.game.Game;
-import com.base.engine.rendering.RenderUtil;
+import com.base.engine.rendering.RenderingEngine;
+import com.base.engine.rendering.Shader;
 import com.base.engine.rendering.Window;
 
 public class CoreEngine {
-
-    private int m_width;
-    private int m_height;
-    private String m_title;
 
     private double m_fpsLimit;
     private long m_fpsRefreshTime;
     private boolean m_fpsUnlimited;
 
-    private Game m_game;
+    private RenderingEngine m_renderingEngine;
 
+    private Game m_game;
     private boolean m_isRunning;
 
     public CoreEngine(Game game, double fpsLimit, boolean fpsUnlimited) {
-        m_width = 800;
-        m_height = 600;
-        m_title = "No title";
-
         m_fpsLimit = fpsLimit;
         m_fpsRefreshTime = (long)(1.0 * Time.SECOND);
         m_fpsUnlimited = fpsUnlimited;
 
         m_game = game;
         m_isRunning = false;
-    }
 
-    private void initRenderingEngine() {
-        System.out.println(RenderUtil.getOpenGLVersion());
-        RenderUtil.initGraphics();
+        System.out.println("INFO: CoreEngine(fpsLimit = " + fpsLimit + ", fpsUnlimited = " + fpsUnlimited + ") was successfully created");
     }
 
     public void createWindow(int width, int height, String title) {
-        m_width = width;
-        m_height = height;
-        m_title = title;
-
         Window.createWindow(width, height, title);
-        initRenderingEngine();
+
+        m_renderingEngine = new RenderingEngine();
+
+        Shader.setRenderingEngine(m_renderingEngine);
+        m_game.setRenderingEngine(m_renderingEngine);
     }
 
     public void start() {
         if (!Window.isCreated()) {
-            System.err.println("Error: trying to start Core Engine when Window wasn't created!");
+            System.err.println("ERROR: trying to start CoreEngine when Window wasn't created!");
             new Exception().printStackTrace();
             return;
         }
@@ -98,17 +88,17 @@ public class CoreEngine {
             }
 
             if (fpsTime >= m_fpsRefreshTime) {
-                System.out.printf("%.2f\n", frames/(fpsTime/(double)Time.SECOND));
+                System.out.printf("INFO: %.2f fps\n", frames/(fpsTime/(double)Time.SECOND));
                 fpsTime = 0;
                 frames = 0;
             }
 
             if (render || m_fpsUnlimited) {
-                render();
+                m_renderingEngine.render(m_game.getRootObject());
                 frames++;
             } else {
                 try {
-                    Thread.sleep(0, 10);
+                    Thread.sleep(0, 100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -116,12 +106,6 @@ public class CoreEngine {
         }
 
         cleanUp();
-    }
-
-    private void render() {
-        RenderUtil.clearScreen();
-        m_game.render();
-        Window.render();
     }
 
     public void stop() {
