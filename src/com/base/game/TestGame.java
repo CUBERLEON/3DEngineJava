@@ -25,47 +25,44 @@ public class TestGame extends Game {
         int indices[] = { 0, 1, 2,
                           2, 1, 3};
 
-        Mesh plane = new Mesh(vertices, indices, true);
-        Mesh angel = new Mesh("models/angel/angel.obj");
-
         Material material = new Material(new Texture("models/cube/default.png"),
                                          new Vector3f(1, 1, 1), 1.0f, 8);
 
-        GameObject planeObject = new GameObject().addComponent(new MeshRenderer(plane, material));
-        GameObject angelObject = new GameObject().addComponent(new MeshRenderer(angel, material));
+        GameObject planeObject = new GameObject().addComponent(new MeshRenderer(new Mesh(vertices, indices, true), material));
+        GameObject angelObject = new GameObject().addComponent(new MeshRenderer(new Mesh("models/angel/angel.obj"), material));
 
         getRootObject().addChild(planeObject).addChild(angelObject);
 
         PhongShader.setAmbientLight(new Vector3f(0.02f, 0.02f, 0.02f));
         PhongShader.setDirectionalLight(m_directionalLight);
-        //PhongShader.setPointLights(m_pointLights);
+        PhongShader.setPointLights(m_pointLights);
         //PhongShader.setSpotLights(m_spotLights);
     }
 
     private int k = 0;
 
-    public void input() {
-        getRenderingEngine().getMainCamera().input();
+    public void input(float time) {
+        getRenderingEngine().getMainCamera().input(time);
 
         if (Input.getKeyDown(Input.KEY_C))
             k = (k + 1) % m_pointLights.length;
 
         if (Input.getKey(Input.KEY_UP))
-            m_pointLights[k].getPosition().add(new Vector3f(0, 0, (float) -Time.getDelta() * 3.0f));
+            m_pointLights[k].getPosition().add(new Vector3f(0, 0, -time * 3.0f));
         if (Input.getKey(Input.KEY_DOWN))
-            m_pointLights[k].getPosition().add(new Vector3f(0, 0, (float) Time.getDelta() * 3.0f));
+            m_pointLights[k].getPosition().add(new Vector3f(0, 0, time * 3.0f));
         if (Input.getKey(Input.KEY_LEFT))
-            m_pointLights[k].getPosition().add(new Vector3f((float) -Time.getDelta() * 3.0f, 0, 0));
+            m_pointLights[k].getPosition().add(new Vector3f(-time * 3.0f, 0, 0));
         if (Input.getKey(Input.KEY_RIGHT))
-            m_pointLights[k].getPosition().add(new Vector3f((float) Time.getDelta() * 3.0f, 0, 0));
+            m_pointLights[k].getPosition().add(new Vector3f(time * 3.0f, 0, 0));
         if (Input.getKey(Input.KEY_SPACE))
-            m_pointLights[k].getPosition().add(new Vector3f(0, (float) Time.getDelta() * 3.0f, 0));
+            m_pointLights[k].getPosition().add(new Vector3f(0, time * 3.0f, 0));
         if (Input.getKey(Input.KEY_LSHIFT))
-            m_pointLights[k].getPosition().add(new Vector3f(0, (float) -Time.getDelta() * 3.0f, 0));
+            m_pointLights[k].getPosition().add(new Vector3f(0, -time * 3.0f, 0));
         if (Input.getKey(Input.KEY_ADD))
-            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() + (float) Time.getDelta() * 3.0f);
+            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() + time * 3.0f);
         if (Input.getKey(Input.KEY_SUBTRACT))
-            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() - (float) Time.getDelta() * 3.0f);
+            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() - time * 3.0f);
     }
 //
 //    public void update() {

@@ -94,7 +94,7 @@ public class Matrix4f {
     }
 
     /**
-     * @param fov full angle of field of view in radians
+     * @param fov full angle of field of view in radians (Y-axis)
      * @param aspectRatio aspect ratio of window
      * @param zNear near clipping plane
      * @param zFar far clipping plane
@@ -104,10 +104,19 @@ public class Matrix4f {
         float tanHalfFOV = (float) Math.tan(fov/2.0f);
         float zRange = zFar - zNear;
 
-        m[0][0] = 1.0f/(tanHalfFOV * aspectRatio); m[0][1] = 0;               m[0][2] = 0;                   m[0][3] = 0;
-        m[1][0] = 0;                               m[1][1] = 1.0f/tanHalfFOV; m[1][2] = 0;                   m[1][3] = 0;
-        m[2][0] = 0;                               m[2][1] = 0;               m[2][2] = -(zFar)/zRange;      m[2][3] = -zFar*zNear/zRange;
-        m[3][0] = 0;                               m[3][1] = 0;               m[3][2] = -1;                  m[3][3] = 0;
+        m[0][0] = 1.0f/(tanHalfFOV * aspectRatio); m[0][1] = 0;               m[0][2] = 0;                    m[0][3] = 0;
+        m[1][0] = 0;                               m[1][1] = 1.0f/tanHalfFOV; m[1][2] = 0;                    m[1][3] = 0;
+        m[2][0] = 0;                               m[2][1] = 0;               m[2][2] = -(zFar+zNear)/zRange; m[2][3] = -2*zFar*zNear/zRange;
+        m[3][0] = 0;                               m[3][1] = 0;               m[3][2] = -1;                   m[3][3] = 0;
+
+        return this;
+    }
+
+    public Matrix4f initOrthographic(float left, float right, float bottom, float top, float near, float far) {
+        m[0][0] = 2/(right - left); m[0][1] = 0;                m[0][2] = 0;               m[0][3] = -(left + right)/(right - left);
+        m[1][0] = 0;                m[1][1] = 2/(top - bottom); m[1][2] = 0;               m[1][3] = -(top + bottom)/(top - bottom);
+        m[2][0] = 0;                m[2][1] = 0;                m[2][2] = -2/(far - near); m[2][3] = -(near + far)/(far - near);
+        m[3][0] = 0;                m[3][1] = 0;                m[3][2] = 0;               m[3][3] = 1;
 
         return this;
     }

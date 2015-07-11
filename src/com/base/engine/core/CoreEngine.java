@@ -6,8 +6,7 @@ import com.base.engine.rendering.Window;
 
 public class CoreEngine {
 
-    private double m_fpsLimit;
-    private long m_fpsRefreshTime;
+    private float m_fpsLimit;
     private boolean m_fpsUnlimited;
 
     private RenderingEngine m_renderingEngine;
@@ -15,9 +14,8 @@ public class CoreEngine {
     private Game m_game;
     private boolean m_isRunning;
 
-    public CoreEngine(Game game, double fpsLimit, boolean fpsUnlimited) {
+    public CoreEngine(Game game, float fpsLimit, boolean fpsUnlimited) {
         m_fpsLimit = fpsLimit;
-        m_fpsRefreshTime = (long)(1.0 * Time.SECOND);
         m_fpsUnlimited = fpsUnlimited;
 
         m_game = game;
@@ -52,18 +50,19 @@ public class CoreEngine {
 
     private void run() {
         int frames = 0;
-        long fpsTime = 0;
+        double fpsTime = 0;
+        double fpsRefreshTime = 1.0;
 
-        long startTime = Time.getTime();
-        long frameTime = (long)(Time.SECOND / m_fpsLimit);
-        long unprocessedTime = 0;
+        double startTime = Time.getTime();
+        double frameTime = 1.0 / m_fpsLimit;
+        double unprocessedTime = 0;
 
         while (m_isRunning) {
             if (Window.isCloseRequested())
                 stop();
 
-            long endTime = Time.getTime();
-            long passedTime = endTime - startTime;
+            double endTime = Time.getTime();
+            double passedTime = endTime - startTime;
             startTime = endTime;
 
             unprocessedTime += passedTime;
@@ -71,25 +70,20 @@ public class CoreEngine {
 
             boolean render = false;
 
-//            Time.setDelta((double)passedTime / (double)Time.SECOND);
-//            m_game.input();
-//            Input.update();
-
             if (unprocessedTime >= frameTime) {
-                long sceneTime = frameTime * (unprocessedTime / frameTime);
+                double sceneTime = frameTime * (int)Math.floor(unprocessedTime / frameTime);
                 unprocessedTime -= sceneTime;
-                Time.setDelta(sceneTime / (double)Time.SECOND);
 
                 render = true;
 
-                m_game.input();
-                m_game.update();
+                m_game.input((float)sceneTime);
+                m_game.update((float)sceneTime);
                 Input.update();
             }
 
-            if (fpsTime >= m_fpsRefreshTime) {
-                System.out.printf("INFO: %.2f fps\n", frames/(fpsTime/(double)Time.SECOND));
-                fpsTime = 0;
+            if (fpsTime >= fpsRefreshTime) {
+                System.out.printf("INFO: %.1f fps\n", frames / fpsTime);
+                fpsTime -= fpsRefreshTime;
                 frames = 0;
             }
 
@@ -119,20 +113,12 @@ public class CoreEngine {
         Window.dispose();
     }
 
-    public double getFPSLimit() {
+    public float getFPSLimit() {
         return m_fpsLimit;
     }
 
-    public void setFPSLimit(double limit) {
+    public void setFPSLimit(float limit) {
         this.m_fpsLimit = limit;
-    }
-
-    public double getFPSRefreshTime() {
-        return m_fpsRefreshTime / (double)Time.SECOND;
-    }
-
-    public void setFPSRefreshTime(double fpsRefreshTime) {
-        m_fpsRefreshTime = (long)(fpsRefreshTime * Time.SECOND);
     }
 
     public boolean isFPSUnlimited() {

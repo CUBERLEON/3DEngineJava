@@ -12,11 +12,11 @@ public class MeshRenderer implements GameComponent {
         m_material = material;
     }
 
-    public void input(Transform transform) {
+    public void input(Transform transform, float time) {
 
     }
 
-    public void update(Transform transform) {
+    public void update(Transform transform, float time) {
 
     }
 

@@ -27,6 +27,7 @@ public class RenderingEngine {
         glEnable(GL_TEXTURE_2D);
 
         m_mainCamera = new Camera((float)Math.toRadians(60), Window.getWidth()/(float)Window.getHeight(), 0.1f, 1000.0f);
+//        m_mainCamera = new Camera(-10, 10, -10, 10, -100, 100);
     }
 
     public void render(GameObject gameObject) {

@@ -2,7 +2,7 @@ package com.base.engine.core;
 
 public class Transform {
 
-    private Vector3f m_translation;
+    private Vector3f m_position;
     private Vector3f m_rotation; //angles in radians
     private Vector3f m_scale;
 
@@ -10,34 +10,34 @@ public class Transform {
         this(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(1, 1, 1));
     }
 
-    public Transform(Vector3f translation, Vector3f rotationRad, Vector3f scale) {
-        m_translation = translation;
+    public Transform(Vector3f position, Vector3f rotationRad, Vector3f scale) {
+        m_position = position;
         m_rotation = rotationRad;
         m_scale = scale;
     }
 
     public Matrix4f getModelTransform() {
-        Matrix4f translation = new Matrix4f().initTranslation(m_translation);
+        Matrix4f position = new Matrix4f().initTranslation(m_position);
         Matrix4f rotation = new Matrix4f().initRotationRad(m_rotation);
         Matrix4f scale = new Matrix4f().initScale(m_scale);
 
-        return translation.getMul(rotation.getMul(scale));
+        return position.getMul(rotation.getMul(scale));
     }
 
     public Matrix4f getModelViewProjectionTransform(Camera camera) {
         return camera.getViewProjectionTransform().getMul(getModelTransform());
     }
 
-    public Vector3f getTranslation() {
-        return m_translation;
+    public Vector3f getPosition() {
+        return m_position;
     }
 
-    public void setTranslation(Vector3f translation) {
-        this.m_translation = translation;
+    public void setPosition(Vector3f position) {
+        this.m_position = position;
     }
 
-    public void setTranslation(float x, float y, float z) {
-        this.m_translation = new Vector3f(x, y, z);
+    public void setPosition(float x, float y, float z) {
+        this.m_position = new Vector3f(x, y, z);
     }
 
     public Vector3f getRotationRad() {

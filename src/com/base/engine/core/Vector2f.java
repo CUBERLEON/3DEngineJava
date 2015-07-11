@@ -20,6 +20,10 @@ public class Vector2f {
         return (float) Math.sqrt(m_x * m_x + m_y * m_y);
     }
 
+    public float cross(Vector2f r) {
+        return m_x * r.getY() - m_y * r.getX();
+    }
+
     public float dot(Vector2f r) {
         return m_x * r.getX() + m_y * r.getY();
     }
@@ -75,6 +79,14 @@ public class Vector2f {
 
     public Vector2f getAbs() {
         return new Vector2f(this).abs();
+    }
+
+    public Vector2f lerp(Vector2f dest, float factor) {
+        return this.add(dest.getSub(this).mul(factor));
+    }
+
+    public Vector2f getLerp(Vector2f dest, float factor) {
+        return new Vector2f(this).lerp(dest, factor);
     }
 
     public Vector2f add(Vector2f r) {
@@ -197,5 +209,24 @@ public class Vector2f {
 
     public void setY(float y) {
         this.m_y = y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vector2f vector2f = (Vector2f) o;
+
+        if (Float.compare(vector2f.m_x, m_x) != 0) return false;
+        return Float.compare(vector2f.m_y, m_y) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (m_x != +0.0f ? Float.floatToIntBits(m_x) : 0);
+        result = 31 * result + (m_y != +0.0f ? Float.floatToIntBits(m_y) : 0);
+        return result;
     }
 }

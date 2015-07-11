@@ -9,12 +9,12 @@ public abstract class Game {
 
     public void init() {}
 
-    public void input() {
-        getRootObject().input();
+    public void input(float time) {
+        getRootObject().input(time);
     }
 
-    public void update() {
-        getRootObject().update();
+    public void update(float time) {
+        getRootObject().update(time);
     }
 
     public GameObject getRootObject() {

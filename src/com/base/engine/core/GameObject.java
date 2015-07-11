@@ -26,20 +26,20 @@ public class GameObject {
         return this;
     }
 
-    public void input() {
+    public void input(float time) {
         for (GameComponent component : m_components)
-            component.input(m_transform);
+            component.input(m_transform, time);
 
         for (GameObject child : m_children)
-            child.input();
+            child.input(time);
     }
 
-    public void update() {
+    public void update(float time) {
         for (GameComponent component : m_components)
-            component.update(m_transform);
+            component.update(m_transform, time);
 
         for (GameObject child : m_children)
-            child.update();
+            child.update(time);
     }
 
     public void render(Shader shader) {

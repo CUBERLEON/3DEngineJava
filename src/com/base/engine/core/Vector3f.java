@@ -52,7 +52,7 @@ public class Vector3f {
     }
 
     public Vector3f rotateDeg(Vector3f axis, float angle) {
-        return rotateRad(axis, (float)Math.toDegrees(angle));
+        return rotateRad(axis, (float) Math.toDegrees(angle));
     }
 
     public Vector3f rotateRad(Vector3f axis, float angle) {
@@ -80,6 +80,14 @@ public class Vector3f {
 
     public Vector3f getRotatedDeg(Vector3f axis, float angle) {
         return new Vector3f(this).rotateDeg(axis, angle);
+    }
+
+    public Vector3f lerp(Vector3f dest, float factor) {
+        return this.add(dest.getSub(this).mul(factor));
+    }
+
+    public Vector3f getLerp(Vector3f dest, float factor) {
+        return new Vector3f(this).lerp(dest, factor);
     }
 
     public Vector3f abs() {
@@ -224,6 +232,30 @@ public class Vector3f {
         return "(" + m_x + " " + m_y + " " + m_z + ")";
     }
 
+    public Vector2f getXY() {
+        return new Vector2f(m_x, m_y);
+    }
+
+    public Vector2f getXZ() {
+        return new Vector2f(m_x, m_z);
+    }
+
+    public Vector2f getYX() {
+        return new Vector2f(m_y, m_x);
+    }
+
+    public Vector2f getYZ() {
+        return new Vector2f(m_y, m_z);
+    }
+
+    public Vector2f getZX() {
+        return new Vector2f(m_z, m_x);
+    }
+
+    public Vector2f getZY() {
+        return new Vector2f(m_z, m_y);
+    }
+
     public float getX() {
         return m_x;
     }
@@ -246,5 +278,26 @@ public class Vector3f {
 
     public void setZ(float z) {
         this.m_z = z;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vector3f vector3f = (Vector3f) o;
+
+        if (Float.compare(vector3f.m_x, m_x) != 0) return false;
+        if (Float.compare(vector3f.m_y, m_y) != 0) return false;
+        return Float.compare(vector3f.m_z, m_z) == 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (m_x != +0.0f ? Float.floatToIntBits(m_x) : 0);
+        result = 31 * result + (m_y != +0.0f ? Float.floatToIntBits(m_y) : 0);
+        result = 31 * result + (m_z != +0.0f ? Float.floatToIntBits(m_z) : 0);
+        return result;
     }
 }

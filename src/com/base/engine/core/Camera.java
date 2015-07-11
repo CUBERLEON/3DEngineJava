@@ -15,21 +15,30 @@ public class Camera {
 
     private Matrix4f m_projectionTransform;
 
+    public Camera(float left, float right, float bottom, float top, float near, float far) {
+        this(new Vector3f(5, 5, 5), new Vector3f(-1, -1, -1), new Vector3f(-1, 2, -1), left, right, bottom, top, near, far);
+    }
+
+    public Camera(Vector3f position, Vector3f forward, Vector3f up, float left, float right, float bottom, float top, float near, float far) {
+        m_position = position;
+        m_forward = forward.getNormalized();
+        m_up = up.getNormalized();
+
+        initDefaults();
+
+        m_projectionTransform = new Matrix4f().initOrthographic(left, right, bottom, top, near, far);
+    }
+
     public Camera(float fov, float aspectRatio, float zNear, float zFar) {
         this(new Vector3f(5, 5, 5), new Vector3f(-1, -1, -1), new Vector3f(-1, 2, -1), fov, aspectRatio, zNear, zFar);
     }
 
     public Camera(Vector3f position, Vector3f forward, Vector3f up, float fov, float aspectRatio, float zNear, float zFar) {
         m_position = position;
-        m_forward = forward;
-        m_up = up;
+        m_forward = forward.getNormalized();
+        m_up = up.getNormalized();
 
-        m_forward.getNormalized();
-        m_up.getNormalized();
-
-        m_isLocked = false;
-        m_sensitivity = 8.0f;
-        m_speed = 6.0f;
+        initDefaults();
 
         m_projectionTransform = new Matrix4f().initPerspective(fov, aspectRatio, zNear, zFar);
     }
@@ -43,9 +52,15 @@ public class Camera {
         return m_projectionTransform.getMul(viewTransform);
     }
 
-    public void input() {
+    private void initDefaults() {
+        m_isLocked = false;
+        m_sensitivity = 8.0f;
+        m_speed = 6.0f;
+    }
+
+    public void input(float time) {
         if (!m_isLocked) {
-            float moveValue = (float) (m_speed * Time.getDelta());
+            float moveValue = (float) (m_speed * time);
 
             if (Input.getKey(Input.KEY_W))
                 move(getForward(), moveValue);
@@ -55,31 +70,35 @@ public class Camera {
                 move(getLeft(), moveValue);
             if (Input.getKey(Input.KEY_D))
                 move(getRight(), moveValue);
+
+            float rotateValue = m_sensitivity / 10000;
+            Vector2f center = Window.getCenter();
+            Vector2f delta = Input.getMousePosition().getSub(center);
+
+            boolean rotX = delta.getX() != 0;
+            boolean rotY = delta.getY() != 0;
+
+            if (rotX)
+                rotateYRad(-rotateValue * delta.getX());
+            if (rotY)
+                rotateXRad(rotateValue * delta.getY());
+
+            if (rotX || rotY) {
+                Input.setMousePosition(center);
+            }
+
+            if (Input.getKey(Input.KEY_Q))
+                rotateZDeg(2 * rotateValue);
+            if (Input.getKey(Input.KEY_E))
+                rotateZDeg(-2 * rotateValue);
+        } else {
+
         }
 
-        float rotateValue = m_sensitivity / 10000;
-        Vector2f center = new Vector2f(Window.getWidth() / 2, Window.getHeight() / 2);
-        Vector2f delta = Input.getMousePosition().getSub(center);
-
-        boolean rotX = delta.getX() != 0;
-        boolean rotY = delta.getY() != 0;
-
-        if (rotX)
-            rotateYRad(-rotateValue * delta.getX());
-        if (rotY)
-            rotateXRad(rotateValue * delta.getY());
-
-        if (rotX || rotY) {
-            Input.setMousePosition(center);
-        }
-
-        if (Input.getKey(Input.KEY_Q))
-            rotateZDeg(2*rotateValue);
-        if (Input.getKey(Input.KEY_E))
-            rotateZDeg(-2 * rotateValue);
-
-        if (Input.getKeyDown(Input.KEY_L))
+        if (Input.getKeyDown(Input.KEY_L)) {
+            Input.setMousePosition(Window.getCenter());
             setLockedStatus(!m_isLocked);
+        }
     }
 
     public void move(Vector3f dir, float value) {
