@@ -20,6 +20,14 @@ public class Vector2f {
         return (float) Math.sqrt(m_x * m_x + m_y * m_y);
     }
 
+    public float min() {
+        return Math.min(m_x, m_y);
+    }
+
+    public float max() {
+        return Math.max(m_x, m_y);
+    }
+
     public float cross(Vector2f r) {
         return m_x * r.getY() - m_y * r.getX();
     }
@@ -30,13 +38,6 @@ public class Vector2f {
 
     public Vector2f normalize() {
         float length = length();
-
-        if (length == 0) {
-            System.err.println("ERROR: division by zero while normalizing a Vector2f.");
-            new Exception().printStackTrace();
-
-            return this;
-        }
 
         m_x /= length;
         m_y /= length;

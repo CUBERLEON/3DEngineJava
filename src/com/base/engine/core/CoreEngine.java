@@ -1,7 +1,7 @@
 package com.base.engine.core;
 
 import com.base.engine.rendering.RenderingEngine;
-import com.base.engine.rendering.Shader;
+import com.base.engine.rendering.shaders.Shader;
 import com.base.engine.rendering.Window;
 
 public class CoreEngine {

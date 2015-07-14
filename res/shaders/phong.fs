@@ -7,8 +7,6 @@ in vec2 f_textureCoord;
 in vec3 f_normalInterpolated; vec3 f_normal;
 in vec3 f_worldPosition;
 
-out vec4 fragColor;
-
 struct Attenuation {
 	float constant;
 	float linear;
@@ -35,13 +33,8 @@ struct SpotLight {
 	float cutoff;
 };
 
-//texture
-uniform sampler2D f_sampler;
-
-//material
-uniform vec3 f_baseColor;
-uniform float f_specularIntensity;
-uniform float f_specularPower;
+//additional variables
+uniform vec3 f_eyePosition;
 
 //lights
 uniform vec3 f_ambientLight;
@@ -54,8 +47,11 @@ uniform int f_pointLightsCount;
 uniform SpotLight f_spotLights[MAX_SPOT_LIGHTS];
 uniform int f_spotLightsCount;
 
-//additional variables
-uniform vec3 f_eyePosition;
+//material
+uniform sampler2D f_sampler;
+uniform vec3 f_baseColor;
+uniform float f_specularIntensity;
+uniform float f_specularPower;
 
 vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal) {
 	float diffuseFactor = dot(normal, -direction);
@@ -84,7 +80,8 @@ vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal) {
 		specularColor = vec4(color, 1) * f_specularIntensity * specularFactor; //phong specular lighting
 	}
 
-    return diffuseColor + specularColor; }
+    return diffuseColor + specularColor;
+}
 
 vec4 calcDirectionalLight(DirectionalLight directionalLight, vec3 normal) {
 	return calcLight(directionalLight.color, directionalLight.intensity, directionalLight.direction, normal);
@@ -141,5 +138,5 @@ void main() {
 	for (int i = 0; i < f_spotLightsCount; i++)
 		totalLight += calcSpotLight(f_spotLights[i], f_normal);
 
-	fragColor = color * totalLight;
+	gl_FragColor = color * totalLight;
 }

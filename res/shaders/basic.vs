@@ -5,9 +5,9 @@ layout (location = 1) in vec2 v_textureCoord;
 
 out vec2 f_textureCoord;
 
-uniform mat4 v_modelViewProjectionTransform;
+uniform mat4 v_mvpTransform;
 
 void main() {
 	f_textureCoord = v_textureCoord;
-	gl_Position = v_modelViewProjectionTransform * vec4(v_position, 1.0);
+	gl_Position = v_mvpTransform * vec4(v_position, 1.0);
 }

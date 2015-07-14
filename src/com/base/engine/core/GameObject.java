@@ -1,6 +1,8 @@
 package com.base.engine.core;
 
-import com.base.engine.rendering.Shader;
+import com.base.engine.core.components.GameComponent;
+import com.base.engine.rendering.RenderingEngine;
+import com.base.engine.rendering.shaders.Shader;
 
 import java.util.ArrayList;
 
@@ -18,6 +20,15 @@ public class GameObject {
 
     public GameObject addComponent(GameComponent component) {
         m_components.add(component);
+        component.setObject(this);
+        return this;
+    }
+
+    public GameObject addComponents(GameComponent components[]) {
+        for (GameComponent component : components) {
+            component.setObject(this);
+            m_components.add(component);
+        }
         return this;
     }
 
@@ -26,9 +37,16 @@ public class GameObject {
         return this;
     }
 
+    public GameObject addChildren(GameObject children[]) {
+        for (GameObject child : children) {
+            m_children.add(child);
+        }
+        return this;
+    }
+
     public void input(float time) {
         for (GameComponent component : m_components)
-            component.input(m_transform, time);
+            component.input(time);
 
         for (GameObject child : m_children)
             child.input(time);
@@ -36,7 +54,7 @@ public class GameObject {
 
     public void update(float time) {
         for (GameComponent component : m_components)
-            component.update(m_transform, time);
+            component.update(time);
 
         for (GameObject child : m_children)
             child.update(time);
@@ -44,10 +62,18 @@ public class GameObject {
 
     public void render(Shader shader) {
         for (GameComponent component : m_components)
-            component.render(m_transform, shader);
+            component.render(shader);
 
         for (GameObject child : m_children)
             child.render(shader);
+    }
+
+    public void addToRenderingEngine(RenderingEngine renderingEngine) {
+        for (GameComponent component : m_components)
+            component.addToRenderingEngine(renderingEngine);
+
+        for (GameObject child : m_children)
+            child.addToRenderingEngine(renderingEngine);
     }
 
     public Transform getTransform() {

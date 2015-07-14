@@ -26,19 +26,20 @@ public class Vector3f {
         return (float) Math.sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
     }
 
+    public float min() {
+        return Math.min(m_x, Math.min(m_y, m_z));
+    }
+
+    public float max() {
+        return Math.max(m_x, Math.max(m_y, m_z));
+    }
+
     public float dot(Vector3f r) {
         return m_x * r.getX() + m_y * r.getY() + m_z * r.getZ();
     }
 
     public Vector3f normalize() {
         float length = length();
-
-        if (length == 0) {
-            System.err.println("ERROR: division by zero while normalizing Vector3f.");
-            new Exception().printStackTrace();
-
-            return this;
-        }
 
         m_x /= length;
         m_y /= length;

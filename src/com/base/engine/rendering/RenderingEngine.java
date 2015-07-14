@@ -1,18 +1,26 @@
 package com.base.engine.rendering;
 
-import com.base.engine.core.Camera;
-import com.base.engine.core.GameObject;
-import com.base.engine.core.Vector3f;
+import com.base.engine.core.*;
+import com.base.engine.core.components.*;
+import com.base.engine.rendering.shaders.*;
+
+import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
+import static org.lwjgl.opengl.GL32.*;
 
 public class RenderingEngine {
 
     private Camera m_mainCamera;
 
+    private Vector3f m_ambientLight;
+
+    private ArrayList<Light> m_lights;
+    private Light m_activeLight;
+
     public RenderingEngine() {
+        m_lights = new ArrayList<>();
+
         System.out.println("INFO: OpenGL version " + getOpenGLVersion());
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -28,12 +36,31 @@ public class RenderingEngine {
 
         m_mainCamera = new Camera((float)Math.toRadians(60), Window.getWidth()/(float)Window.getHeight(), 0.1f, 1000.0f);
 //        m_mainCamera = new Camera(-10, 10, -10, 10, -100, 100);
+
+        m_ambientLight = new Vector3f(0.03f, 0.03f, 0.03f);
     }
 
     public void render(GameObject gameObject) {
         clearScreen();
+        m_lights.clear();
 
-        gameObject.render(PhongShader.getInstance());
+        gameObject.addToRenderingEngine(this);
+
+        gameObject.render(FAmbientShader.getInstance());
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glDepthMask(false);
+        glDepthFunc(GL_EQUAL);
+
+        for (Light light : m_lights) {
+            m_activeLight = light;
+            gameObject.render(light.getShader());
+        }
+
+        glDepthMask(true);
+        glDepthFunc(GL_LESS);
+        glDisable(GL_BLEND);
 
         Window.render();
     }
@@ -71,5 +98,21 @@ public class RenderingEngine {
 
     public void setMainCamera(Camera mainCamera) {
         m_mainCamera = mainCamera;
+    }
+
+    public Vector3f getAmbientLight() {
+        return m_ambientLight;
+    }
+
+    public void setAmbientLight(Vector3f ambientLight) {
+        m_ambientLight = ambientLight;
+    }
+
+    public Light getActiveLight() {
+        return m_activeLight;
+    }
+
+    public void addLight(Light light) {
+        m_lights.add(light);
     }
 }
