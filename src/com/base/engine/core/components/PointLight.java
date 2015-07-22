@@ -43,7 +43,6 @@ public class PointLight extends Light {
         }
 
         m_range = Math.min(range, maxRange);
-        System.out.println(range);
     }
 
     @Override public void setIntensity(float intensity) {

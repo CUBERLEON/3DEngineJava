@@ -4,6 +4,9 @@ public class Vector2f {
 
     public static final int SIZE = 2;
 
+    public static final Vector2f xAxis = new Vector2f(1, 0);
+    public static final Vector2f yAxis = new Vector2f(0, 1);
+
     private float m_x;
     private float m_y;
 
@@ -194,6 +197,11 @@ public class Vector2f {
 
     public String toString() {
         return "(" + m_x + " " + m_y + ")";
+    }
+
+    public void set(float x, float y) {
+        m_x = x;
+        m_y = y;
     }
 
     public float getX() {

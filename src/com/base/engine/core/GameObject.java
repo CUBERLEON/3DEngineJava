@@ -19,12 +19,20 @@ public class GameObject {
     }
 
     public GameObject addComponent(GameComponent component) {
-        m_components.add(component);
         component.setObject(this);
+        m_components.add(component);
         return this;
     }
 
     public GameObject addComponents(GameComponent components[]) {
+        for (GameComponent component : components) {
+            component.setObject(this);
+            m_components.add(component);
+        }
+        return this;
+    }
+
+    public GameObject addComponents(ArrayList<GameComponent> components) {
         for (GameComponent component : components) {
             component.setObject(this);
             m_components.add(component);
@@ -38,6 +46,13 @@ public class GameObject {
     }
 
     public GameObject addChildren(GameObject children[]) {
+        for (GameObject child : children) {
+            m_children.add(child);
+        }
+        return this;
+    }
+
+    public GameObject addChildren(ArrayList<GameObject> children) {
         for (GameObject child : children) {
             m_children.add(child);
         }

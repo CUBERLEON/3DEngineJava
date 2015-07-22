@@ -52,31 +52,38 @@ public class Vector3f {
         return new Vector3f(this).normalize();
     }
 
+    public Vector3f rotate(Quaternion rotation) {
+        Quaternion m = rotation.getMul(this).mul(rotation.getConjugated());
+
+        set(m.getX(), m.getY(), m.getZ());
+
+        return this;
+    }
+
+    public Vector3f getRotated(Quaternion rotation) {
+        return new Vector3f(this).rotate(rotation);
+    }
+
     public Vector3f rotateDeg(Vector3f axis, float angle) {
         return rotateRad(axis, (float) Math.toDegrees(angle));
     }
 
     public Vector3f rotateRad(Vector3f axis, float angle) {
-        float sinHalfAngle = (float) Math.sin(angle / 2);
-        float cosHalfAngle = (float) Math.cos(angle / 2);
+        Vector3f m = getRotatedRad(axis, angle);
 
-        float rX = axis.getX() * sinHalfAngle;
-        float rY = axis.getY() * sinHalfAngle;
-        float rZ = axis.getZ() * sinHalfAngle;
-        float rW = cosHalfAngle;
-
-        Quaternion rotation = new Quaternion(rX, rY, rZ, rW);
-        Quaternion m = rotation.mul(this).mul(rotation.conjugate());
-
-        m_x = m.getX();
-        m_y = m.getY();
-        m_z = m.getZ();
+        set(m.getX(), m.getY(), m.getZ());
 
         return this;
     }
 
     public Vector3f getRotatedRad(Vector3f axis, float angle) {
-        return new Vector3f(this).rotateRad(axis, angle);
+        float sinAngle = (float)Math.sin(angle);
+        float cosAngle = (float)Math.cos(angle);
+
+        //Rodrigues' rotation formula
+        return axis.getCross(this).getMul(sinAngle).add(       //Rotation on local X
+               this.getMul(cosAngle).add(                      //Rotation on local Z
+               axis.getMul(this.dot(axis) * (1 - cosAngle)))); //Rotation on local Y
     }
 
     public Vector3f getRotatedDeg(Vector3f axis, float angle) {
@@ -231,6 +238,12 @@ public class Vector3f {
 
     public String toString() {
         return "(" + m_x + " " + m_y + " " + m_z + ")";
+    }
+
+    public void set(float x, float y, float z) {
+        m_x = x;
+        m_y = y;
+        m_z = z;
     }
 
     public Vector2f getXY() {

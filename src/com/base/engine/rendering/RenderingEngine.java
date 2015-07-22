@@ -19,8 +19,6 @@ public class RenderingEngine {
     private Light m_activeLight;
 
     public RenderingEngine() {
-        m_lights = new ArrayList<>();
-
         System.out.println("INFO: OpenGL version " + getOpenGLVersion());
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -34,9 +32,7 @@ public class RenderingEngine {
 
         glEnable(GL_TEXTURE_2D);
 
-        m_mainCamera = new Camera((float)Math.toRadians(60), Window.getWidth()/(float)Window.getHeight(), 0.1f, 1000.0f);
-//        m_mainCamera = new Camera(-10, 10, -10, 10, -100, 100);
-
+        m_lights = new ArrayList<>();
         m_ambientLight = new Vector3f(0.03f, 0.03f, 0.03f);
     }
 
@@ -96,7 +92,11 @@ public class RenderingEngine {
         return m_mainCamera;
     }
 
-    public void setMainCamera(Camera mainCamera) {
+//    public void setMainCamera(Camera mainCamera) {
+//        m_mainCamera = mainCamera;
+//    }
+
+    public void addCamera(Camera mainCamera) {
         m_mainCamera = mainCamera;
     }
 

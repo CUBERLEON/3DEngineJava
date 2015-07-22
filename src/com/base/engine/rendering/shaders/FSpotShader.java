@@ -55,7 +55,7 @@ public class FSpotShader extends Shader {
         setUniformM4F("v_mvpTransform", mvpTransform);
 
         //additional variables
-        setUniformV3F("f_eyePosition", getRenderingEngine().getMainCamera().getPosition());
+        setUniformV3F("f_eyePosition", getRenderingEngine().getMainCamera().getTransform().getPosition());
 
         //lights
         setUniform("f_spotLight", (SpotLight)getRenderingEngine().getActiveLight());

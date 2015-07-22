@@ -67,10 +67,10 @@ public class Matrix4f {
         return this;
     }
 
-    public Matrix4f initRotation(Vector3f forward, Vector3f up) {
+    public Matrix4f initRotation(Vector3f forward, Vector3f up, Vector3f right) {
         Vector3f f = forward.getNormalized();
         Vector3f u = up.getNormalized();
-        Vector3f r = f.getCross(u).normalize();
+        Vector3f r = right.getNormalized();
 
         m[0][0] = r.getX(); m[0][1] = r.getY(); m[0][2] = r.getZ(); m[0][3] = 0;
         m[1][0] = u.getX(); m[1][1] = u.getY(); m[1][2] = u.getZ(); m[1][3] = 0;
@@ -78,6 +78,15 @@ public class Matrix4f {
         m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 
         return this;
+    }
+
+    public Matrix4f initRotation(Vector3f forward, Vector3f up) {
+        Vector3f right = forward.getCross(up);
+        return initRotation(forward, up, right);
+    }
+
+    public Matrix4f initRotation(Quaternion rotation) {
+        return initRotation(rotation.getForward(), rotation.getUp());
     }
 
     public Matrix4f initScale(Vector3f r) {

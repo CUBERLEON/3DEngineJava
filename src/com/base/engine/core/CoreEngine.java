@@ -88,7 +88,7 @@ public class CoreEngine {
             }
 
             if (render || m_fpsUnlimited) {
-                m_renderingEngine.render(m_game.getRootObject());
+                m_renderingEngine.render(m_game.getRoot());
                 frames++;
             } else {
                 try {

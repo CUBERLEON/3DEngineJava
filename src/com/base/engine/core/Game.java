@@ -10,14 +10,14 @@ public abstract class Game {
     public void init() {}
 
     public void input(float time) {
-        getRootObject().input(time);
+        getRoot().input(time);
     }
 
     public void update(float time) {
-        getRootObject().update(time);
+        getRoot().update(time);
     }
 
-    public GameObject getRootObject() {
+    public GameObject getRoot() {
         if (m_root == null)
             m_root = new GameObject();
 
