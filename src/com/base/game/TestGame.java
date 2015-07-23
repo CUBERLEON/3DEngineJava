@@ -1,7 +1,7 @@
 package com.base.game;
 
+import com.base.engine.components.*;
 import com.base.engine.core.*;
-import com.base.engine.core.components.*;
 import com.base.engine.rendering.*;
 
 import java.util.ArrayList;
@@ -60,10 +60,11 @@ public class TestGame extends Game {
         getRoot().addChildren(spotLightObjects);
         getRoot().addComponent(m_directionalLight);
 
+        //camera
         GameObject cameraObject = new GameObject();
         cameraObject.getTransform().setPosition(new Vector3f(1, 1, 1))
                                    .setRotation(new Quaternion().initRotationDeg(new Vector3f(1, 0, -1), 0));
-        getRoot().addChild(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.1f, 1000.0f)));
+        getRoot().addChild(cameraObject.addComponent(new PerspectiveCamera((float)Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.1f, 1000.0f)));
 //        getRoot().addChild(cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100)));
     }
 

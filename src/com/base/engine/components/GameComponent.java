@@ -1,4 +1,4 @@
-package com.base.engine.core.components;
+package com.base.engine.components;
 
 import com.base.engine.core.GameObject;
 import com.base.engine.core.Transform;

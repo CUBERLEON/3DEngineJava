@@ -3,8 +3,7 @@ package com.base.engine.rendering.shaders;
 import com.base.engine.core.Matrix4f;
 import com.base.engine.core.Transform;
 import com.base.engine.rendering.Material;
-import com.base.engine.core.components.PointLight;
-import com.base.engine.core.components.SpotLight;
+import com.base.engine.components.SpotLight;
 
 public class FSpotShader extends Shader {
 

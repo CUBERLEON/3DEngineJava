@@ -1,7 +1,8 @@
 package com.base.engine.rendering.shaders;
 
 import com.base.engine.core.*;
-import com.base.engine.rendering.*;
+import com.base.engine.rendering.Material;
+import com.base.engine.rendering.RenderingEngine;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -1,6 +1,5 @@
-package com.base.engine.core.components;
+package com.base.engine.components;
 
-import com.base.engine.core.Transform;
 import com.base.engine.rendering.*;
 import com.base.engine.rendering.shaders.Shader;
 

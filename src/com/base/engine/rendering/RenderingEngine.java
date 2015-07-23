@@ -1,8 +1,10 @@
 package com.base.engine.rendering;
 
-import com.base.engine.core.*;
-import com.base.engine.core.components.*;
-import com.base.engine.rendering.shaders.*;
+import com.base.engine.components.Camera;
+import com.base.engine.components.Light;
+import com.base.engine.core.GameObject;
+import com.base.engine.core.Vector3f;
+import com.base.engine.rendering.shaders.FAmbientShader;
 
 import java.util.ArrayList;
 

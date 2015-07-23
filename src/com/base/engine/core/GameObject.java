@@ -1,6 +1,6 @@
 package com.base.engine.core;
 
-import com.base.engine.core.components.GameComponent;
+import com.base.engine.components.GameComponent;
 import com.base.engine.rendering.RenderingEngine;
 import com.base.engine.rendering.shaders.Shader;
 

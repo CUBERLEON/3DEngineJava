@@ -2,8 +2,8 @@ package com.base.engine.rendering.shaders;
 
 import com.base.engine.core.Matrix4f;
 import com.base.engine.core.Transform;
-import com.base.engine.core.components.PointLight;
-import com.base.engine.rendering.*;
+import com.base.engine.components.PointLight;
+import com.base.engine.rendering.Material;
 
 public class FPointShader extends Shader {
 

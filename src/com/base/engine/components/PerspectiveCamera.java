@@ -1,6 +1,7 @@
-package com.base.engine.core.components;
+package com.base.engine.components;
 
-import com.base.engine.core.*;
+import com.base.engine.core.Input;
+import com.base.engine.core.Matrix4f;
 import com.base.engine.rendering.Window;
 
 public class PerspectiveCamera extends Camera {
