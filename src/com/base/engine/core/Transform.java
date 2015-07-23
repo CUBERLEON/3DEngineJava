@@ -14,7 +14,7 @@ public class Transform {
 
     public Transform(Vector3f position, Quaternion rotation, Vector3f scale) {
         m_position = position;
-        m_rotation = rotation;
+        m_rotation = rotation.getNormalized();
         m_scale = scale;
     }
 
@@ -45,7 +45,7 @@ public class Transform {
     }
 
     public Transform setRotation(Quaternion rotation) {
-        this.m_rotation = rotation;
+        this.m_rotation = rotation.getNormalized();
         return this;
     }
 

@@ -63,8 +63,8 @@ public class TestGame extends Game {
         GameObject cameraObject = new GameObject();
         cameraObject.getTransform().setPosition(new Vector3f(1, 1, 1))
                                    .setRotation(new Quaternion().initRotationDeg(new Vector3f(1, 0, -1), 0));
-        getRoot().addChild(cameraObject.addComponent(new Camera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.1f, 1000.0f)));
-        //new Camera(-10, 10, -10, 10, -100, 100)
+        getRoot().addChild(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.1f, 1000.0f)));
+//        getRoot().addChild(cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100)));
     }
 
 //    private int k = 0;
