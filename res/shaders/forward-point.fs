@@ -35,7 +35,7 @@ vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal) {
 	vec4 diffuseColor = vec4(0, 0, 0, 0);
 	vec4 specularColor = vec4(0, 0, 0, 0);
 
-	if (diffuseFactor > 0 && intensity > 0.1) {
+	if (diffuseFactor > 0 && intensity > 0) {
 		diffuseColor = vec4(color, 1) * intensity * diffuseFactor;
 
 		vec3 directionToEye = normalize(f_eyePosition - f_worldPosition);

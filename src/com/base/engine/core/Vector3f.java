@@ -65,12 +65,11 @@ public class Vector3f {
     }
 
     public Vector3f rotateDeg(Vector3f axis, float angle) {
-        return rotateRad(axis, (float) Math.toDegrees(angle));
+        return rotateRad(axis, (float) Math.toRadians(angle));
     }
 
     public Vector3f rotateRad(Vector3f axis, float angle) {
         Vector3f m = getRotatedRad(axis, angle);
-
         set(m.getX(), m.getY(), m.getZ());
 
         return this;
@@ -81,9 +80,9 @@ public class Vector3f {
         float cosAngle = (float)Math.cos(angle);
 
         //Rodrigues' rotation formula
-        return axis.getCross(this).getMul(sinAngle).add(       //Rotation on local X
-               this.getMul(cosAngle).add(                      //Rotation on local Z
-               axis.getMul(this.dot(axis) * (1 - cosAngle)))); //Rotation on local Y
+        return axis.getCross(this).getMul(sinAngle).add(
+               this.getMul(cosAngle).add(
+               axis.getMul(axis.dot(this) * (1.0f - cosAngle))));
     }
 
     public Vector3f getRotatedDeg(Vector3f axis, float angle) {
@@ -174,11 +173,25 @@ public class Vector3f {
         return this;
     }
 
+    public Vector3f mul(Matrix4f r) {
+        float x_ = m_x * r.get(0, 0) + m_y * r.get(0, 1) + m_z * r.get(0, 2) + r.get(0, 3);
+        float y_ = m_x * r.get(1, 0) + m_y * r.get(1, 1) + m_z * r.get(1, 2) + r.get(1, 3);
+        float z_ = m_x * r.get(2, 0) + m_y * r.get(2, 1) + m_z * r.get(2, 2) + r.get(2, 3);
+
+        set(x_, y_, z_);
+
+        return this;
+    }
+
     public Vector3f getMul(Vector3f r) {
         return new Vector3f(this).mul(r);
     }
 
     public Vector3f getMul(float r) {
+        return new Vector3f(this).mul(r);
+    }
+
+    public Vector3f getMul(Matrix4f r) {
         return new Vector3f(this).mul(r);
     }
 
@@ -246,6 +259,10 @@ public class Vector3f {
         m_z = z;
     }
 
+    public void set(Vector3f r) {
+        set(r.getX(), r.getY(), r.getZ());
+    }
+
     public Vector2f getXY() {
         return new Vector2f(m_x, m_y);
     }
@@ -301,10 +318,8 @@ public class Vector3f {
 
         Vector3f vector3f = (Vector3f) o;
 
-        if (Float.compare(vector3f.m_x, m_x) != 0) return false;
-        if (Float.compare(vector3f.m_y, m_y) != 0) return false;
+        if (Float.compare(vector3f.m_x, m_x) != 0 || Float.compare(vector3f.m_y, m_y) != 0) return false;
         return Float.compare(vector3f.m_z, m_z) == 0;
-
     }
 
     @Override

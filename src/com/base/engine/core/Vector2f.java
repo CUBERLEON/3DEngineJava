@@ -204,6 +204,10 @@ public class Vector2f {
         m_y = y;
     }
 
+    public void set(Vector2f r) {
+        set(r.getX(), r.getY());
+    }
+
     public float getX() {
         return m_x;
     }

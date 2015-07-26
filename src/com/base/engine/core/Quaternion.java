@@ -25,6 +25,10 @@ public class Quaternion {
         this.m_w = m_w;
     }
 
+    public Quaternion(Vector3f axis, float angle) {
+        initRotationRad(axis, angle);
+    }
+
     public Quaternion initRotationRad(Vector3f axis, float angle) {
         float sinHalfAngle = (float) Math.sin(angle / 2.0f);
         float cosHalfAngle = (float) Math.cos(angle / 2.0f);
@@ -103,13 +107,6 @@ public class Quaternion {
         return new Quaternion(this).conjugate();
     }
 
-    public void set(float x, float y, float z, float w) {
-        m_x = x;
-        m_y = y;
-        m_z = z;
-        m_w = w;
-    }
-
     public Vector3f getForward() {
         return new Vector3f(0,0,-1).rotate(this).normalize();
     }
@@ -132,6 +129,17 @@ public class Quaternion {
 
     public Vector3f getLeft() {
         return new Vector3f(-1,0,0).rotate(this).normalize();
+    }
+
+    public void set(float x, float y, float z, float w) {
+        m_x = x;
+        m_y = y;
+        m_z = z;
+        m_w = w;
+    }
+
+    public void set(Quaternion r) {
+        set(r.getX(), r.getY(), r.getZ(), r.getW());
     }
 
     public float getX() {
@@ -164,5 +172,27 @@ public class Quaternion {
 
     public void setW(float m_w) {
         this.m_w = m_w;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Quaternion that = (Quaternion) o;
+
+        if (Float.compare(that.m_x, m_x) != 0) return false;
+        if (Float.compare(that.m_y, m_y) != 0) return false;
+        if (Float.compare(that.m_z, m_z) != 0) return false;
+        return Float.compare(that.m_w, m_w) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (m_x != +0.0f ? Float.floatToIntBits(m_x) : 0);
+        result = 31 * result + (m_y != +0.0f ? Float.floatToIntBits(m_y) : 0);
+        result = 31 * result + (m_z != +0.0f ? Float.floatToIntBits(m_z) : 0);
+        result = 31 * result + (m_w != +0.0f ? Float.floatToIntBits(m_w) : 0);
+        return result;
     }
 }

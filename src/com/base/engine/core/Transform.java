@@ -4,9 +4,17 @@ import com.base.engine.components.Camera;
 
 public class Transform {
 
+    private Transform m_parent;
+
+    private Matrix4f m_modelTransform;
+
     private Vector3f m_position;
     private Quaternion m_rotation;
     private Vector3f m_scale;
+
+    private Vector3f m_oldPosition;
+    private Quaternion m_oldRotation;
+    private Vector3f m_oldScale;
 
     public Transform() {
         this(new Vector3f(0, 0, 0), new Quaternion(0, 0, 0, 1), new Vector3f(1, 1, 1));
@@ -18,16 +26,50 @@ public class Transform {
         m_scale = scale;
     }
 
-    public Matrix4f getModelTransform() {
-        Matrix4f position = new Matrix4f().initTranslation(m_position);
-        Matrix4f rotation = new Matrix4f().initRotation(m_rotation);
-        Matrix4f scale = new Matrix4f().initScale(m_scale);
+    public boolean hasChanged() {
+        if (m_oldPosition == null) {
+            m_oldPosition = new Vector3f(m_position);
+            m_oldRotation = new Quaternion(m_rotation);
+            m_oldScale = new Vector3f(m_scale);
+            return true;
+        }
 
-        return position.getMul(rotation.getMul(scale));
+        if (!m_oldPosition.equals(m_position)) return true;
+        if (!m_oldRotation.equals(m_rotation)) return true;
+        if (!m_oldScale.equals(m_scale)) return true;
+
+        return false;
+    }
+
+    public Matrix4f getModelTransform() {
+        if (hasChanged() || m_modelTransform == null) {
+            Matrix4f position = new Matrix4f().initTranslation(m_position);
+            Matrix4f rotation = new Matrix4f().initRotation(m_rotation);
+            Matrix4f scale = new Matrix4f().initScale(m_scale);
+
+            m_modelTransform = position.getMul(rotation.getMul(scale));
+        }
+
+        m_oldPosition.set(m_position);
+        m_oldRotation.set(m_rotation);
+        m_oldScale.set(m_scale);
+
+        if (m_parent == null)
+            return new Matrix4f(m_modelTransform);
+        else
+            return m_parent.getModelTransform().getMul(m_modelTransform);
     }
 
     public Matrix4f getModelViewProjectionTransform(Camera camera) {
         return camera.getViewProjectionTransform().getMul(getModelTransform());
+    }
+
+    public Transform getParent() {
+        return m_parent;
+    }
+
+    public void setParent(Transform parent) {
+        m_parent = parent;
     }
 
     public Vector3f getPosition() {

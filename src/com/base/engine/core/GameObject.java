@@ -26,28 +26,27 @@ public class GameObject {
 
     public GameObject addComponents(GameComponent components[]) {
         for (GameComponent component : components) {
-            component.setObject(this);
-            m_components.add(component);
+            addComponent(component);
         }
         return this;
     }
 
     public GameObject addComponents(ArrayList<GameComponent> components) {
         for (GameComponent component : components) {
-            component.setObject(this);
-            m_components.add(component);
+            addComponent(component);
         }
         return this;
     }
 
     public GameObject addChild(GameObject child) {
+        child.getTransform().setParent(m_transform);
         m_children.add(child);
         return this;
     }
 
     public GameObject addChildren(GameObject children[]) {
         for (GameObject child : children) {
-            m_children.add(child);
+            addChild(child);
         }
         return this;
     }

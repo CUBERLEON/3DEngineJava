@@ -4,6 +4,10 @@ public class Matrix4f {
 
     private float[][] m;
 
+    public Matrix4f(Matrix4f r) {
+        m = r.getArray();
+    }
+
     public Matrix4f() {
         m = new float[4][4];
     }
@@ -72,12 +76,38 @@ public class Matrix4f {
         Vector3f u = up.getNormalized();
         Vector3f r = right.getNormalized();
 
+        m[0][0] = r.getX(); m[0][1] = u.getX(); m[0][2] = -f.getX(); m[0][3] = 0;
+        m[1][0] = r.getY(); m[1][1] = u.getY(); m[1][2] = -f.getY(); m[1][3] = 0;
+        m[2][0] = r.getZ(); m[2][1] = u.getZ(); m[2][2] = -f.getZ(); m[2][3] = 0;
+        m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
+
+        return this;
+    }
+
+    public Matrix4f initCameraRotation(Quaternion rotation) {
+        Vector3f f = rotation.getForward();
+        Vector3f u = rotation.getUp();
+        Vector3f r = rotation.getRight();
+
         m[0][0] = r.getX(); m[0][1] = r.getY(); m[0][2] = r.getZ(); m[0][3] = 0;
         m[1][0] = u.getX(); m[1][1] = u.getY(); m[1][2] = u.getZ(); m[1][3] = 0;
         m[2][0] = -f.getX(); m[2][1] = -f.getY(); m[2][2] = -f.getZ(); m[2][3] = 0;
         m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 
         return this;
+//        float x = rotation.getX();
+//        float y = rotation.getY();
+//        float z = rotation.getZ();
+//        float w = rotation.getW();
+//
+//        float x2 = x*x; float y2 = y*y; float z2 = z*z;
+//
+//        m[0][0] = 1-2*y2-2*z2; m[0][1] = 2*x*y+2*w*z; m[0][2] = 2*x*z-2*w*y; m[0][3] = 0;
+//        m[1][0] = 2*x*y-2*w*z; m[1][1] = 1-2*x2-2*z2; m[1][2] = 2*y*z+2*w*x; m[1][3] = 0;
+//        m[2][0] = 2*x*z+2*w*y; m[2][1] = 2*y*z-2*w*x; m[2][2] = 1-2*x2-2*y2; m[2][3] = 0;
+//        m[3][0] = 0;           m[3][1] = 0;           m[3][2] = 0;           m[3][3] = 1;
+//
+//        return this;
     }
 
     public Matrix4f initRotation(Vector3f forward, Vector3f up) {
@@ -86,19 +116,7 @@ public class Matrix4f {
     }
 
     public Matrix4f initRotation(Quaternion rotation) {
-        float x = rotation.getX();
-        float y = rotation.getY();
-        float z = rotation.getZ();
-        float w = rotation.getW();
-
-        float x2 = x*x; float y2 = y*y; float z2 = z*z;
-
-        m[0][0] = 1-2*y2-2*z2; m[0][1] = 2*x*y+2*w*z; m[0][2] = 2*x*z-2*w*y; m[0][3] = 0;
-        m[1][0] = 2*x*y-2*w*z; m[1][1] = 1-2*x2-2*z2; m[1][2] = 2*y*z+2*w*x; m[1][3] = 0;
-        m[2][0] = 2*x*z+2*w*y; m[2][1] = 2*y*z-2*w*x; m[2][2] = 1-2*x2-2*y2; m[2][3] = 0;
-        m[3][0] = 0;           m[3][1] = 0;           m[3][2] = 0;           m[3][3] = 1;
-
-        return this;
+        return initRotation(rotation.getForward(), rotation.getUp());
     }
 
     public Matrix4f initScale(Vector3f r) {
@@ -134,9 +152,9 @@ public class Matrix4f {
     }
 
     public Matrix4f initOrthographic(float left, float right, float bottom, float top, float near, float far) {
-        m[0][0] = 2/(right - left); m[0][1] = 0;                m[0][2] = 0;               m[0][3] = -(left + right)/(right - left);
-        m[1][0] = 0;                m[1][1] = 2/(top - bottom); m[1][2] = 0;               m[1][3] = -(top + bottom)/(top - bottom);
-        m[2][0] = 0;                m[2][1] = 0;                m[2][2] = -2/(far - near); m[2][3] = -(near + far)/(far - near);
+        m[0][0] = 2/(right - left); m[0][1] = 0;                m[0][2] = 0;               m[0][3] = (right + left)/(right - left);
+        m[1][0] = 0;                m[1][1] = 2/(top - bottom); m[1][2] = 0;               m[1][3] = (top + bottom)/(top - bottom);
+        m[2][0] = 0;                m[2][1] = 0;                m[2][2] = -2/(far - near); m[2][3] = (far + near)/(far - near);
         m[3][0] = 0;                m[3][1] = 0;                m[3][2] = 0;               m[3][3] = 1;
 
         return this;
@@ -175,5 +193,20 @@ public class Matrix4f {
 
     public void setM(float[][] m) {
         this.m = m;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder r = new StringBuilder();
+
+        r.append("\n");
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                r.append(" " + m[i][j] + " ");
+            }
+            r.append("\n");
+        }
+
+        return r.toString();
     }
 }

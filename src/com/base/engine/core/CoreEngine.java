@@ -82,7 +82,7 @@ public class CoreEngine {
             }
 
             if (fpsTime >= fpsRefreshTime) {
-                System.out.printf("INFO: %.1f fps\n", frames / fpsTime);
+//                System.out.printf("INFO: %.1f fps\n", frames / fpsTime);
                 fpsTime -= fpsRefreshTime;
                 frames = 0;
             }

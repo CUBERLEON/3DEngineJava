@@ -25,8 +25,8 @@ public abstract class Camera extends GameComponent {
     }
 
     public Matrix4f getViewProjectionTransform() {
-        Matrix4f cameraRotation = new Matrix4f().initRotation(getTransform().getRotation());
         Matrix4f cameraTranslation = new Matrix4f().initTranslation(getTransform().getPosition().getMul(-1));
+        Matrix4f cameraRotation = new Matrix4f().initCameraRotation(getTransform().getRotation());
 
         Matrix4f viewTransform = cameraRotation.getMul(cameraTranslation);
 
@@ -34,13 +34,13 @@ public abstract class Camera extends GameComponent {
     }
 
     public void move(Vector3f direction, float value) {
-        getTransform().getPosition().add(direction.getNormalized().getMul(value));
+        getTransform().getPosition().add(direction.getNormalized().mul(value));
     }
 
-    public void updateRotation() {
+    protected void updateRotation() {
         float rotateValue = m_sensitivity / 10000.0f;
         Vector2f center = Window.getCenter();
-        Vector2f delta = Input.getMousePosition().getSub(center);
+        Vector2f delta = Input.getMousePosition().sub(center);
 
         boolean movedX = delta.getX() != 0;
         boolean movedY = delta.getY() != 0;
