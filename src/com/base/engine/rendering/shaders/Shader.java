@@ -71,7 +71,7 @@ public abstract class Shader {
     }
 
     public void setUniformM4F(String uniformName, Matrix4f value) {
-        glUniformMatrix4(m_uniforms.get(uniformName), true, Util.createFlippedBuffer(value));
+        glUniformMatrix4(m_uniforms.get(uniformName), true, Util.createFloatBuffer(value));
     }
 
     public void addVertexShaderFromFile(String fileName) {

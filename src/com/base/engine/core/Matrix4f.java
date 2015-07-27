@@ -34,14 +34,6 @@ public class Matrix4f {
         return this;
     }
 
-    public Matrix4f initRotationDeg(Vector3f r) {
-        return this.initRotationDeg(r.getX(), r.getY(), r.getZ());
-    }
-
-    public Matrix4f initRotationDeg(float x, float y, float z) {
-        return this.initRotationRad((float) Math.toRadians(x), (float) Math.toRadians(y), (float) Math.toRadians(z));
-    }
-
     public Matrix4f initRotationRad(Vector3f r) {
         return this.initRotationRad(r.getX(), r.getY(), r.getZ());
     }
@@ -71,6 +63,38 @@ public class Matrix4f {
         return this;
     }
 
+    public Matrix4f initRotationXRad(float x) {
+        return initRotationRad(x, 0, 0);
+    }
+
+    public Matrix4f initRotationYRad(float y) {
+        return initRotationRad(0, y, 0);
+    }
+
+    public Matrix4f initRotationZRad(float z) {
+        return initRotationRad(0, 0, z);
+    }
+
+    public Matrix4f initRotationDeg(Vector3f r) {
+        return this.initRotationRad(r.toRadians());
+    }
+
+    public Matrix4f initRotationDeg(float x, float y, float z) {
+        return this.initRotationRad(new Vector3f(x, y, z).toRadians());
+    }
+
+    public Matrix4f initRotationXDeg(float x) {
+        return initRotationDeg(x, 0, 0);
+    }
+
+    public Matrix4f initRotationYDeg(float y) {
+        return initRotationDeg(0, y, 0);
+    }
+
+    public Matrix4f initRotationZDeg(float z) {
+        return initRotationDeg(0, 0, z);
+    }
+
     public Matrix4f initRotation(Vector3f forward, Vector3f up, Vector3f right) {
         Vector3f f = forward.getNormalized();
         Vector3f u = up.getNormalized();
@@ -84,39 +108,27 @@ public class Matrix4f {
         return this;
     }
 
-    public Matrix4f initCameraRotation(Quaternion rotation) {
-        Vector3f f = rotation.getForward();
-        Vector3f u = rotation.getUp();
-        Vector3f r = rotation.getRight();
-
-        m[0][0] = r.getX(); m[0][1] = r.getY(); m[0][2] = r.getZ(); m[0][3] = 0;
-        m[1][0] = u.getX(); m[1][1] = u.getY(); m[1][2] = u.getZ(); m[1][3] = 0;
-        m[2][0] = -f.getX(); m[2][1] = -f.getY(); m[2][2] = -f.getZ(); m[2][3] = 0;
-        m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
-
-        return this;
-//        float x = rotation.getX();
-//        float y = rotation.getY();
-//        float z = rotation.getZ();
-//        float w = rotation.getW();
-//
-//        float x2 = x*x; float y2 = y*y; float z2 = z*z;
-//
-//        m[0][0] = 1-2*y2-2*z2; m[0][1] = 2*x*y+2*w*z; m[0][2] = 2*x*z-2*w*y; m[0][3] = 0;
-//        m[1][0] = 2*x*y-2*w*z; m[1][1] = 1-2*x2-2*z2; m[1][2] = 2*y*z+2*w*x; m[1][3] = 0;
-//        m[2][0] = 2*x*z+2*w*y; m[2][1] = 2*y*z-2*w*x; m[2][2] = 1-2*x2-2*y2; m[2][3] = 0;
-//        m[3][0] = 0;           m[3][1] = 0;           m[3][2] = 0;           m[3][3] = 1;
-//
-//        return this;
-    }
-
     public Matrix4f initRotation(Vector3f forward, Vector3f up) {
-        Vector3f right = forward.getCross(up);
-        return initRotation(forward, up, right);
+        Vector3f f = forward.getNormalized();
+        Vector3f u = up.getNormalized();
+        Vector3f r = f.getCross(u);
+        return initRotation(f, u, r);
     }
 
     public Matrix4f initRotation(Quaternion rotation) {
-        return initRotation(rotation.getForward(), rotation.getUp());
+        float x = rotation.getX();
+        float y = rotation.getY();
+        float z = rotation.getZ();
+        float w = rotation.getW();
+
+        float x2 = x*x; float y2 = y*y; float z2 = z*z;
+
+        m[0][0] = 1-2*y2-2*z2; m[0][1] = 2*x*y-2*w*z; m[0][2] = 2*x*z+2*w*y; m[0][3] = 0;
+        m[1][0] = 2*x*y+2*w*z; m[1][1] = 1-2*x2-2*z2; m[1][2] = 2*y*z-2*w*x; m[1][3] = 0;
+        m[2][0] = 2*x*z-2*w*y; m[2][1] = 2*y*z+2*w*x; m[2][2] = 1-2*x2-2*y2; m[2][3] = 0;
+        m[3][0] = 0;           m[3][1] = 0;           m[3][2] = 0;           m[3][3] = 1;
+
+        return this;
     }
 
     public Matrix4f initScale(Vector3f r) {
@@ -160,6 +172,27 @@ public class Matrix4f {
         return this;
     }
 
+    public Matrix4f transpose() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = i+1; j < 4; j++) {
+                float tmp = m[i][j];
+                m[i][j] = m[j][i];
+                m[j][i] = tmp;
+            }
+        }
+
+        return this;
+    }
+
+    public Matrix4f getTransposed() {
+        return new Matrix4f(this).transpose();
+    }
+
+    public Matrix4f mul(Matrix4f r) {
+        m = getMul(r).getArray();
+        return this;
+    }
+
     public Matrix4f getMul(Matrix4f r) {
         Matrix4f res = new Matrix4f();
 
@@ -199,10 +232,10 @@ public class Matrix4f {
     public String toString() {
         StringBuilder r = new StringBuilder();
 
-        r.append("\n");
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                r.append(" " + m[i][j] + " ");
+                r.append(m[i][j]);
+                if (j < 3) r.append(", ");
             }
             r.append("\n");
         }

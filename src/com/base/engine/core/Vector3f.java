@@ -64,10 +64,6 @@ public class Vector3f {
         return new Vector3f(this).rotate(rotation);
     }
 
-    public Vector3f rotateDeg(Vector3f axis, float angle) {
-        return rotateRad(axis, (float) Math.toRadians(angle));
-    }
-
     public Vector3f rotateRad(Vector3f axis, float angle) {
         Vector3f m = getRotatedRad(axis, angle);
         set(m.getX(), m.getY(), m.getZ());
@@ -76,17 +72,23 @@ public class Vector3f {
     }
 
     public Vector3f getRotatedRad(Vector3f axis, float angle) {
+        Vector3f _axis = axis.getNormalized();
+
         float sinAngle = (float)Math.sin(angle);
         float cosAngle = (float)Math.cos(angle);
 
         //Rodrigues' rotation formula
-        return axis.getCross(this).getMul(sinAngle).add(
-               this.getMul(cosAngle).add(
-               axis.getMul(axis.dot(this) * (1.0f - cosAngle))));
+        return _axis.getCross(this).getMul(sinAngle).add(
+                this.getMul(cosAngle).add(
+                        _axis.getMul(_axis.dot(this) * (1.0f - cosAngle))));
+    }
+
+    public Vector3f rotateDeg(Vector3f axis, float angle) {
+        return rotateRad(axis, (float) Math.toRadians(angle));
     }
 
     public Vector3f getRotatedDeg(Vector3f axis, float angle) {
-        return new Vector3f(this).rotateDeg(axis, angle);
+        return getRotatedRad(axis, (float) Math.toRadians(angle));
     }
 
     public Vector3f lerp(Vector3f dest, float factor) {
@@ -250,7 +252,7 @@ public class Vector3f {
     }
 
     public String toString() {
-        return "(" + m_x + " " + m_y + " " + m_z + ")";
+        return "(" + m_x + ", " + m_y + ", " + m_z + ")";
     }
 
     public void set(float x, float y, float z) {
@@ -261,6 +263,14 @@ public class Vector3f {
 
     public void set(Vector3f r) {
         set(r.getX(), r.getY(), r.getZ());
+    }
+
+    public Vector3f toRadians() {
+        return new Vector3f((float)Math.toRadians(m_x), (float)Math.toRadians(m_y), (float)Math.toRadians(m_z));
+    }
+
+    public Vector3f toDegrees() {
+        return new Vector3f((float)Math.toDegrees(m_x), (float)Math.toDegrees(m_y), (float)Math.toDegrees(m_z));
     }
 
     public Vector2f getXY() {

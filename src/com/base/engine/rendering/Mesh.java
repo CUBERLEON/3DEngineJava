@@ -47,10 +47,10 @@ public class Mesh {
         m_size = indices.length;
 
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        GL15.glBufferData(GL_ARRAY_BUFFER, Util.createFlippedBuffer(vertices), GL_STATIC_DRAW);
+        GL15.glBufferData(GL_ARRAY_BUFFER, Util.createFloatBuffer(vertices), GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.createFlippedBuffer(indices), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.createIntBuffer(indices), GL_STATIC_DRAW);
     }
 
     public void draw() {

@@ -196,7 +196,7 @@ public class Vector2f {
     }
 
     public String toString() {
-        return "(" + m_x + " " + m_y + ")";
+        return "(" + m_x + ", " + m_y + ")";
     }
 
     public void set(float x, float y) {
