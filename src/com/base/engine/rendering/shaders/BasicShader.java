@@ -26,7 +26,7 @@ public class BasicShader extends Shader {
 
     @Override
     public void updateUniforms(Transform transform, Material material) {
-//        Matrix4f mTransform = transform.getModelTransform();
+//        Matrix4f mTransform = transform.getRealModelTransform();
         Matrix4f mvpTransform = transform.getModelViewProjectionTransform(getRenderingEngine().getMainCamera());
 
         setUniformM4F("v_mvpTransform", mvpTransform);

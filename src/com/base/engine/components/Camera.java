@@ -25,8 +25,8 @@ public abstract class Camera extends GameComponent {
     }
 
     public Matrix4f getViewProjectionTransform() {
-        Matrix4f cameraTranslation = new Matrix4f().initTranslation(getTransform().getPosition().getMul(-1));
-        Matrix4f cameraRotation = new Matrix4f().initRotation(getTransform().getRotation()).transpose();
+        Matrix4f cameraTranslation = new Matrix4f().initTranslation(getTransform().getRealPosition().getMul(-1));
+        Matrix4f cameraRotation = new Matrix4f().initRotation(getTransform().getRealRotation()).transpose();
 
         Matrix4f viewTransform = cameraRotation.getMul(cameraTranslation);
 
@@ -69,27 +69,27 @@ public abstract class Camera extends GameComponent {
     }
 
     public Vector3f getLeft() {
-        return getTransform().getRotation().getLeft();
+        return getTransform().getRealRotation().getLeft();
     }
 
     public Vector3f getRight() {
-        return getTransform().getRotation().getRight();
+        return getTransform().getRealRotation().getRight();
     }
 
     public Vector3f getForward() {
-        return getTransform().getRotation().getForward();
+        return getTransform().getRealRotation().getForward();
     }
 
     public Vector3f getBack() {
-        return getTransform().getRotation().getBack();
+        return getTransform().getRealRotation().getBack();
     }
 
     public Vector3f getUp() {
-        return getTransform().getRotation().getUp();
+        return getTransform().getRealRotation().getUp();
     }
 
     public Vector3f getDown() {
-        return getTransform().getRotation().getDown();
+        return getTransform().getRealRotation().getDown();
     }
 
     public boolean isLocked() {

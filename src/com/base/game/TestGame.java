@@ -47,7 +47,7 @@ public class TestGame extends Game {
 
         GameObject test1 = new GameObject().addComponent(new MeshRenderer(planeMesh, planeMaterial));
         GameObject test2 = new GameObject().addComponent(new MeshRenderer(planeMesh, planeMaterial));
-        test1.getTransform().setScale(0.1f, 0.1f, 0.1f).setPosition(3, 1, 0).setRotation(new Quaternion().initEulerYDeg(45));
+        test1.getTransform().setScale(0.1f, 0.1f, 0.1f).setPosition(0, 0, -1).setRotation(new Quaternion().initEulerXDeg(45));
         test2.getTransform().setPosition(50, 0, 0);
         test1.addChild(test2);
 
@@ -71,15 +71,15 @@ public class TestGame extends Game {
 
         getRoot().addChildren(pointLightObjects);
         getRoot().addChildren(spotLightObjects);
-//        getRoot().addChild(directionalLightObject);
+        getRoot().addChild(directionalLightObject);
 
         //camera
         GameObject cameraObject = new GameObject();
         cameraObject.getTransform().setPosition(new Vector3f(5, 1, 5))
                                    .setRotation(new Quaternion().initEulerYDeg(45));
         test2.addChild(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f)));
-//        cameraObject.addChild(test1);
 //        getRoot().addChild(cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100)));
+//        cameraObject.addChild(test1);
 
 
         //Math tests

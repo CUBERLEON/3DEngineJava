@@ -15,6 +15,6 @@ public class DirectionalLight extends Light {
     }
 
     public Vector3f getDirection() {
-        return getTransform().getRotation().getForward();
+        return getTransform().getRealRotation().getForward();
     }
 }

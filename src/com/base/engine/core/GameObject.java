@@ -67,6 +67,8 @@ public class GameObject {
     }
 
     public void update(float time) {
+        getTransform().update();
+
         for (GameComponent component : m_components)
             component.update(time);
 

@@ -40,7 +40,7 @@ public class FDirectionalShader extends Shader {
 
     @Override
     public void updateUniforms(Transform transform, Material material) {
-        Matrix4f mTransform = transform.getModelTransform();
+        Matrix4f mTransform = transform.getRealModelTransform();
         Matrix4f mvpTransform = transform.getModelViewProjectionTransform(getRenderingEngine().getMainCamera());
 
         //transforms
@@ -48,7 +48,7 @@ public class FDirectionalShader extends Shader {
         setUniformM4F("v_mvpTransform", mvpTransform);
 
         //additional variables
-        setUniformV3F("f_eyePosition", getRenderingEngine().getMainCamera().getTransform().getPosition());
+        setUniformV3F("f_eyePosition", getRenderingEngine().getMainCamera().getTransform().getRealPosition());
 
         //lights
         setUniform("f_directionalLight", (DirectionalLight)getRenderingEngine().getActiveLight());
