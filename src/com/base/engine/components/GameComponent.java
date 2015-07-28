@@ -14,6 +14,11 @@ public abstract class GameComponent {
     public void render(Shader shader) {}
 
     public Transform getTransform() {
+        if (m_object == null) {
+            System.err.println("Fatal ERROR: calling GameComponent.getTransform() method when GameObject wasn't assigned");
+            new Exception().printStackTrace();
+            System.exit(1);
+        }
         return m_object.getTransform();
     }
 

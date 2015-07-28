@@ -1,23 +1,24 @@
 package com.base.engine.components;
 
 import com.base.engine.core.Vector3f;
+import com.base.engine.rendering.Attenuation;
 import com.base.engine.rendering.shaders.FPointShader;
 
 public class PointLight extends Light {
 
-    protected Vector3f m_attenuation;
+    protected Attenuation m_attenuation;
     protected float m_range;
 
     public PointLight(PointLight r) {
         this(r.getColor(), r.getIntensity(), r.getAttenuation(), r.getRange());
     }
 
-    public PointLight(Vector3f color, float intensity, Vector3f attenuation) {
+    public PointLight(Vector3f color, float intensity, Attenuation attenuation) {
         this(color, intensity, attenuation, 0);
         updateRange();
     }
 
-    protected PointLight(Vector3f color, float intensity, Vector3f attenuation, float range) {
+    protected PointLight(Vector3f color, float intensity, Attenuation attenuation, float range) {
         super(color, intensity);
         m_attenuation = attenuation;
         m_range = range;
@@ -30,15 +31,15 @@ public class PointLight extends Light {
 
         float range = maxRange;
 
-        float c = getConstantAttenuation();
-        float l = getLinearAttenuation();
-        float e = getExponentAttenuation();
+        float c = getAttenuation().getConstant();
+        float l = getAttenuation().getLinear();
+        float e = getAttenuation().getExponent();
         if (m_intensity < minIntensity * c) {
             range = 0;
         } else {
             if (e > 0) {
                 range = (-l + (float)Math.sqrt(l * l + 4.0 * e * (m_intensity/minIntensity - c))) / (2.0f * e);
-            } else if (getLinearAttenuation() > 0)
+            } else if (l > 0)
                 range = Math.max(0, (m_intensity - minIntensity * c) / (minIntensity * l));
         }
 
@@ -50,36 +51,12 @@ public class PointLight extends Light {
         updateRange();
     }
 
-    public Vector3f getAttenuation() {
+    public Attenuation getAttenuation() {
         return m_attenuation;
     }
 
-    public void setAttenuation(Vector3f attenuation) {
+    public void setAttenuation(Attenuation attenuation) {
         m_attenuation = attenuation;
-    }
-
-    public float getConstantAttenuation() {
-        return m_attenuation.getX();
-    }
-
-    public void setConstantAttenuation(float constantAttenuation) {
-        this.m_attenuation.setX(constantAttenuation);
-    }
-
-    public float getLinearAttenuation() {
-        return m_attenuation.getY();
-    }
-
-    public void setLinearAttenuation(float linearAttenuation) {
-        this.m_attenuation.setY(linearAttenuation);
-    }
-
-    public float getExponentAttenuation() {
-        return m_attenuation.getZ();
-    }
-
-    public void setExponentAttenuation(float exponentAttenuation) {
-        this.m_attenuation.setZ(exponentAttenuation);
     }
 
     public float getRange() {

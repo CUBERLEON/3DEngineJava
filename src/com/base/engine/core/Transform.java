@@ -64,6 +64,12 @@ public class Transform {
         return camera.getViewProjectionTransform().getMul(getModelTransform());
     }
 
+    public Transform rotate(Quaternion rotation) {
+        m_rotation = rotation.getMul(m_rotation);
+
+        return this;
+    }
+
     public Transform getParent() {
         return m_parent;
     }

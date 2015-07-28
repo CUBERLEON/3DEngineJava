@@ -1,6 +1,7 @@
 package com.base.engine.components;
 
 import com.base.engine.core.Vector3f;
+import com.base.engine.rendering.Attenuation;
 import com.base.engine.rendering.shaders.FSpotShader;
 
 public class SpotLight extends PointLight {
@@ -11,7 +12,7 @@ public class SpotLight extends PointLight {
         this(r.getColor(), r.getIntensity(), r.getAttenuation(), r.getRange(), r.getCutoff());
     }
 
-    public SpotLight(Vector3f color, float intensity, Vector3f attenuation, float cutoff) {
+    public SpotLight(Vector3f color, float intensity, Attenuation attenuation, float cutoff) {
         super(color, intensity, attenuation);
         this.m_cutoff = cutoff;
         setShader(FSpotShader.getInstance());
@@ -21,7 +22,7 @@ public class SpotLight extends PointLight {
         this(pointLight.getColor(), pointLight.getIntensity(), pointLight.getAttenuation(), pointLight.getRange(), cutoff);
     }
 
-    protected SpotLight(Vector3f color, float intensity, Vector3f attenuation, float range, float cutoff) {
+    protected SpotLight(Vector3f color, float intensity, Attenuation attenuation, float range, float cutoff) {
         super(color, intensity, attenuation, range);
         this.m_cutoff = cutoff;
         setShader(FSpotShader.getInstance());

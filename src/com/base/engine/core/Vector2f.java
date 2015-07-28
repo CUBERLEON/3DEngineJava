@@ -10,6 +10,10 @@ public class Vector2f {
     private float m_x;
     private float m_y;
 
+    public Vector2f() {
+        this(0, 0);
+    }
+
     public Vector2f(float x, float y) {
         this.m_x = x;
         this.m_y = y;

@@ -48,21 +48,20 @@ public abstract class Camera extends GameComponent {
         Quaternion qx = new Quaternion();
         Quaternion qy = new Quaternion();
         Quaternion qz = new Quaternion();
-        Quaternion old = new Quaternion(getTransform().getRotation());
 
         if (movedY)
-            qx.initRotationRad(getRight(), rotateValue * delta.getY());
+            qx.initAxisRad(getRight(), rotateValue * delta.getY());
         if (movedX)
-            qy.initRotationRad(Vector3f.yAxis, -rotateValue * delta.getX());
+            qy.initAxisRad(Vector3f.yAxis, -rotateValue * delta.getX());
 
         if (Input.getKey(Input.KEY_Q) ^ Input.getKey(Input.KEY_E)) {
             if (Input.getKey(Input.KEY_Q))
-                qz.initRotationRad(getBack(), 15 * rotateValue);
+                qz.initAxisRad(getBack(), 15 * rotateValue);
             if (Input.getKey(Input.KEY_E))
-                qz.initRotationRad(getBack(), -15 * rotateValue);
+                qz.initAxisRad(getBack(), -15 * rotateValue);
         }
 
-        getTransform().setRotation(qz.mul(qy.mul(qx.mul(old))));
+        getTransform().rotate(qz.mul(qy.mul(qx)));
 
         if (movedX || movedY) {
             Input.setMousePosition(center);

@@ -12,6 +12,10 @@ public class Vector3f {
     private float m_y;
     private float m_z;
 
+    public Vector3f() {
+        this(0, 0, 0);
+    }
+
     public Vector3f(float x, float y, float z) {
         this.m_x = x;
         this.m_y = y;

@@ -23,18 +23,18 @@ public class Quaternion {
     }
 
     public Quaternion(Vector3f axis, float angle) {
-        initRotationRad(axis, angle);
+        initAxisRad(axis, angle);
     }
 
     public Quaternion(float x, float y, float z) {
-        initRotationRad(x, y, z);
+        initEulerRad(x, y, z);
     }
 
-    public Quaternion initRotationRad(Vector3f axis, float angle) {
+    public Quaternion initAxisRad(Vector3f axis, float angle) {
         Vector3f _axis = axis.getNormalized();
 
-        float sinHalfAngle = (float) Math.sin(angle / 2.0f);
-        float cosHalfAngle = (float) Math.cos(angle / 2.0f);
+        float sinHalfAngle = (float) Math.sin(angle / 2);
+        float cosHalfAngle = (float) Math.cos(angle / 2);
 
         m_x = _axis.getX() * sinHalfAngle;
         m_y = _axis.getY() * sinHalfAngle;
@@ -44,51 +44,60 @@ public class Quaternion {
         return this;
     }
 
-    public Quaternion initRotationRad(float x, float y, float z) {
+    public Quaternion initEulerRad(float x, float y, float z) {
+//        float siny2 = (float) Math.sin(y/2.0f);
+//        float cosy2 = (float) Math.cos(y/2.0f);
+//
+//        m_x = (float) Math.cos((z-x)/2.0f) * siny2;
+//        m_y = (float) Math.sin((z-x)/2.0f) * siny2;
+//        m_z = (float) Math.sin((z+x)/2.0f) * cosy2;
+//        m_w = (float) Math.cos((z+x)/2.0f) * cosy2;
+//
+//        return this;
         Quaternion quatAroundX = new Quaternion(Vector3f.xAxis, x);
         Quaternion quatAroundY = new Quaternion(Vector3f.yAxis, y);
         Quaternion quatAroundZ = new Quaternion(Vector3f.zAxis, z);
         return quatAroundZ.mul(quatAroundY.mul(quatAroundX));
     }
 
-    public Quaternion initRotationXRad(float x) {
-        return initRotationRad(x, 0, 0);
+    public Quaternion initEulerXRad(float x) {
+        return initEulerRad(x, 0, 0);
     }
 
-    public Quaternion initRotationYRad(float y) {
-        return initRotationRad(0, y, 0);
+    public Quaternion initEulerYRad(float y) {
+        return initEulerRad(0, y, 0);
     }
 
-    public Quaternion initRotationZRad(float z) {
-        return initRotationRad(0, 0, z);
+    public Quaternion initEulerZRad(float z) {
+        return initEulerRad(0, 0, z);
     }
 
-    public Quaternion initRotationRad(Vector3f r) {
-        return initRotationRad(r.getX(), r.getY(), r.getZ());
+    public Quaternion initEulerRad(Vector3f r) {
+        return initEulerRad(r.getX(), r.getY(), r.getZ());
     }
 
-    public Quaternion initRotationDeg(Vector3f axis, float angle) {
-        return initRotationRad(axis, (float) Math.toRadians(angle));
+    public Quaternion initAxisDeg(Vector3f axis, float angle) {
+        return initAxisRad(axis, (float) Math.toRadians(angle));
     }
 
-    public Quaternion initRotationDeg(float x, float y, float z) {
-        return initRotationRad(new Vector3f(x, y, z).toRadians());
+    public Quaternion initEulerDeg(float x, float y, float z) {
+        return initEulerRad(new Vector3f(x, y, z).toRadians());
     }
 
-    public Quaternion initRotationXDeg(float x) {
-        return initRotationDeg(x, 0, 0);
+    public Quaternion initEulerXDeg(float x) {
+        return initEulerDeg(x, 0, 0);
     }
 
-    public Quaternion initRotationYDeg(float y) {
-        return initRotationDeg(0, y, 0);
+    public Quaternion initEulerYDeg(float y) {
+        return initEulerDeg(0, y, 0);
     }
 
-    public Quaternion initRotationZDeg(float z) {
-        return initRotationDeg(0, 0, z);
+    public Quaternion initEulerZDeg(float z) {
+        return initEulerDeg(0, 0, z);
     }
 
-    public Quaternion initRotationDeg(Vector3f r) {
-        return initRotationRad(r.toRadians());
+    public Quaternion initEulerDeg(Vector3f r) {
+        return initEulerRad(r.toRadians());
     }
 
     public float length() {
@@ -188,11 +197,11 @@ public class Quaternion {
 
     //TODO proper Quaternion to Euler angles conversion
     public Vector3f toEulerAnglesRad() {
-        float yaw = (float)Math.atan2(2*(m_w*m_y-m_x*m_z), 1-2*(m_z*m_z+m_y*m_y));
-        float pitch = (float)Math.asin(2 * (m_x * m_y + m_z * m_w));
-        float roll = (float)Math.atan2(2*(m_w*m_x-m_z*m_y), 1-2*(m_x*m_x+m_z*m_z));
+        float a = (float)Math.atan2(2*(m_z*m_y+m_x*m_w), 1-2*(m_x*m_x+m_y*m_y));
+        float b = (float)Math.asin(2 * (m_w * m_y - m_x * m_z));
+        float c = (float)Math.atan2(2*(m_w*m_z+m_x*m_y), 1-2*(m_y*m_y+m_z*m_z));
 
-        return new Vector3f(roll, yaw, -pitch);
+        return new Vector3f(a, b, c);
     }
 
     public Vector3f toEulerAnglesDeg() {

@@ -68,9 +68,9 @@ public class FSpotShader extends Shader {
     public void setUniform(String uniformName, SpotLight value) {
         setUniformV3F(uniformName + ".pointLight.color", value.getColor());
         setUniformF(uniformName + ".pointLight.intensity", value.getIntensity());
-        setUniformF(uniformName + ".pointLight.attenuation.constant", value.getConstantAttenuation());
-        setUniformF(uniformName + ".pointLight.attenuation.linear", value.getLinearAttenuation());
-        setUniformF(uniformName + ".pointLight.attenuation.exponent", value.getExponentAttenuation());
+        setUniformF(uniformName + ".pointLight.attenuation.constant", value.getAttenuation().getConstant());
+        setUniformF(uniformName + ".pointLight.attenuation.linear", value.getAttenuation().getLinear());
+        setUniformF(uniformName + ".pointLight.attenuation.exponent", value.getAttenuation().getExponent());
         setUniformV3F(uniformName + ".pointLight.position", value.getTransform().getPosition());
         setUniformF(uniformName + ".pointLight.range", value.getRange());
         setUniformV3F(uniformName + ".direction", value.getDirection());

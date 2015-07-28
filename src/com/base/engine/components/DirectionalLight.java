@@ -5,23 +5,16 @@ import com.base.engine.rendering.shaders.FDirectionalShader;
 
 public class DirectionalLight extends Light {
 
-    protected Vector3f m_direction;
-
     public DirectionalLight(DirectionalLight r) {
-        this(r.getColor(), r.getIntensity(), r.getDirection());
+        this(r.getColor(), r.getIntensity());
     }
 
-    public DirectionalLight(Vector3f color, float intensity, Vector3f direction) {
+    public DirectionalLight(Vector3f color, float intensity) {
         super(color, intensity);
-        m_direction = direction.getNormalized();
         setShader(FDirectionalShader.getInstance());
     }
 
     public Vector3f getDirection() {
-        return m_direction;
-    }
-
-    public void setDirection(Vector3f direction) {
-        this.m_direction = direction.getNormalized();
+        return getTransform().getRotation().getForward();
     }
 }

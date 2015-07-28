@@ -66,9 +66,9 @@ public class FPointShader extends Shader {
     public void setUniform(String uniformName, PointLight value) {
         setUniformV3F(uniformName + ".color", value.getColor());
         setUniformF(uniformName + ".intensity", value.getIntensity());
-        setUniformF(uniformName + ".attenuation.constant", value.getConstantAttenuation());
-        setUniformF(uniformName + ".attenuation.linear", value.getLinearAttenuation());
-        setUniformF(uniformName + ".attenuation.exponent", value.getExponentAttenuation());
+        setUniformF(uniformName + ".attenuation.constant", value.getAttenuation().getConstant());
+        setUniformF(uniformName + ".attenuation.linear", value.getAttenuation().getLinear());
+        setUniformF(uniformName + ".attenuation.exponent", value.getAttenuation().getExponent());
         setUniformV3F(uniformName + ".position", value.getTransform().getPosition());
         setUniformF(uniformName + ".range", value.getRange());
     }
