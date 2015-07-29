@@ -28,9 +28,6 @@ public class CoreEngine {
         Window.createWindow(width, height, title);
 
         m_renderingEngine = new RenderingEngine();
-
-        Shader.setRenderingEngine(m_renderingEngine);
-        m_game.setRenderingEngine(m_renderingEngine);
     }
 
     public void start() {
@@ -71,28 +68,28 @@ public class CoreEngine {
             boolean render = false;
 
             if (unprocessedTime >= frameTime) {
-                double sceneTime = frameTime * (int)Math.floor(unprocessedTime / frameTime);
-                unprocessedTime -= sceneTime;
+                double gameTime = frameTime * (int)Math.floor(unprocessedTime / frameTime);
+                unprocessedTime -= gameTime;
 
                 render = true;
 
-                m_game.input((float)sceneTime);
-                m_game.update((float)sceneTime);
+                m_game.input((float)gameTime);
+                m_game.update((float)gameTime);
                 Input.update();
             }
 
             if (fpsTime >= fpsRefreshTime) {
-                System.out.printf("INFO: %.1f fps\n", frames / fpsTime);
+//                System.out.printf("INFO: %.1f fps\n", frames / fpsTime);
                 fpsTime -= fpsRefreshTime;
                 frames = 0;
             }
 
             if (render || m_fpsUnlimited) {
-                m_renderingEngine.render(m_game.getRoot());
+                m_game.render(m_renderingEngine);
                 frames++;
             } else {
                 try {
-                    Thread.sleep(0, 100);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

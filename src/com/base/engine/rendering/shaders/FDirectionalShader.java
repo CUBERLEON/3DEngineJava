@@ -4,6 +4,7 @@ import com.base.engine.core.Matrix4f;
 import com.base.engine.core.Transform;
 import com.base.engine.components.DirectionalLight;
 import com.base.engine.rendering.Material;
+import com.base.engine.rendering.RenderingEngine;
 
 public class FDirectionalShader extends Shader {
 
@@ -39,24 +40,24 @@ public class FDirectionalShader extends Shader {
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material) {
+    public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
         Matrix4f mTransform = transform.getRealModelTransform();
-        Matrix4f mvpTransform = transform.getModelViewProjectionTransform(getRenderingEngine().getMainCamera());
+        Matrix4f mvpTransform = transform.getModelViewProjectionTransform(renderingEngine.getMainCamera());
 
         //transforms
         setUniformM4F("v_mTransform", mTransform);
         setUniformM4F("v_mvpTransform", mvpTransform);
 
         //additional variables
-        setUniformV3F("f_eyePosition", getRenderingEngine().getMainCamera().getTransform().getRealPosition());
+        setUniformV3F("f_eyePosition", renderingEngine.getMainCamera().getTransform().getRealPosition());
 
         //lights
-        setUniform("f_directionalLight", (DirectionalLight)getRenderingEngine().getActiveLight());
+        setUniform("f_directionalLight", (DirectionalLight) renderingEngine.getActiveLight());
 
         //material
-        material.getTexture().bind();
-        setUniformF("f_specularIntensity", material.getSpecularIntensity());
-        setUniformF("f_specularPower", material.getSpecularPower());
+        material.getTexture("texture").bind();
+        setUniformF("f_specularIntensity", material.getFloat("specularIntensity"));
+        setUniformF("f_specularPower", material.getFloat("specularPower"));
     }
 
     public void setUniform(String uniformName, DirectionalLight value) {

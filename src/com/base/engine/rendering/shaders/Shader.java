@@ -16,8 +16,6 @@ public abstract class Shader {
     private int m_program;
     private HashMap<String, Integer> m_uniforms;
 
-    private static RenderingEngine m_renderingEngine;
-
     public Shader() {
         m_program = glCreateProgram();
         m_uniforms = new HashMap<>();
@@ -44,7 +42,7 @@ public abstract class Shader {
         m_uniforms.put(name, uniformLocation);
     }
 
-    public void updateUniforms(Transform transform, Material material) {}
+    public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {}
 
     public void setUniformI(String uniformName, int value) {
         glUniform1i(m_uniforms.get(uniformName), value);
@@ -150,13 +148,5 @@ public abstract class Shader {
         }
 
         return shaderSource.toString();
-    }
-
-    protected static RenderingEngine getRenderingEngine() {
-        return m_renderingEngine;
-    }
-
-    public static void setRenderingEngine(RenderingEngine renderingEngine) {
-        m_renderingEngine = renderingEngine;
     }
 }

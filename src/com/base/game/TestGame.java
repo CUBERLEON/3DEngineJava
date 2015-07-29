@@ -33,56 +33,66 @@ public class TestGame extends Game {
                           2, 1, 3 };
         Mesh planeMesh = new Mesh(vertices, indices, true);
 
-        Material planeMaterial = new Material(new Texture("models/test/test.png"),
-                                              new Vector3f(1, 1, 1), 0.7f, 8);
-        Material material1 = new Material(new Texture("models/test/test.png"),
-                                               new Vector3f(0, 1, 0), 1.0f, 8);
+        Material material1 = new Material();
+        material1.addTexture("texture", new Texture("models/test/test.png"));
+        material1.addFloat("specularIntensity", 1);
+        material1.addFloat("specularPower", 8);
 
-        GameObject planeObject = new GameObject().addComponent(new MeshRenderer(planeMesh, planeMaterial));
+        GameObject planeObject = new GameObject().addComponent(new MeshRenderer(planeMesh, material1));
         GameObject object1 = new GameObject().addComponent(new MeshRenderer(new Mesh("models/test/angel.obj"), material1));
 //        object1.getTransform().setScale(0.02f, 0.02f, 0.02f);
 //        object1.getTransform().setPosition(0, 0, 0);
 
-        getRoot().addChild(planeObject).addChild(object1);
+        addObject(planeObject);
+        addObject(object1);
 
-        GameObject test1 = new GameObject().addComponent(new MeshRenderer(planeMesh, planeMaterial));
-        GameObject test2 = new GameObject().addComponent(new MeshRenderer(planeMesh, planeMaterial));
-        test1.getTransform().setScale(0.1f, 0.1f, 0.1f).setPosition(0, 0, -1).setRotation(new Quaternion().initEulerXDeg(45));
-        test2.getTransform().setPosition(50, 0, 0);
-        test1.addChild(test2);
+        GameObject test1 = new GameObject().addComponent(new MeshRenderer(planeMesh, material1));
+        GameObject test2 = new GameObject().addComponent(new MeshRenderer(planeMesh, material1));
+        GameObject test3 = new GameObject().addComponent(new MeshRenderer(planeMesh, material1));
 
-        getRoot().addChild(test1);
+        test1.getTransform().setScale(0.1f, 0.1f, 0.1f)
+                            .setPosition(0, 2, 0)
+                            .setRotation(new Quaternion().initEulerYDeg(45));
+        test2.getTransform().setPosition(50, 0, 0)
+                            .setRotation(new Quaternion().initEulerXDeg(20));
+        test3.getTransform().setPosition(0, 0, 10)
+                            .setRotation(new Quaternion().initEulerXDeg(25));
+
+        test1.addChild(test2.addChild(test3));
+        addObject(test1);
 
         //lights
         ArrayList<GameObject> pointLightObjects = new ArrayList<>();
-        pointLightObjects.add(new GameObject().addComponent(m_pointLights[0]));
-        pointLightObjects.get(0).getTransform().setPosition(new Vector3f(0.0f, 4.0f, -3.0f));
-
-        pointLightObjects.add(new GameObject().addComponent(m_pointLights[1]));
-        pointLightObjects.get(1).getTransform().setPosition(new Vector3f(3.0f, 4.0f, 0.0f));
-
         ArrayList<GameObject> spotLightObjects = new ArrayList<>();
+        GameObject directionalLightObject = new GameObject().addComponent(m_directionalLight);
+
+        pointLightObjects.add(new GameObject().addComponent(m_pointLights[0]));
+        pointLightObjects.add(new GameObject().addComponent(m_pointLights[1]));
         spotLightObjects.add(new GameObject().addComponent(m_spotLights[0]));
+
+        pointLightObjects.get(0).getTransform().setPosition(new Vector3f(0.0f, 4.0f, -3.0f));
+        pointLightObjects.get(1).getTransform().setPosition(new Vector3f(3.0f, 4.0f, 0.0f));
         spotLightObjects.get(0).getTransform().setPosition(new Vector3f(0, 3, -2))
                                               .setRotation(new Quaternion().initAxisDeg(new Vector3f(1, 0, 0), -150));
-
-        GameObject directionalLightObject = new GameObject().addComponent(m_directionalLight);
         directionalLightObject.getTransform().setRotation(new Quaternion().initEulerXDeg(-45));
 
-        getRoot().addChildren(pointLightObjects);
-        getRoot().addChildren(spotLightObjects);
-        getRoot().addChild(directionalLightObject);
+        addObjects(pointLightObjects);
+//        addObjects(spotLightObjects);
+//        addObject(directionalLightObject);
 
         //camera
         GameObject cameraObject = new GameObject();
-        cameraObject.getTransform().setPosition(new Vector3f(5, 1, 5))
-                                   .setRotation(new Quaternion().initEulerYDeg(45));
-        test2.addChild(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f)));
-//        getRoot().addChild(cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100)));
-//        cameraObject.addChild(test1);
+        cameraObject.getTransform().setPosition(new Vector3f(0, 1, 0));
+                                   //.setRotation(new Quaternion().initEulerXDeg(-45));
 
+//        test3.addChild(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f)));
+        addObject(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f)));
+
+//        addObject(cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100)));
+//        cameraObject.addObject(test1);
 
         //Math tests
+//        System.out.println(new Vector3f(0, 1, 0).mul(new Matrix4f().initRotationDeg(45, 45, 0)));
 //        Vector3f in = new Vector3f(23, 13, -17);
 //        float angle = 100;
 //        Vector3f axis = new Vector3f(111, -3, 5);

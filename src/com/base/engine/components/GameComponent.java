@@ -11,7 +11,7 @@ public abstract class GameComponent {
 
     public void input(float time) {}
     public void update(float time) {}
-    public void render(Shader shader) {}
+    public void render(Shader shader, RenderingEngine renderingEngine) {}
 
     public Transform getTransform() {
         if (m_object == null) {

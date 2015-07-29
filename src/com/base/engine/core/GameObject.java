@@ -76,12 +76,12 @@ public class GameObject {
             child.update(time);
     }
 
-    public void render(Shader shader) {
+    public void render(Shader shader, RenderingEngine renderingEngine) {
         for (GameComponent component : m_components)
-            component.render(shader);
+            component.render(shader, renderingEngine);
 
         for (GameObject child : m_children)
-            child.render(shader);
+            child.render(shader, renderingEngine);
     }
 
     public void addToRenderingEngine(RenderingEngine renderingEngine) {

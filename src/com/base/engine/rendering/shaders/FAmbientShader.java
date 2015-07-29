@@ -3,6 +3,7 @@ package com.base.engine.rendering.shaders;
 import com.base.engine.core.Matrix4f;
 import com.base.engine.core.Transform;
 import com.base.engine.rendering.Material;
+import com.base.engine.rendering.RenderingEngine;
 
 public class FAmbientShader extends Shader {
 
@@ -28,16 +29,16 @@ public class FAmbientShader extends Shader {
     }
 
     @Override
-    public void updateUniforms(Transform transform, Material material) {
-        Matrix4f mvpTransform = transform.getModelViewProjectionTransform(getRenderingEngine().getMainCamera());
+    public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
+        Matrix4f mvpTransform = transform.getModelViewProjectionTransform(renderingEngine.getMainCamera());
 
         //transforms
         setUniformM4F("v_mvpTransform", mvpTransform);
 
         //lights
-        setUniformV3F("f_ambientIntensity", getRenderingEngine().getAmbientLight());
+        setUniformV3F("f_ambientIntensity", renderingEngine.getAmbientLight());
 
         //material
-        material.getTexture().bind();
+        material.getTexture("texture").bind();
     }
 }

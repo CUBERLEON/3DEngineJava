@@ -2,57 +2,44 @@ package com.base.engine.rendering;
 
 import com.base.engine.core.Vector3f;
 
+import java.util.HashMap;
+
 public class Material {
 
-    private Texture m_texture;
-    private Vector3f m_color;
-    private float m_specularIntensity;
-    private float m_specularPower;
+    private HashMap<String, Texture> m_textures;
+    private HashMap<String, Vector3f> m_vector3fs;
+    private HashMap<String, Float> m_floats;
 
-    public Material(Texture texture) {
-        this(texture, new Vector3f(1, 1, 1));
+    public Material() {
+        m_textures = new HashMap<>();
+        m_vector3fs = new HashMap<>();
+        m_floats = new HashMap<>();
     }
 
-    public Material(Texture texture, Vector3f color) {
-        this(texture, color, 0.3f, 16);
+    public Material addTexture(String name, Texture value) {
+        m_textures.put(name, value);
+        return this;
     }
 
-    public Material(Texture texture, Vector3f color, float specularIntensity, float specularPower) {
-        m_texture = texture;
-        m_color = color;
-        m_specularIntensity = specularIntensity;
-        m_specularPower = specularPower;
+    public Material addVector3f(String name, Vector3f value) {
+        m_vector3fs.put(name, value);
+        return this;
     }
 
-    public Texture getTexture() {
-        return m_texture;
+    public Material addFloat(String name, float value) {
+        m_floats.put(name, value);
+        return this;
     }
 
-    public void setTexture(Texture texture) {
-        this.m_texture = texture;
+    public Texture getTexture(String name) {
+        return m_textures.get(name);
     }
 
-    public Vector3f getColor() {
-        return m_color;
+    public Vector3f getVector3f(String name) {
+        return m_vector3fs.get(name);
     }
 
-    public void setColor(Vector3f color) {
-        this.m_color = color;
-    }
-
-    public float getSpecularIntensity() {
-        return m_specularIntensity;
-    }
-
-    public void setSpecularIntensity(float specularIntensity) {
-        this.m_specularIntensity = specularIntensity;
-    }
-
-    public float getSpecularPower() {
-        return m_specularPower;
-    }
-
-    public void setSpecularPower(float specularPower) {
-        this.m_specularPower = specularPower;
+    public float getFloat(String name) {
+        return m_floats.get(name);
     }
 }

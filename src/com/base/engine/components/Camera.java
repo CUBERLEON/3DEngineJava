@@ -69,27 +69,27 @@ public abstract class Camera extends GameComponent {
     }
 
     public Vector3f getLeft() {
-        return getTransform().getRealRotation().getLeft();
+        return getTransform().getRotation().getLeft();
     }
 
     public Vector3f getRight() {
-        return getTransform().getRealRotation().getRight();
+        return getTransform().getRotation().getRight();
     }
 
     public Vector3f getForward() {
-        return getTransform().getRealRotation().getForward();
+        return getTransform().getRotation().getForward();
     }
 
     public Vector3f getBack() {
-        return getTransform().getRealRotation().getBack();
+        return getTransform().getRotation().getBack();
     }
 
     public Vector3f getUp() {
-        return getTransform().getRealRotation().getUp();
+        return getTransform().getRotation().getUp();
     }
 
     public Vector3f getDown() {
-        return getTransform().getRealRotation().getDown();
+        return getTransform().getRotation().getDown();
     }
 
     public boolean isLocked() {

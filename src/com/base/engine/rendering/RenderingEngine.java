@@ -44,7 +44,7 @@ public class RenderingEngine {
 
         gameObject.addToRenderingEngine(this);
 
-        gameObject.render(FAmbientShader.getInstance());
+        gameObject.render(FAmbientShader.getInstance(), this);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
@@ -53,7 +53,7 @@ public class RenderingEngine {
 
         for (Light light : m_lights) {
             m_activeLight = light;
-            gameObject.render(light.getShader());
+            gameObject.render(light.getShader(), this);
         }
 
         glDepthMask(true);
@@ -91,6 +91,12 @@ public class RenderingEngine {
     }
 
     public Camera getMainCamera() {
+        if (m_mainCamera == null) {
+            System.err.println("Fatal ERROR: there is no Camera in the scene graph");
+            new Exception().printStackTrace();
+            System.exit(1);
+        }
+
         return m_mainCamera;
     }
 
