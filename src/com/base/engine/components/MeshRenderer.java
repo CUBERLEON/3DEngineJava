@@ -3,7 +3,7 @@ package com.base.engine.components;
 import com.base.engine.rendering.*;
 import com.base.engine.rendering.shaders.Shader;
 
-public class MeshRenderer extends GameComponent {
+public class MeshRenderer extends Component {
 
     private Mesh m_mesh;
     private Material m_material;

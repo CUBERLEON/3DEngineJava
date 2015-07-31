@@ -43,9 +43,9 @@ public class TestGame extends Game {
         material2.addFloat("specularIntensity", 1);
         material2.addFloat("specularPower", 8);
 
-        GameObject planeObject = new GameObject().addComponent(new MeshRenderer(planeMesh, material2));
+        Node planeObject = new Node().addComponent(new MeshRenderer(planeMesh, material2));
 
-        GameObject object1 = new GameObject().addComponent(new MeshRenderer(new Mesh("models/barrels/metal_barrel.obj"), material1));
+        Node object1 = new Node().addComponent(new MeshRenderer(new Mesh("models/barrels/metal_barrel.obj"), material1));
         object1.getTransform().setScale(0.03f, 0.03f, 0.03f);
         object1.getTransform().setPosition(0, 0, 2);
 //        object1.getTransform().setRotation(new Quaternion().initEulerDeg(0, 0, 0));
@@ -53,9 +53,9 @@ public class TestGame extends Game {
 
         addObject(planeObject);
 
-        GameObject test1 = new GameObject().addComponent(new MeshRenderer(planeMesh, material2));
-        GameObject test2 = new GameObject().addComponent(new MeshRenderer(planeMesh, material2));
-        GameObject test3 = new GameObject().addComponent(new MeshRenderer(planeMesh, material2));
+        Node test1 = new Node().addComponent(new MeshRenderer(planeMesh, material2));
+        Node test2 = new Node().addComponent(new MeshRenderer(planeMesh, material2));
+        Node test3 = new Node().addComponent(new MeshRenderer(planeMesh, material2));
 
         test1.getTransform().setScale(0.1f, 0.1f, 0.1f)
                             .setPosition(0, 3, 0)
@@ -68,14 +68,17 @@ public class TestGame extends Game {
         test1.addChild(test2.addChild(test3));
         addObject(test1);
 
-        //lights
-        ArrayList<GameObject> pointLightObjects = new ArrayList<>();
-        ArrayList<GameObject> spotLightObjects = new ArrayList<>();
-        GameObject directionalLightObject = new GameObject().addComponent(m_directionalLight);
+        Mesh m = new Mesh("models/test/mustang_gt500.obj");
+        m = null;
 
-        pointLightObjects.add(new GameObject().addComponent(m_pointLights[0]));
-        pointLightObjects.add(new GameObject().addComponent(m_pointLights[1]));
-        spotLightObjects.add(new GameObject().addComponent(m_spotLights[0]));
+        //lights
+        ArrayList<Node> pointLightObjects = new ArrayList<>();
+        ArrayList<Node> spotLightObjects = new ArrayList<>();
+        Node directionalLightObject = new Node().addComponent(m_directionalLight);
+
+        pointLightObjects.add(new Node().addComponent(m_pointLights[0]));
+        pointLightObjects.add(new Node().addComponent(m_pointLights[1]));
+        spotLightObjects.add(new Node().addComponent(m_spotLights[0]));
 
         pointLightObjects.get(0).getTransform().setPosition(new Vector3f(0.0f, 4.0f, -3.0f));
         pointLightObjects.get(1).getTransform().setPosition(new Vector3f(3.0f, 4.0f, 0.0f));
@@ -88,7 +91,7 @@ public class TestGame extends Game {
         addObject(directionalLightObject);
 
         //camera
-        GameObject cameraObject = new GameObject();
+        Node cameraObject = new Node();
         cameraObject.getTransform().setPosition(new Vector3f(5, 5, 5))
                                    .setRotation(new Quaternion().initEulerYDeg(45));
 

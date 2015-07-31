@@ -4,7 +4,7 @@ import com.base.engine.core.Vector3f;
 import com.base.engine.rendering.RenderingEngine;
 import com.base.engine.rendering.shaders.Shader;
 
-public abstract class Light extends GameComponent {
+public abstract class Light extends Component {
 
     protected Vector3f m_color;
     protected float m_intensity;

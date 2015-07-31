@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 public abstract class Game {
 
-    private GameObject m_root;
+    private Node m_root;
 
     public Game() {
-        m_root = new GameObject();
+        m_root = new Node();
     }
 
     public void init() {}
@@ -26,15 +26,15 @@ public abstract class Game {
         renderingEngine.render(m_root);
     }
 
-    public void addObject(GameObject object) {
+    public void addObject(Node object) {
         m_root.addChild(object);
     }
 
-    public void addObjects(GameObject objects[]) {
+    public void addObjects(Node objects[]) {
         m_root.addChildren(objects);
     }
 
-    public void addObjects(ArrayList<GameObject> objects) {
+    public void addObjects(ArrayList<Node> objects) {
         m_root.addChildren(objects);
     }
 }

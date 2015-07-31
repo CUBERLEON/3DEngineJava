@@ -5,12 +5,11 @@ import com.base.engine.core.Vector2f;
 import com.base.engine.core.Vector3f;
 import com.base.engine.rendering.meshLoading.IndexedModel;
 import com.base.engine.rendering.meshLoading.OBJModel;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
+import com.base.engine.rendering.resources.MeshBuffer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -18,40 +17,64 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Mesh {
 
-    private int m_vbo;
-    private int m_ibo;
-    private int m_size;
+    private static HashMap<String, WeakReference<MeshBuffer>> m_loadedMeshes = new HashMap<>();
+
+    private MeshBuffer m_buffer;
+    private int m_indicesCount;
+
+    private String m_filePath;
 
     public Mesh(String filePath) {
-        initBuffers();
+        m_filePath = filePath;
+
+        if (m_loadedMeshes.containsKey(filePath)) {
+            m_buffer = m_loadedMeshes.get(filePath).get();
+            m_buffer.addReference();
+        } else {
+            m_buffer = new MeshBuffer();
+            m_loadedMeshes.put(filePath, new WeakReference(m_buffer));
+        }
+
         loadMesh(filePath);
     }
 
-    public Mesh(Vertex[] vertices, int[] indices) {
-        this(vertices, indices, false);
-    }
-
     public Mesh(Vertex[] vertices, int[] indices, boolean calcNormals) {
-        initBuffers();
+        m_buffer = new MeshBuffer();
+
         setVertices(vertices, indices, calcNormals);
     }
 
-    private void initBuffers() {
-        m_vbo = glGenBuffers();
-        m_ibo = glGenBuffers();
-        m_size = 0;
+    public void dispose() {
+        if (m_buffer != null)
+            m_buffer.dispose();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            if (m_buffer.deleteReference()) {
+                if (m_filePath != null) {
+                    m_loadedMeshes.remove(m_filePath, m_buffer);
+                    System.out.println("INFO: Mesh(" + m_filePath + ") was deleted (finalize)");
+                }
+            }
+        } catch (Throwable t) {
+            throw t;
+        } finally {
+            super.finalize();
+        }
     }
 
     private void setVertices(Vertex[] vertices, int[] indices, boolean calcNormals) {
         if (calcNormals)
             calcNormals(vertices, indices);
 
-        m_size = indices.length;
+        m_indicesCount = indices.length;
 
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        GL15.glBufferData(GL_ARRAY_BUFFER, Util.createFloatBuffer(vertices), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, m_buffer.getVertexBufferID());
+        glBufferData(GL_ARRAY_BUFFER, Util.createBuffer(vertices), GL_STATIC_DRAW);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffer.getIndicesBufferID());
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, Util.createIntBuffer(indices), GL_STATIC_DRAW);
     }
 
@@ -60,13 +83,13 @@ public class Mesh {
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
 
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        GL20.glVertexAttribPointer(0, Vector3f.SIZE, GL_FLOAT, false, 4 * Vertex.SIZE, 0);
-        GL20.glVertexAttribPointer(1, Vector2f.SIZE, GL_FLOAT, false, 4 * Vertex.SIZE, 4 * Vector3f.SIZE);
+        glBindBuffer(GL_ARRAY_BUFFER, m_buffer.getVertexBufferID());
+        glVertexAttribPointer(0, Vector3f.SIZE, GL_FLOAT, false, 4 * Vertex.SIZE, 0);
+        glVertexAttribPointer(1, Vector2f.SIZE, GL_FLOAT, false, 4 * Vertex.SIZE, 4 * Vector3f.SIZE);
         glVertexAttribPointer(2, Vector3f.SIZE, GL_FLOAT, false, 4 * Vertex.SIZE, 4 * (Vector3f.SIZE + Vector2f.SIZE));
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-        glDrawElements(GL_TRIANGLES, m_size, GL_UNSIGNED_INT, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffer.getIndicesBufferID());
+        glDrawElements(GL_TRIANGLES, m_indicesCount, GL_UNSIGNED_INT, 0);
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
@@ -102,7 +125,7 @@ public class Mesh {
         String[] splitArray = filePath.split("\\.");
         String ext = splitArray[splitArray.length - 1].toUpperCase();
 
-        if (!(ext.equals("OBJ"))) {
+        if (!ext.equals("OBJ")) {
             System.err.println("Fatal ERROR: " + ext + " mesh format isn't supported!");
             new Exception().printStackTrace();
             System.exit(1);

@@ -4,7 +4,7 @@ import com.base.engine.core.*;
 import com.base.engine.rendering.RenderingEngine;
 import com.base.engine.rendering.Window;
 
-public abstract class Camera extends GameComponent {
+public abstract class Camera extends Component {
 
     protected boolean m_isLocked;
 

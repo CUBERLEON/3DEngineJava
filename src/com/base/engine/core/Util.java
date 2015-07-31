@@ -20,7 +20,7 @@ public class Util {
         return buffer;
     }
 
-    public static FloatBuffer createFloatBuffer(Vertex[] vertices) {
+    public static FloatBuffer createBuffer(Vertex[] vertices) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(vertices.length * Vertex.SIZE);
 
         for (int i = 0; i < vertices.length; i++) {

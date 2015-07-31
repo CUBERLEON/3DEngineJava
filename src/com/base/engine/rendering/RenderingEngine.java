@@ -2,7 +2,7 @@ package com.base.engine.rendering;
 
 import com.base.engine.components.Camera;
 import com.base.engine.components.Light;
-import com.base.engine.core.GameObject;
+import com.base.engine.core.Node;
 import com.base.engine.core.Vector3f;
 import com.base.engine.rendering.shaders.FAmbientShader;
 
@@ -38,13 +38,13 @@ public class RenderingEngine {
         m_ambientLight = new Vector3f(0.03f, 0.03f, 0.03f);
     }
 
-    public void render(GameObject gameObject) {
+    public void render(Node node) {
         clearScreen();
         m_lights.clear();
 
-        gameObject.addToRenderingEngine(this);
+        node.addToRenderingEngine(this);
 
-        gameObject.render(FAmbientShader.getInstance(), this);
+        node.render(FAmbientShader.getInstance(), this);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
@@ -53,7 +53,7 @@ public class RenderingEngine {
 
         for (Light light : m_lights) {
             m_activeLight = light;
-            gameObject.render(light.getShader(), this);
+            node.render(light.getShader(), this);
         }
 
         glDepthMask(true);
