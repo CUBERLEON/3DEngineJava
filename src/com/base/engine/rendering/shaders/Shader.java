@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL32.*;
+//import static org.lwjgl.opengl.GL32.*;
 
 public abstract class Shader {
 
@@ -76,9 +76,9 @@ public abstract class Shader {
         addProgram(loadShader(fileName), GL_VERTEX_SHADER);
     }
 
-    public void addGeometryShaderFromFile(String fileName) {
-        addProgram(loadShader(fileName), GL_GEOMETRY_SHADER);
-    }
+//    public void addGeometryShaderFromFile(String fileName) {
+//        addProgram(loadShader(fileName), GL_GEOMETRY_SHADER);
+//    }
 
     public void addFragmentShaderFromFile(String fileName) {
         addProgram(loadShader(fileName), GL_FRAGMENT_SHADER);
@@ -88,9 +88,9 @@ public abstract class Shader {
         addProgram(text, GL_VERTEX_SHADER);
     }
 
-    public void addGeometryShader(String text) {
-        addProgram(text, GL_GEOMETRY_SHADER);
-    }
+//    public void addGeometryShader(String text) {
+//        addProgram(text, GL_GEOMETRY_SHADER);
+//    }
 
     public void addFragmentShader(String text) {
         addProgram(text, GL_FRAGMENT_SHADER);

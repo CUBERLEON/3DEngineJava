@@ -3,6 +3,8 @@ package com.base.engine.rendering;
 import com.base.engine.core.Util;
 import com.base.engine.core.Vector2f;
 import com.base.engine.core.Vector3f;
+import com.base.engine.rendering.meshLoading.IndexedModel;
+import com.base.engine.rendering.meshLoading.OBJModel;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
@@ -106,78 +108,21 @@ public class Mesh {
             System.exit(1);
         }
 
+        IndexedModel model = new OBJModel("./res/" + filePath).toIndexedModel();
+
+        Vertex[] verticesData = new Vertex[model.getPositions().size()];
+        Integer[] indicesData = new Integer[model.getIndices().size()];
+
         ArrayList<Vertex> vertices = new ArrayList<>();
-        ArrayList<Vertex> texCoords = new ArrayList<>();
-        ArrayList<Vertex> normals = new ArrayList<>();
-
-        ArrayList<Integer> vertIndices = new ArrayList<>();
-        ArrayList<Integer> texIndices = new ArrayList<>();
-        ArrayList<Integer> normIndices = new ArrayList<>();
-
-        try {
-            BufferedReader meshReader = new BufferedReader(new FileReader("./res/" + filePath));
-
-            String line;
-            while ((line = meshReader.readLine()) != null) {
-                String[] tokens = line.split(" ");
-                tokens = Util.removeEmptyStrings(tokens);
-
-                if (tokens.length == 0 || tokens[0].equals("#"))
-                    continue;
-
-                if (tokens[0].equals("v") && tokens.length == 4) {
-                    vertices.add(new Vertex(new Vector3f(Float.valueOf(tokens[1]),
-                            Float.valueOf(tokens[2]),
-                            Float.valueOf(tokens[3]))));
-                } else if (tokens[0].equals("f") && tokens.length == 4) {
-                    for (int i = 1; i <= 3; i++) {
-                        String[] values;
-                        if (tokens[i].contains("//"))
-                            values = tokens[i].split("//");
-                        else if (tokens[i].contains("/"))
-                            values = tokens[i].split("/");
-                        else values = new String[]{tokens[i]};
-
-                        switch (values.length) {
-                            case 1: vertIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                break;
-                            case 2: vertIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                normIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                break;
-                            case 3: vertIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                texIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                normIndices.add(Math.abs(Integer.valueOf(values[0])) - 1);
-                                break;
-                            default:
-                                throw new Exception("Fatal ERROR: " + filePath + " faces data was corrupted!");
-                        }
-                    }
-                } if (tokens[0].equals("vt") && tokens.length == 4) {
-                    texCoords.add(new Vertex(new Vector3f(Float.valueOf(tokens[1]),
-                            Float.valueOf(tokens[2]),
-                            Float.valueOf(tokens[3]))));
-                } if (tokens[0].equals("vn") && tokens.length == 4) {
-                    normals.add(new Vertex(new Vector3f(Float.valueOf(tokens[1]),
-                            Float.valueOf(tokens[2]),
-                            Float.valueOf(tokens[3]))));
-                }
-            }
-
-            meshReader.close();
-
-            if (vertices.size() == 0 || vertIndices.size() == 0)
-                throw new Exception("Fatal ERROR: " + filePath + " data was corrupted!");
-
-            Vertex[] verticesData = new Vertex[vertices.size()];
-            Integer[] indicesData = new Integer[vertIndices.size()];
-
-            vertices.toArray(verticesData);
-            vertIndices.toArray(indicesData);
-
-            setVertices(verticesData, Util.toIntArray(indicesData), true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
+        for (int i = 0; i < model.getPositions().size(); i++) {
+            vertices.add(new Vertex(model.getPositions().get(i),
+                                    model.getTexCoords().get(i),
+                                    model.getNormals().get(i)));
         }
+
+        vertices.toArray(verticesData);
+        model.getIndices().toArray(indicesData);
+
+        setVertices(verticesData, Util.toIntArray(indicesData), false);
     }
 }

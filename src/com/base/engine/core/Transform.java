@@ -41,16 +41,19 @@ public class Transform {
     }
 
     public void update() {
-        m_needChildrenUpdate = hasChanged() ||
-                               (m_parent != null && m_parent.isChildrenUpdateNeeded());
+        boolean hasChanged = hasChanged();
 
-        if (m_needChildrenUpdate) {
+        if (hasChanged) {
             updateModelTransform();
-            updateRealValues();
 
             m_oldPosition.set(m_position);
             m_oldRotation.set(m_rotation);
             m_oldScale.set(m_scale);
+        }
+
+        if (m_needChildrenUpdate = hasChanged ||
+                                   (m_parent != null && m_parent.isChildrenUpdateNeeded())) {
+            updateRealValues();
         }
     }
 

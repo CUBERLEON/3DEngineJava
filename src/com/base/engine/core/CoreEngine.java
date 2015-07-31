@@ -31,21 +31,23 @@ public class CoreEngine {
     }
 
     public void start() {
+        if (m_isRunning)
+            return;
+
         if (!Window.isCreated()) {
             System.err.println("ERROR: trying to start CoreEngine when Window wasn't created!");
             new Exception().printStackTrace();
             return;
         }
 
-        if (m_isRunning)
-            return;
-
-        m_isRunning = true;
         m_game.init();
+
         run();
     }
 
     private void run() {
+        m_isRunning = true;
+
         int frames = 0;
         double fpsTime = 0;
         double fpsRefreshTime = 1.0;

@@ -23,7 +23,7 @@ public class Util {
     public static FloatBuffer createFloatBuffer(Vertex[] vertices) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(vertices.length * Vertex.SIZE);
 
-        for(int i = 0; i < vertices.length; i++) {
+        for (int i = 0; i < vertices.length; i++) {
             buffer.put(vertices[i].getPosition().getX());
             buffer.put(vertices[i].getPosition().getY());
             buffer.put(vertices[i].getPosition().getZ());
@@ -42,8 +42,8 @@ public class Util {
     public static FloatBuffer createFloatBuffer(Matrix4f value) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(4 * 4);
 
-        for(int i = 0; i < 4; i++)
-            for(int j = 0; j < 4; j++)
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
                 buffer.put(value.get(i, j));
 
         buffer.flip();
@@ -54,8 +54,8 @@ public class Util {
     public static String[] removeEmptyStrings(String[] data) {
         ArrayList<String> result = new ArrayList<>();
 
-        for(int i = 0; i < data.length; i++)
-            if(!data[i].equals(""))
+        for (int i = 0; i < data.length; i++)
+            if (!data[i].equals(""))
                 result.add(data[i]);
 
         String[] res = new String[result.size()];

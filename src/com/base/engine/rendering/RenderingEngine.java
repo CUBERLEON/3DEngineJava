@@ -9,7 +9,7 @@ import com.base.engine.rendering.shaders.FAmbientShader;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL32.*;
+//import static org.lwjgl.opengl.GL32.*;
 
 public class RenderingEngine {
 
@@ -30,7 +30,7 @@ public class RenderingEngine {
         glEnable(GL_CULL_FACE);
 
         glEnable(GL_DEPTH_TEST);
-        glEnable(GL_DEPTH_CLAMP);
+//        glEnable(GL_DEPTH_CLAMP);
 
         glEnable(GL_TEXTURE_2D);
 

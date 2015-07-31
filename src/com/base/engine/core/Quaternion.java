@@ -45,19 +45,15 @@ public class Quaternion {
     }
 
     public Quaternion initEulerRad(float x, float y, float z) {
-//        float siny2 = (float) Math.sin(y/2.0f);
-//        float cosy2 = (float) Math.cos(y/2.0f);
-//
-//        m_x = (float) Math.cos((z-x)/2.0f) * siny2;
-//        m_y = (float) Math.sin((z-x)/2.0f) * siny2;
-//        m_z = (float) Math.sin((z+x)/2.0f) * cosy2;
-//        m_w = (float) Math.cos((z+x)/2.0f) * cosy2;
-//
-//        return this;
-        Quaternion quatAroundX = new Quaternion(Vector3f.xAxis, x);
-        Quaternion quatAroundY = new Quaternion(Vector3f.yAxis, y);
-        Quaternion quatAroundZ = new Quaternion(Vector3f.zAxis, z);
-        return quatAroundZ.mul(quatAroundY.mul(quatAroundX));
+        Vector3f s = new Vector3f((float) Math.sin(x / 2), (float) Math.sin(y / 2), (float) Math.sin(z / 2));
+        Vector3f c = new Vector3f((float) Math.cos(x / 2), (float) Math.cos(y / 2), (float) Math.cos(z / 2));
+
+        m_w = c.getX()*c.getY()*c.getZ()+s.getX()*s.getY()*s.getZ();
+        m_x = s.getX()*c.getY()*c.getZ()-c.getX()*s.getY()*s.getZ();
+        m_y = c.getX()*s.getY()*c.getZ()+s.getX()*c.getY()*s.getZ();
+        m_z = c.getX()*c.getY()*s.getZ()-s.getX()*s.getY()*c.getZ();
+
+        return this;
     }
 
     public Quaternion initEulerXRad(float x) {
