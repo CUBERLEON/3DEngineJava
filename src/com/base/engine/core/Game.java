@@ -9,7 +9,7 @@ public abstract class Game {
     private Node m_root;
 
     public Game() {
-        m_root = new Node();
+        m_root = new Node("root");
     }
 
     public void init() {}
@@ -26,15 +26,7 @@ public abstract class Game {
         renderingEngine.render(m_root);
     }
 
-    public void addObject(Node object) {
-        m_root.addChild(object);
-    }
-
-    public void addObjects(Node objects[]) {
-        m_root.addChildren(objects);
-    }
-
-    public void addObjects(ArrayList<Node> objects) {
-        m_root.addChildren(objects);
+    public Node getRoot() {
+        return m_root;
     }
 }

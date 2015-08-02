@@ -7,23 +7,27 @@ import com.base.engine.rendering.shaders.Shader;
 
 public abstract class Component {
 
-    private Node m_object;
+    private Node m_node;
 
     public void input(float time) {}
     public void update(float time) {}
     public void render(Shader shader, RenderingEngine renderingEngine) {}
 
     public Transform getTransform() {
-        if (m_object == null) {
-            System.err.println("Fatal ERROR: calling Component.getTransform() method when Node wasn't assigned");
+        return getNode().getTransform();
+    }
+
+    public void setNode(Node node) {
+        m_node = node;
+    }
+
+    public Node getNode() {
+        if (m_node == null) {
+            System.err.println("Fatal ERROR: calling Component.getNode() method when Node wasn't assigned");
             new Exception().printStackTrace();
             System.exit(1);
         }
-        return m_object.getTransform();
-    }
-
-    public void setObject(Node object) {
-        m_object = object;
+        return m_node;
     }
 
     public void addToRenderingEngine(RenderingEngine renderingEngine) {}

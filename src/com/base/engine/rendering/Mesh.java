@@ -18,11 +18,10 @@ import static org.lwjgl.opengl.GL20.*;
 public class Mesh {
 
     private static HashMap<String, WeakReference<MeshBuffer>> m_loadedMeshes = new HashMap<>();
-
     private MeshBuffer m_buffer;
-    private int m_indicesCount;
-
     private String m_filePath;
+
+    private int m_indicesCount;
 
     public Mesh(String filePath) {
         m_filePath = filePath;

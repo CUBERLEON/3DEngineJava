@@ -43,19 +43,19 @@ public class TestGame extends Game {
         material2.addFloat("specularIntensity", 1);
         material2.addFloat("specularPower", 8);
 
-        Node planeObject = new Node().addComponent(new MeshRenderer(planeMesh, material2));
+        Node planeObject = new Node("main_plane").addComponents(new MeshRenderer(planeMesh, material2));
 
-        Node object1 = new Node().addComponent(new MeshRenderer(new Mesh("models/barrels/metal_barrel.obj"), material1));
+        Node object1 = new Node("barrel").addComponents(new MeshRenderer(new Mesh("models/barrels/metal_barrel.obj"), material1));
         object1.getTransform().setScale(0.03f, 0.03f, 0.03f);
         object1.getTransform().setPosition(0, 0, 2);
 //        object1.getTransform().setRotation(new Quaternion().initEulerDeg(0, 0, 0));
-        addObject(object1);
+        getRoot().addChild(object1);
 
-        addObject(planeObject);
+        getRoot().addChild(planeObject);
 
-        Node test1 = new Node().addComponent(new MeshRenderer(planeMesh, material2));
-        Node test2 = new Node().addComponent(new MeshRenderer(planeMesh, material2));
-        Node test3 = new Node().addComponent(new MeshRenderer(planeMesh, material2));
+        Node test1 = new Node("test_1").addComponents(new MeshRenderer(planeMesh, material2));
+        Node test2 = new Node("test_2").addComponents(new MeshRenderer(planeMesh, material2));
+        Node test3 = new Node("test_3").addComponents(new MeshRenderer(planeMesh, material2));
 
         test1.getTransform().setScale(0.1f, 0.1f, 0.1f)
                             .setPosition(0, 3, 0)
@@ -66,19 +66,16 @@ public class TestGame extends Game {
                             .setRotation(new Quaternion().initEulerXDeg(25));
 
         test1.addChild(test2.addChild(test3));
-        addObject(test1);
-
-        Mesh m = new Mesh("models/test/mustang_gt500.obj");
-        m = null;
+        getRoot().addChild(test1);
 
         //lights
         ArrayList<Node> pointLightObjects = new ArrayList<>();
         ArrayList<Node> spotLightObjects = new ArrayList<>();
-        Node directionalLightObject = new Node().addComponent(m_directionalLight);
+        Node directionalLightObject = new Node("directional_light").addComponents(m_directionalLight);
 
-        pointLightObjects.add(new Node().addComponent(m_pointLights[0]));
-        pointLightObjects.add(new Node().addComponent(m_pointLights[1]));
-        spotLightObjects.add(new Node().addComponent(m_spotLights[0]));
+        pointLightObjects.add(new Node("point_light_1").addComponents(m_pointLights[0]));
+        pointLightObjects.add(new Node("point_light_2").addComponents(m_pointLights[1]));
+        spotLightObjects.add(new Node("spot_light").addComponents(m_spotLights[0]));
 
         pointLightObjects.get(0).getTransform().setPosition(new Vector3f(0.0f, 4.0f, -3.0f));
         pointLightObjects.get(1).getTransform().setPosition(new Vector3f(3.0f, 4.0f, 0.0f));
@@ -86,20 +83,21 @@ public class TestGame extends Game {
                                               .setRotation(new Quaternion().initAxisDeg(new Vector3f(1, 0, 0), -150));
         directionalLightObject.getTransform().setRotation(new Quaternion().initEulerXDeg(-45));
 
-        addObjects(pointLightObjects);
-        addObjects(spotLightObjects);
-        addObject(directionalLightObject);
+        getRoot().addChildren(pointLightObjects);
+        getRoot().addChildren(spotLightObjects);
+        getRoot().addChild(directionalLightObject);
 
         //camera
-        Node cameraObject = new Node();
-        cameraObject.getTransform().setPosition(new Vector3f(5, 5, 5))
-                                   .setRotation(new Quaternion().initEulerYDeg(45));
+        Node cameraObject = new Node("camera");
+        getRoot().addChild(cameraObject);
+        getRoot().getChildByName("camera").getTransform().setPosition(new Vector3f(5, 5, 5))
+                                                         .setRotation(new Quaternion().initEulerYDeg(45));
+        cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f));
+        cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100));
+        cameraObject.removeComponent(OrthographicCamera.class);
 
-//        test3.addChild(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f)));
-        addObject(cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f)));
-
-//        addObject(cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100)));
-//        cameraObject.addObject(test1);
+//        test3.addChild(cameraObject);
+//        cameraObject.addChild(test1);
 
         //Math tests
 //        Vector3f in = new Vector3f(23, 13, -17);

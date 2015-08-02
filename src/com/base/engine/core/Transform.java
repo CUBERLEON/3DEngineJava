@@ -2,9 +2,11 @@ package com.base.engine.core;
 
 import com.base.engine.components.Camera;
 
+import java.lang.ref.WeakReference;
+
 public class Transform {
 
-    private Transform m_parent;
+    private WeakReference<Transform> m_parent;
 
     private Vector3f m_position;
     private Quaternion m_rotation;
@@ -32,6 +34,8 @@ public class Transform {
         m_rotation = rotation.getNormalized();
         m_scale = scale;
 
+        m_parent = new WeakReference(null);
+
         updateModelTransform();
         updateRealValues();
 
@@ -52,7 +56,7 @@ public class Transform {
         }
 
         if (m_needChildrenUpdate = hasChanged ||
-                                   (m_parent != null && m_parent.isChildrenUpdateNeeded())) {
+                                   (getParent() != null && getParent().isChildrenUpdateNeeded())) {
             updateRealValues();
         }
     }
@@ -66,16 +70,16 @@ public class Transform {
     }
 
     private void updateRealValues() {
-        if (m_parent != null) {
-            m_realRotation = m_parent.getRealRotation().getMul(m_rotation);
-            m_realScale = m_scale.getMul(m_parent.getRealScale());
-            m_realPosition = m_position.getMul(m_parent.getRealScale()).rotate(m_parent.getRealRotation()).add(m_parent.getRealPosition());
-            m_realModelTransform = m_parent.getRealModelTransform().getMul(m_modelTransform);
+        if (getParent() != null) {
+            m_realRotation = getParent().getRealRotation().getMul(m_rotation);
+            m_realScale = m_scale.getMul(getParent().getRealScale());
+            m_realPosition = m_position.getMul(getParent().getRealScale()).rotate(getParent().getRealRotation()).add(getParent().getRealPosition());
+            m_realModelTransform = getParent().getRealModelTransform().getMul(m_modelTransform);
         } else {
-            m_realPosition = new Vector3f(m_position);
-            m_realRotation = new Quaternion(m_rotation);
-            m_realScale = new Vector3f(m_scale);
-            m_realModelTransform = new Matrix4f(m_modelTransform);
+            m_realPosition = m_position;
+            m_realRotation = m_rotation;
+            m_realScale = m_scale;
+            m_realModelTransform = m_modelTransform;
         }
     }
 
@@ -107,14 +111,6 @@ public class Transform {
 
     public boolean isChildrenUpdateNeeded() {
         return m_needChildrenUpdate;
-    }
-
-    public Transform getParent() {
-        return m_parent;
-    }
-
-    public void setParent(Transform parent) {
-        m_parent = parent;
     }
 
     public Vector3f getRealPosition() {
@@ -164,5 +160,13 @@ public class Transform {
     public Transform setScale(float x, float y, float z) {
         m_scale.set(x, y, z);
         return this;
+    }
+
+    public void setParent(Transform parent) {
+        m_parent = new WeakReference(parent);
+    }
+
+    public Transform getParent() {
+        return m_parent.get();
     }
 }
