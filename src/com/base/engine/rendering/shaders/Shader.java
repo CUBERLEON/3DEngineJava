@@ -3,15 +3,12 @@ package com.base.engine.rendering.shaders;
 import com.base.engine.core.*;
 import com.base.engine.rendering.Material;
 import com.base.engine.rendering.RenderingEngine;
-import javafx.util.Pair;
 import org.mentaregex.Regex;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.lwjgl.opengl.GL20.*;
 //import static org.lwjgl.opengl.GL32.*;
@@ -132,7 +129,57 @@ public abstract class Shader {
     }
 
     public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
-//        for (int i = 0; i < )
+        for (GLSLvariable variable : m_uniforms) {
+            if (variable.name.length() < 3 || variable.name.charAt(1) != '_') {
+                System.err.println("ERROR: invalid GLSL variable name" + variable.name);
+                continue;
+            }
+
+            char firstChar = variable.name.charAt(0);
+
+            switch (firstChar) {
+                //transform uniforms
+                case 't': {
+                    if (variable.name.equals("t_mvpTransform") && variable.type.equals("mat4"))
+                        setUniformM4F("t_mvpTransform", transform.getModelViewProjectionTransform(renderingEngine.getMainCamera()));
+                    else if (variable.name.equals("t_mTransform") && variable.type.equals("mat4"))
+                        setUniformM4F("t_mTransform", transform.getRealModelTransform());
+
+                    break;
+                }
+                //material uniforms
+                case 'm': {
+                    if (variable.name.equals("m_diffuse") && variable.type.equals("sampler2D"))
+                        material.getTexture("diffuse").bind(renderingEngine.getInteger("diffuse"));
+                    else if (variable.name.equals("m_specularIntensity") && variable.type.equals("float"))
+                        setUniformF("m_specularIntensity", material.getFloat("specularIntensity"));
+                    else if (variable.name.equals("m_specularPower") && variable.type.equals("float"))
+                        setUniformF("m_specularPower", material.getFloat("specularPower"));
+
+                    break;
+                }
+                //rendering engine uniforms
+                case 'r': {
+                    if (variable.name.equals("r_ambientLight") && variable.type.equals("vec3"))
+                        setUniformV3F("r_ambientLight", renderingEngine.getVector3f("ambientLight"));
+
+                    break;
+                }
+                //additional vertex shader uniforms
+                case 'v': {
+
+
+                    break;
+                }
+                //additional fragment shader uniforms
+                case 'f': {
+                    if (variable.name.equals("f_eyePosition") && variable.type.equals("vec3"))
+                        setUniformV3F("f_eyePosition", renderingEngine.getMainCamera().getTransform().getRealPosition());
+
+                    break;
+                }
+            }
+        }
     }
 
     protected void setUniformI(String uniformName, int value) {
@@ -229,9 +276,9 @@ public abstract class Shader {
             String line;
             while ((line = shaderReader.readLine()) != null) {
                 if (line.startsWith("include")) {
-                    Matcher m = Pattern.compile("\\s*include\\s+\"([^\"]+)\"\\s*").matcher(line);
-                    if (m.find())
-                        shaderSource.append(loadShader(m.group(1)));
+                    String[] m = Regex.match(line, "/include\\s+\"([^\"]+)\"/g");
+                    for (String include : m)
+                        shaderSource.append(loadShader(include));
                 } else {
                     shaderSource.append(line + "\n");
                 }

@@ -11,16 +11,16 @@ import java.util.ArrayList;
 import static org.lwjgl.opengl.GL11.*;
 //import static org.lwjgl.opengl.GL32.*;
 
-public class RenderingEngine {
+public class RenderingEngine extends MappedValues {
 
     private Camera m_mainCamera;
-
-    private Vector3f m_ambientLight;
 
     private ArrayList<Light> m_lights;
     private Light m_activeLight;
 
     public RenderingEngine() {
+        m_lights = new ArrayList<>();
+
         System.out.println("INFO: OpenGL version " + getOpenGLVersion());
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -34,12 +34,16 @@ public class RenderingEngine {
 
         glEnable(GL_TEXTURE_2D);
 
-        m_lights = new ArrayList<>();
-        m_ambientLight = new Vector3f(0.03f, 0.03f, 0.03f);
+        //sampler2D GLSL locations
+        addInteger("diffuse", 0);
+        addInteger("normalMap", 1);
+
+        addVector3f("ambientLight", new Vector3f(0.03f, 0.03f, 0.03f));
     }
 
     public void render(Node node) {
-        clearScreen();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         m_lights.clear();
 
         node.addToRenderingEngine(this);
@@ -63,31 +67,8 @@ public class RenderingEngine {
         Window.render();
     }
 
-    private void clearScreen() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
-    private static void setClearColor(Vector3f color) {
-        glClearColor(color.getX(), color.getY(), color.getZ(), 1.0f);
-    }
-
-    private static void setClearColor(float r, float g, float b, float a) {
-        glClearColor(r, g, b, a);
-    }
-
     public static String getOpenGLVersion() {
         return glGetString(GL_VERSION);
-    }
-
-    private static void setTextures(boolean enabled) {
-        if (enabled)
-            glEnable(GL_TEXTURE_2D);
-        else
-            glDisable(GL_TEXTURE_2D);
-    }
-
-    private static void unbindTextures() {
-        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public Camera getMainCamera() {
@@ -106,14 +87,6 @@ public class RenderingEngine {
 
     public void addCamera(Camera mainCamera) {
         m_mainCamera = mainCamera;
-    }
-
-    public Vector3f getAmbientLight() {
-        return m_ambientLight;
-    }
-
-    public void setAmbientLight(Vector3f ambientLight) {
-        m_ambientLight = ambientLight;
     }
 
     public Light getActiveLight() {

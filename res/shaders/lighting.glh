@@ -43,13 +43,13 @@ vec4 calcLight(vec3 color, float intensity, vec3 direction, vec3 normal, vec3 wo
 		float blinnTerm = dot(normal, halfAngle);
 		blinnTerm = clamp(blinnTerm, 0, 1);
 		blinnTerm = cosAngleIncidence != 0.0 ? blinnTerm : 0.0;
-		blinnTerm = pow(blinnTerm, f_specularPower);
+		blinnTerm = pow(blinnTerm, m_specularPower);
 		
-		specularColor = vec4(color, 1) * f_specularIntensity * blinnTerm; //blinn-phong specular lighting
+		specularColor = vec4(color, 1) * m_specularIntensity * blinnTerm; //blinn-phong specular lighting
 */
 
-		float specularFactor = pow(cosAngleIncidence, f_specularPower);
-		specularColor = vec4(color, 1) * f_specularIntensity * specularFactor; //phong specular lighting
+		float specularFactor = pow(cosAngleIncidence, m_specularPower);
+		specularColor = vec4(color, 1) * m_specularIntensity * specularFactor; //phong specular lighting
 	}
 
     return diffuseColor + specularColor;

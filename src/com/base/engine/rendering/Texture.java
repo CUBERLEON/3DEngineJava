@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 
 public class Texture {
 
@@ -49,6 +50,16 @@ public class Texture {
     }
 
     public void bind() {
+        bind(0);
+    }
+
+    public void bind(int samplerLocation) {
+        if (samplerLocation < 0 || samplerLocation > 31) {
+            System.err.println("Fatal ERROR: sampler location("+samplerLocation+") is out of valid range [0, 31]");
+            new Exception().printStackTrace();
+            System.exit(1);
+        }
+        glActiveTexture(GL_TEXTURE0 + samplerLocation);
         glBindTexture(GL_TEXTURE_2D, m_buffer.getBufferID());
     }
 

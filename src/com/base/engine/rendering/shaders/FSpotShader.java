@@ -20,23 +20,10 @@ public class FSpotShader extends Shader {
 
     @Override
     public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
-        Matrix4f mTransform = transform.getRealModelTransform();
-        Matrix4f mvpTransform = transform.getModelViewProjectionTransform(renderingEngine.getMainCamera());
-
-        //transforms
-        setUniformM4F("v_mTransform", mTransform);
-        setUniformM4F("v_mvpTransform", mvpTransform);
-
-        //additional variables
-        setUniformV3F("f_eyePosition", renderingEngine.getMainCamera().getTransform().getRealPosition());
+        super.updateUniforms(transform, material, renderingEngine);
 
         //lights
         setUniform("f_spotLight", (SpotLight)renderingEngine.getActiveLight());
-
-        //material
-        material.getTexture("diffuse").bind();
-        setUniformF("f_specularIntensity", material.getFloat("specularIntensity"));
-        setUniformF("f_specularPower", material.getFloat("specularPower"));
     }
 
     public void setUniform(String uniformName, SpotLight value) {

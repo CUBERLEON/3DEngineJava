@@ -19,15 +19,6 @@ public class FAmbientShader extends Shader {
 
     @Override
     public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
-        Matrix4f mvpTransform = transform.getModelViewProjectionTransform(renderingEngine.getMainCamera());
-
-        //transforms
-        setUniformM4F("t_mvpTransform", mvpTransform);
-
-        //lights
-        setUniformV3F("r_ambientLight", renderingEngine.getAmbientLight());
-
-        //material
-        material.getTexture("diffuse").bind();
+        super.updateUniforms(transform, material, renderingEngine);
     }
 }

@@ -5,7 +5,7 @@ layout (location = 1) in vec2 v_textureCoord;
 
 out vec2 f_textureCoord;
 
-//transforms
+//transform
 uniform mat4 t_mvpTransform;
 
 void main() {
