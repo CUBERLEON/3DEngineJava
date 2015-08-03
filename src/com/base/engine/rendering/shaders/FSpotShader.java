@@ -15,34 +15,7 @@ public class FSpotShader extends Shader {
     }
 
     protected FSpotShader() {
-        super();
-
-        addVertexShaderFromFile("forward-spot.vs");
-        addFragmentShaderFromFile("forward-spot.fs");
-
-        compileShader();
-
-        //transforms
-        addUniform("v_mTransform");
-        addUniform("v_mvpTransform");
-
-        //additional variables
-        addUniform("f_eyePosition");
-
-        //lights
-        addUniform("f_spotLight.pointLight.color");
-        addUniform("f_spotLight.pointLight.intensity");
-        addUniform("f_spotLight.pointLight.attenuation.constant");
-        addUniform("f_spotLight.pointLight.attenuation.linear");
-        addUniform("f_spotLight.pointLight.attenuation.exponent");
-        addUniform("f_spotLight.pointLight.position");
-        addUniform("f_spotLight.pointLight.range");
-        addUniform("f_spotLight.direction");
-        addUniform("f_spotLight.cutoff");
-
-        //material
-        addUniform("f_specularIntensity");
-        addUniform("f_specularPower");
+        super("forward-spot");
     }
 
     @Override
@@ -61,7 +34,7 @@ public class FSpotShader extends Shader {
         setUniform("f_spotLight", (SpotLight)renderingEngine.getActiveLight());
 
         //material
-        material.getTexture("texture").bind();
+        material.getTexture("diffuse").bind();
         setUniformF("f_specularIntensity", material.getFloat("specularIntensity"));
         setUniformF("f_specularPower", material.getFloat("specularPower"));
     }

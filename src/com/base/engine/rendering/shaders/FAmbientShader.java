@@ -14,18 +14,7 @@ public class FAmbientShader extends Shader {
     }
 
     protected FAmbientShader() {
-        super();
-
-        addVertexShaderFromFile("forward-ambient.vs");
-        addFragmentShaderFromFile("forward-ambient.fs");
-
-        compileShader();
-
-        //transforms
-        addUniform("v_mvpTransform");
-
-        //lights
-        addUniform("f_ambientIntensity");
+        super("forward-ambient");
     }
 
     @Override
@@ -33,12 +22,12 @@ public class FAmbientShader extends Shader {
         Matrix4f mvpTransform = transform.getModelViewProjectionTransform(renderingEngine.getMainCamera());
 
         //transforms
-        setUniformM4F("v_mvpTransform", mvpTransform);
+        setUniformM4F("t_mvpTransform", mvpTransform);
 
         //lights
-        setUniformV3F("f_ambientIntensity", renderingEngine.getAmbientLight());
+        setUniformV3F("r_ambientLight", renderingEngine.getAmbientLight());
 
         //material
-        material.getTexture("texture").bind();
+        material.getTexture("diffuse").bind();
     }
 }

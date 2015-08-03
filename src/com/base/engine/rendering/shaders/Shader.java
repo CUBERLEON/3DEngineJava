@@ -3,34 +3,65 @@ package com.base.engine.rendering.shaders;
 import com.base.engine.core.*;
 import com.base.engine.rendering.Material;
 import com.base.engine.rendering.RenderingEngine;
+import javafx.util.Pair;
+import org.mentaregex.Regex;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.lwjgl.opengl.GL20.*;
 //import static org.lwjgl.opengl.GL32.*;
 
 public abstract class Shader {
 
-    private int m_program;
-    private HashMap<String, Integer> m_uniforms;
+    private class GLSLvariable {
+        public String type;
+        public String name;
 
-    public Shader() {
+        public GLSLvariable(String type, String name) {
+            this.type = type;
+            this.name = name;
+        }
+    }
+
+    private int m_program;
+    private HashMap<String, Integer> m_uniformLocations;
+
+    private ArrayList<GLSLvariable> m_uniforms;
+
+    protected Shader(String fileName) {
         m_program = glCreateProgram();
-        m_uniforms = new HashMap<>();
+        m_uniformLocations = new HashMap<>();
+
+        m_uniforms = new ArrayList<>();
 
         if (m_program == 0) {
-            System.err.println("Shader creation failed: could not find valid memory location in constructor");
+            System.err.println("Fatal ERROR: Shader creation failed. Could not find valid memory location in constructor");
+            new Exception().printStackTrace();
             System.exit(1);
         }
+
+        String vertexShaderSource = loadShader(fileName+".vs");
+        String fragmentShaderSource = loadShader(fileName+".fs");
+
+        addVertexShader(vertexShaderSource);
+        addFragmentShader(fragmentShaderSource);
+
+        compileShader();
+
+        addAllUniforms(vertexShaderSource);
+        addAllUniforms(fragmentShaderSource);
     }
 
     public void bind() {
         glUseProgram(m_program);
     }
 
-    public void addUniform(String name) {
+    private void addUniform(String name) {
         int uniformLocation = glGetUniformLocation(m_program, name);
 
         if (uniformLocation == -1) {
@@ -39,64 +70,124 @@ public abstract class Shader {
             System.exit(1);
         }
 
-        m_uniforms.put(name, uniformLocation);
+        m_uniformLocations.put(name, uniformLocation);
     }
 
-    public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {}
+    private void addAllUniforms(String text) {
+        String[] m = Regex.match(text, "/uniform\\s+([^\\s]+)\\s+([^\\s]+)\\s*;/g");
 
-    public void setUniformI(String uniformName, int value) {
-        glUniform1i(m_uniforms.get(uniformName), value);
+        for (int i = 0; i < m.length; i+=2) {
+            String uniformType = m[i];
+            String uniformName = m[i+1];
+
+            ArrayList<GLSLvariable> subUniforms = parseStruct(uniformType, text);
+            if (subUniforms == null) {
+                addUniform(uniformName);
+
+                m_uniforms.add(new GLSLvariable(uniformType, uniformName));
+            }
+            else {
+                for (GLSLvariable subUniform : subUniforms) {
+                    addUniform(uniformName + "." + subUniform.name);
+
+                    m_uniforms.add(new GLSLvariable(subUniform.type, uniformName + "." + subUniform.name));
+                }
+            }
+        }
     }
 
-    public void setUniformF(String uniformName, float value) {
-        glUniform1f(m_uniforms.get(uniformName), value);
+    private ArrayList<GLSLvariable> parseStruct(String structName, String text) {
+        String[] m = Regex.match(text, "/struct\\s+"+structName+"\\s+\\{([^\\}]*)\\};/");
+        if (m == null) {
+            return null;
+        }
+        else {
+            if (m.length != 1) {
+                System.err.println("Fatal ERROR: adding shader uniforms failed on parsing struct '" + structName + "'");
+                new Exception().printStackTrace();
+                System.exit(1);
+            }
+
+            m = Regex.match(m[0], "/([^\\s]+)\\s+([^\\s]+)\\s*;/g");
+
+            ArrayList<GLSLvariable> res = new ArrayList<>();
+
+            for (int i = 0; i < m.length; i+=2) {
+                String fieldType = m[i];
+                String fieldName = m[i+1];
+
+                ArrayList<GLSLvariable> subFields = parseStruct(fieldType, text);
+
+                if (subFields == null) {
+                    res.add(new GLSLvariable(fieldType, fieldName));
+                } else {
+                    for (GLSLvariable subField : subFields) {
+                        res.add(new GLSLvariable(subField.type, fieldName + "." + subField.name));
+                    }
+                }
+            }
+
+            return res;
+        }
     }
 
-    public void setUniformV3F(String uniformName, Vector3f value) {
-        glUniform3f(m_uniforms.get(uniformName), value.getX(), value.getY(), value.getZ());
+    public void updateUniforms(Transform transform, Material material, RenderingEngine renderingEngine) {
+//        for (int i = 0; i < )
     }
 
-    public void setUniform3F(String uniformName, float x, float y, float z) {
-        glUniform3f(m_uniforms.get(uniformName), x, y, z);
+    protected void setUniformI(String uniformName, int value) {
+        glUniform1i(m_uniformLocations.get(uniformName), value);
     }
 
-    public void setUniformV2F(String uniformName, Vector2f value) {
-        glUniform2f(m_uniforms.get(uniformName), value.getX(), value.getY());
+    protected void setUniformF(String uniformName, float value) {
+        glUniform1f(m_uniformLocations.get(uniformName), value);
     }
 
-    public void setUniform2F(String uniformName, float x, float y) {
-        glUniform2f(m_uniforms.get(uniformName), x, y);
+    protected void setUniformV3F(String uniformName, Vector3f value) {
+        glUniform3f(m_uniformLocations.get(uniformName), value.getX(), value.getY(), value.getZ());
     }
 
-    public void setUniformM4F(String uniformName, Matrix4f value) {
-        glUniformMatrix4(m_uniforms.get(uniformName), true, Util.createFloatBuffer(value));
+    protected void setUniform3F(String uniformName, float x, float y, float z) {
+        glUniform3f(m_uniformLocations.get(uniformName), x, y, z);
     }
 
-    public void addVertexShaderFromFile(String fileName) {
-        addProgram(loadShader(fileName), GL_VERTEX_SHADER);
+    protected void setUniformV2F(String uniformName, Vector2f value) {
+        glUniform2f(m_uniformLocations.get(uniformName), value.getX(), value.getY());
     }
 
-//    public void addGeometryShaderFromFile(String fileName) {
-//        addProgram(loadShader(fileName), GL_GEOMETRY_SHADER);
+    protected void setUniform2F(String uniformName, float x, float y) {
+        glUniform2f(m_uniformLocations.get(uniformName), x, y);
+    }
+
+    protected void setUniformM4F(String uniformName, Matrix4f value) {
+        glUniformMatrix4(m_uniformLocations.get(uniformName), true, Util.createFloatBuffer(value));
+    }
+
+    private void addVertexShaderFromFile(String fileName) {
+        addVertexShader(loadShader(fileName));
+    }
+
+//    private void addGeometryShaderFromFile(String fileName) {
+//        addGeometryShader(loadShader(fileName));
 //    }
 
-    public void addFragmentShaderFromFile(String fileName) {
-        addProgram(loadShader(fileName), GL_FRAGMENT_SHADER);
+    private void addFragmentShaderFromFile(String fileName) {
+        addFragmentShader(loadShader(fileName));
     }
 
-    public void addVertexShader(String text) {
+    private void addVertexShader(String text) {
         addProgram(text, GL_VERTEX_SHADER);
     }
 
-//    public void addGeometryShader(String text) {
+//    private void addGeometryShader(String text) {
 //        addProgram(text, GL_GEOMETRY_SHADER);
 //    }
 
-    public void addFragmentShader(String text) {
+    private void addFragmentShader(String text) {
         addProgram(text, GL_FRAGMENT_SHADER);
     }
 
-    public void compileShader() {
+    private void compileShader() {
         glLinkProgram(m_program);
         if (glGetProgram(m_program, GL_LINK_STATUS) == 0) {
             System.err.println(glGetShaderInfoLog(m_program, 1024));
@@ -137,7 +228,13 @@ public abstract class Shader {
 
             String line;
             while ((line = shaderReader.readLine()) != null) {
-                shaderSource.append(line).append("\n");
+                if (line.startsWith("include")) {
+                    Matcher m = Pattern.compile("\\s*include\\s+\"([^\"]+)\"\\s*").matcher(line);
+                    if (m.find())
+                        shaderSource.append(loadShader(m.group(1)));
+                } else {
+                    shaderSource.append(line + "\n");
+                }
             }
 
             shaderReader.close();

@@ -15,28 +15,7 @@ public class FDirectionalShader extends Shader {
     }
 
     protected FDirectionalShader() {
-        super();
-
-        addVertexShaderFromFile("forward-directional.vs");
-        addFragmentShaderFromFile("forward-directional.fs");
-
-        compileShader();
-
-        //transforms
-        addUniform("v_mTransform");
-        addUniform("v_mvpTransform");
-
-        //additional variables
-        addUniform("f_eyePosition");
-
-        //lights
-        addUniform("f_directionalLight.color");
-        addUniform("f_directionalLight.intensity");
-        addUniform("f_directionalLight.direction");
-
-        //material
-        addUniform("f_specularIntensity");
-        addUniform("f_specularPower");
+        super("forward-directional");
     }
 
     @Override
@@ -55,7 +34,7 @@ public class FDirectionalShader extends Shader {
         setUniform("f_directionalLight", (DirectionalLight) renderingEngine.getActiveLight());
 
         //material
-        material.getTexture("texture").bind();
+        material.getTexture("diffuse").bind();
         setUniformF("f_specularIntensity", material.getFloat("specularIntensity"));
         setUniformF("f_specularPower", material.getFloat("specularPower"));
     }

@@ -15,32 +15,7 @@ public class FPointShader extends Shader {
     }
 
     protected FPointShader() {
-        super();
-
-        addVertexShaderFromFile("forward-point.vs");
-        addFragmentShaderFromFile("forward-point.fs");
-
-        compileShader();
-
-        //transforms
-        addUniform("v_mTransform");
-        addUniform("v_mvpTransform");
-
-        //additional variables
-        addUniform("f_eyePosition");
-
-        //lights
-        addUniform("f_pointLight.color");
-        addUniform("f_pointLight.intensity");
-        addUniform("f_pointLight.attenuation.constant");
-        addUniform("f_pointLight.attenuation.linear");
-        addUniform("f_pointLight.attenuation.exponent");
-        addUniform("f_pointLight.position");
-        addUniform("f_pointLight.range");
-
-        //material
-        addUniform("f_specularIntensity");
-        addUniform("f_specularPower");
+        super("forward-point");
     }
 
     @Override
@@ -59,7 +34,7 @@ public class FPointShader extends Shader {
         setUniform("f_pointLight", (PointLight)renderingEngine.getActiveLight());
 
         //material
-        material.getTexture("texture").bind();
+        material.getTexture("diffuse").bind();
         setUniformF("f_specularIntensity", material.getFloat("specularIntensity"));
         setUniformF("f_specularPower", material.getFloat("specularPower"));
     }

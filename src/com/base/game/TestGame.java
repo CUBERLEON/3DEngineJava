@@ -34,12 +34,12 @@ public class TestGame extends Game {
         Mesh planeMesh = new Mesh(vertices, indices, true);
 
         Material material1 = new Material();
-        material1.addTexture("texture", new Texture("models/barrels/diffus_rust.tga"));
+        material1.addTexture("diffuse", new Texture("models/barrels/diffus_rust.tga"));
         material1.addFloat("specularIntensity", 1);
         material1.addFloat("specularPower", 4);
 
         Material material2 = new Material();
-        material2.addTexture("texture", new Texture("models/test/test.png"));
+        material2.addTexture("diffuse", new Texture("models/test/test.png"));
         material2.addFloat("specularIntensity", 1);
         material2.addFloat("specularPower", 8);
 
@@ -90,14 +90,15 @@ public class TestGame extends Game {
         //camera
         Node cameraObject = new Node("camera");
         getRoot().addChild(cameraObject);
-        getRoot().getChildByName("camera").getTransform().setPosition(new Vector3f(5, 5, 5))
-                                                         .setRotation(new Quaternion().initEulerYDeg(45));
+//        test3.addChild(cameraObject);
+//        cameraObject.addChild(test1);
+
+        cameraObject.getTransform().setPosition(new Vector3f(5, 5, 5))
+                                   .setRotation(new Quaternion().initEulerYDeg(45));
         cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f));
         cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100));
         cameraObject.removeComponent(OrthographicCamera.class);
 
-//        test3.addChild(cameraObject);
-//        cameraObject.addChild(test1);
 
         //Math tests
 //        Vector3f in = new Vector3f(23, 13, -17);
