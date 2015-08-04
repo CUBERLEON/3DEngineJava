@@ -24,6 +24,10 @@ public abstract class Game {
         renderingEngine.render(m_root);
     }
 
+    public void dispose() {
+        m_root.dispose();
+    }
+
     public Node getRoot() {
         return m_root;
     }

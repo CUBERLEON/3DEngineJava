@@ -1,5 +1,6 @@
 package com.cuberleon.engine.core;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -8,6 +9,16 @@ import com.cuberleon.engine.rendering.Vertex;
 import org.lwjgl.BufferUtils;
 
 public class Util {
+
+    public static ByteBuffer createByteBuffer(byte... values) {
+        ByteBuffer buffer = BufferUtils.createByteBuffer(values.length);
+
+        buffer.put(values);
+
+        buffer.flip();
+
+        return buffer;
+    }
 
     public static IntBuffer createIntBuffer(int... values) {
         IntBuffer buffer = BufferUtils.createIntBuffer(values.length);
@@ -19,7 +30,7 @@ public class Util {
         return buffer;
     }
 
-    public static FloatBuffer createBuffer(Vertex[] vertices) {
+    public static FloatBuffer createFloatBuffer(Vertex[] vertices) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(vertices.length * Vertex.SIZE);
 
         for (Vertex vertex : vertices) {

@@ -34,7 +34,7 @@ public class TestGame extends Game {
         Mesh planeMesh = new Mesh(vertices, indices, true);
 
         Material material1 = new Material();
-        material1.addTexture("diffuse", new Texture("models/barrels/diffus_rust.tga"));
+        material1.addTexture("diffuse", new Texture("models/barrels/diffuse_rust.jpg"));
         material1.addFloat("specularIntensity", 1);
         material1.addFloat("specularPower", 4);
 
@@ -43,15 +43,13 @@ public class TestGame extends Game {
         material2.addFloat("specularIntensity", 1);
         material2.addFloat("specularPower", 8);
 
-        Node planeObject = new Node("main_plane").addComponents(new MeshRenderer(planeMesh, material2));
+        getRoot().addChild(new Node("main_plane").addComponents(new MeshRenderer(planeMesh, material2)));
 
         Node object1 = new Node("barrel").addComponents(new MeshRenderer(new Mesh("models/barrels/metal_barrel.obj"), material1));
         object1.getTransform().setScale(0.03f, 0.03f, 0.03f);
         object1.getTransform().setPosition(0, 0, 2);
 //        object1.getTransform().setRotation(new Quaternion().initEulerDeg(0, 0, 0));
         getRoot().addChild(object1);
-
-        getRoot().addChild(planeObject);
 
         Node test1 = new Node("test_1").addComponents(new MeshRenderer(planeMesh, material2));
         Node test2 = new Node("test_2").addComponents(new MeshRenderer(planeMesh, material2));
@@ -86,6 +84,8 @@ public class TestGame extends Game {
         getRoot().addChildren(pointLightObjects);
         getRoot().addChildren(spotLightObjects);
         getRoot().addChild(directionalLightObject);
+
+        getRoot().removeChild(spotLightObjects.get(0));
 
         //camera
         Node cameraObject = new Node("camera");

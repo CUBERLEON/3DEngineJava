@@ -1,5 +1,6 @@
 package com.cuberleon.engine.rendering;
 
+import com.cuberleon.engine.core.Debug;
 import com.cuberleon.engine.core.Vector2f;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -18,12 +19,10 @@ public class Window {
             Keyboard.create();
             Mouse.create();
         } catch (LWJGLException e) {
-            System.err.println("Fatal Error: window creation failed!");
-            e.printStackTrace();
-            System.exit(1);
+            Debug.fatalError("window creation failed");
         }
 
-        System.out.println("INFO: Window " + width + "x" + height + " was successfully created");
+        Debug.info("Window " + width + "x" + height + " was successfully created");
     }
 
     public static void dispose() {

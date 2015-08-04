@@ -1,27 +1,29 @@
 package com.cuberleon.engine.rendering.resources;
 
+import com.cuberleon.engine.core.Debug;
+
 import static org.lwjgl.opengl.GL15.*;
 
-public class TextureBuffer {
+public class TextureData {
 
     private int m_id;
 
     private int m_referencesCount;
 
-    public TextureBuffer(int id) {
-        m_id = id;
+    public TextureData() {
+        m_id = glGenBuffers();
         m_referencesCount = 1;
     }
 
     public void dispose() {
         glDeleteBuffers(m_id);
-        System.out.println("INFO: TextureBuffer(" + m_id + ") deleted from the GPU");
+        Debug.info("TextureData(" + m_id + ") disposed");
     }
 
     @Override
     protected void finalize() throws Throwable {
         try {
-            System.out.println("INFO: TextureBuffer(" + m_id + ") deleted from the GPU");
+            Debug.info("TextureData(" + m_id + ") deleted (finalize)");
             glDeleteBuffers(m_id);
         } catch (Throwable t) {
             throw t;

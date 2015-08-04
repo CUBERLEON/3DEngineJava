@@ -203,9 +203,7 @@ public class Vector3f {
 
     public Vector3f div(Vector3f r) {
         if (r.getX() == 0 || r.getY() == 0 || r.getZ() == 0) {
-            System.err.println("ERROR: division by zero while dividing Vector3f by Vector3f.");
-            new Exception().printStackTrace();
-
+            Debug.error("division by zero while dividing Vector3f by Vector3f.");
             return this;
         }
 
@@ -218,9 +216,7 @@ public class Vector3f {
 
     public Vector3f div(float r) {
         if (r == 0) {
-            System.err.println("ERROR: division by zero while dividing Vector3f by float.");
-            new Exception().printStackTrace();
-
+            Debug.error("division by zero while dividing Vector3f by float.");
             return this;
         }
 

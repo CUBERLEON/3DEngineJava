@@ -20,6 +20,11 @@ public abstract class Light extends Component {
         renderingEngine.addLight(this);
     }
 
+    @Override
+    public void dispose() {
+        m_shader.dispose();
+    }
+
     public Shader getShader() {
         return m_shader;
     }

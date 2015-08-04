@@ -2,7 +2,7 @@ package com.cuberleon.engine.components;
 
 import com.cuberleon.engine.core.Vector3f;
 import com.cuberleon.engine.rendering.Attenuation;
-import com.cuberleon.engine.rendering.shaders.FPointShader;
+import com.cuberleon.engine.rendering.shaders.Shader;
 
 public class PointLight extends Light {
 
@@ -22,7 +22,7 @@ public class PointLight extends Light {
         super(color, intensity);
         m_attenuation = attenuation;
         m_range = range;
-        setShader(FPointShader.getInstance());
+        setShader(new Shader("forward-point"));
     }
 
     private void updateRange() {

@@ -1,30 +1,34 @@
 package com.cuberleon.engine.rendering.resources;
 
+import com.cuberleon.engine.core.Debug;
+
 import static org.lwjgl.opengl.GL15.*;
 
-public class MeshBuffer {
+public class MeshData {
 
     private int m_vbo;
     private int m_ibo;
+    private int m_indicesCount;
 
     private int m_referencesCount;
 
-    public MeshBuffer() {
+    public MeshData(int indicesCount) {
         m_vbo = glGenBuffers();
         m_ibo = glGenBuffers();
+        m_indicesCount = indicesCount;
         m_referencesCount = 1;
     }
 
     public void dispose() {
         glDeleteBuffers(m_vbo);
         glDeleteBuffers(m_ibo);
-        System.out.println("INFO: MeshBuffer(" + m_vbo + ", " + m_ibo + ") deleted from the GPU");
+        Debug.info("MeshData(" + m_vbo + ", " + m_ibo + ") was diposed");
     }
 
     @Override
     protected void finalize() throws Throwable {
         try {
-            System.out.println("INFO: MeshBuffer(" + m_vbo + ", " + m_ibo + ") deleted from the GPU (finalize)");
+            Debug.info("MeshData(" + m_vbo + ", " + m_ibo + ") was deleted (finalize)");
             glDeleteBuffers(m_vbo);
             glDeleteBuffers(m_ibo);
         } catch (Throwable t) {
@@ -49,5 +53,9 @@ public class MeshBuffer {
 
     public int getIndicesBufferID() {
         return m_ibo;
+    }
+
+    public int getIndicesCount() {
+        return m_indicesCount;
     }
 }

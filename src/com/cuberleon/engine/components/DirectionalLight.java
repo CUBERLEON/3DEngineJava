@@ -1,7 +1,7 @@
 package com.cuberleon.engine.components;
 
 import com.cuberleon.engine.core.Vector3f;
-import com.cuberleon.engine.rendering.shaders.FDirectionalShader;
+import com.cuberleon.engine.rendering.shaders.Shader;
 
 public class DirectionalLight extends Light {
 
@@ -11,7 +11,7 @@ public class DirectionalLight extends Light {
 
     public DirectionalLight(Vector3f color, float intensity) {
         super(color, intensity);
-        setShader(FDirectionalShader.getInstance());
+        setShader(new Shader("forward-directional"));
     }
 
     public Vector3f getDirection() {

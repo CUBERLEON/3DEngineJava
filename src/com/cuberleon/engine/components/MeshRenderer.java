@@ -19,4 +19,10 @@ public class MeshRenderer extends Component {
         shader.updateUniforms(getTransform(), m_material, renderingEngine);
         m_mesh.draw();
     }
+
+    @Override
+    public void dispose() {
+        m_mesh.dispose();
+        m_material.dispose();
+    }
 }

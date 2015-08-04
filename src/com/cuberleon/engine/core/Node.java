@@ -35,9 +35,9 @@ public class Node {
     }
 
     public Node addComponent(Component component) {
-        if (m_componentsMap.containsKey(component.getClass().getName())) {
-            System.err.println("ERROR: cannot add second "+component.getClass().getName()+" Component to the Node('"+m_name+"')");
-        } else {
+        if (m_componentsMap.containsKey(component.getClass().getName()))
+            Debug.error("cannot add second " + component.getClass().getName() + " Component to the Node('" + m_name + "')");
+        else {
             component.setNode(this);
             m_componentsMap.put(component.getClass().getName(), new WeakReference<>(component));
             m_components.add(component);
@@ -90,9 +90,9 @@ public class Node {
     }
 
     public Node addChild(Node child) {
-        if (m_childrenMap.containsKey(child.getName())) {
-            System.err.println("ERROR: cannot add second Node('"+child.getName()+"') to the Node('"+m_name+"')");
-        } else {
+        if (m_childrenMap.containsKey(child.getName()))
+            Debug.error("cannot add second Node('" + child.getName() + "') to the Node('" + m_name + "')");
+        else {
             child.setParent(this);
             child.getTransform().setParent(m_transform);
 
@@ -127,7 +127,11 @@ public class Node {
 
     public Node removeChildByName(String name) {
         if (m_childrenMap.containsKey(name)) {
-            m_children.remove(m_childrenMap.get(name).get());
+            Node child = m_childrenMap.get(name).get();
+            if (child != null) {
+                child.dispose();
+                m_children.remove(child);
+            }
             m_childrenMap.remove(name);
         }
 
@@ -135,7 +139,8 @@ public class Node {
     }
 
     public Node removeChild(Node child) {
-        if (m_childrenMap.containsKey(child.getName())) {
+        if (child != null && m_childrenMap.containsKey(child.getName())) {
+            child.dispose();
             m_children.remove(child);
             m_childrenMap.remove(child.getName());
         }
@@ -167,6 +172,14 @@ public class Node {
 
         for (Node child : m_children)
             child.render(shader, renderingEngine);
+    }
+
+    public void dispose() {
+        for (Component component : m_components)
+            component.dispose();
+
+        for (Node child : m_children)
+            child.dispose();
     }
 
     public void addToRenderingEngine(RenderingEngine renderingEngine) {

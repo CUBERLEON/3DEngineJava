@@ -2,7 +2,7 @@ package com.cuberleon.engine.components;
 
 import com.cuberleon.engine.core.Vector3f;
 import com.cuberleon.engine.rendering.Attenuation;
-import com.cuberleon.engine.rendering.shaders.FSpotShader;
+import com.cuberleon.engine.rendering.shaders.Shader;
 
 public class SpotLight extends PointLight {
 
@@ -15,7 +15,7 @@ public class SpotLight extends PointLight {
     public SpotLight(Vector3f color, float intensity, Attenuation attenuation, float cutoff) {
         super(color, intensity, attenuation);
         this.m_cutoff = cutoff;
-        setShader(FSpotShader.getInstance());
+        setShader(new Shader("forward-spot"));
     }
 
     public SpotLight(PointLight pointLight, float cutoff) {
@@ -25,7 +25,7 @@ public class SpotLight extends PointLight {
     protected SpotLight(Vector3f color, float intensity, Attenuation attenuation, float range, float cutoff) {
         super(color, intensity, attenuation, range);
         this.m_cutoff = cutoff;
-        setShader(FSpotShader.getInstance());
+        setShader(new Shader("forward-spot"));
     }
 
     public Vector3f getDirection() {

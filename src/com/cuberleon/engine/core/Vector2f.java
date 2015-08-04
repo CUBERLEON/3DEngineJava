@@ -165,9 +165,7 @@ public class Vector2f {
 
     public Vector2f div(Vector2f r) {
         if (r.getX() == 0 || r.getY() == 0) {
-            System.err.println("ERROR: division by zero while dividing Vector2f by Vector2f.");
-            new Exception().printStackTrace();
-
+            Debug.error("division by zero while dividing Vector2f by Vector2f.");
             return this;
         }
 
@@ -179,9 +177,7 @@ public class Vector2f {
 
     public Vector2f div(float r) {
         if (r == 0) {
-            System.err.println("ERROR: division by zero while dividing Vector2f by float.");
-            new Exception().printStackTrace();
-
+            Debug.error("division by zero while dividing Vector2f by float.");
             return this;
         }
 

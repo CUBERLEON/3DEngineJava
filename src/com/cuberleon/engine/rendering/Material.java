@@ -1,20 +1,13 @@
 package com.cuberleon.engine.rendering;
 
-import java.util.HashMap;
-
 public class Material extends MappedValues {
 
-    private HashMap<String, Texture> m_textures;
-
     public Material() {
-        m_textures = new HashMap<>();
+        super();
     }
 
-    public void addTexture(String name, Texture value) {
-        m_textures.put(name, value);
+    public void dispose() {
+        super.dispose();
     }
 
-    public Texture getTexture(String name) {
-        return m_textures.get(name);
-    }
 }

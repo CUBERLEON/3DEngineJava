@@ -19,8 +19,6 @@ public class CoreEngine {
 
         m_game = game;
         m_isRunning = false;
-
-        System.out.println("INFO: CoreEngine(fpsLimit = " + fpsLimit + ", fpsUnlimited = " + fpsUnlimited + ") was successfully created");
     }
 
     public void createWindow(int width, int height, String title) {
@@ -34,8 +32,7 @@ public class CoreEngine {
             return;
 
         if (!Window.isCreated()) {
-            System.err.println("ERROR: trying to start CoreEngine when Window wasn't created!");
-            new Exception().printStackTrace();
+            Debug.error("trying to start CoreEngine when Window wasn't created!");
             return;
         }
 
@@ -80,7 +77,7 @@ public class CoreEngine {
             }
 
             if (fpsTime >= fpsRefreshTime) {
-//                System.out.printf("INFO: %.1f fps\n", frames / fpsTime);
+                Debug.info("%.1f fps", frames / fpsTime);
                 fpsTime -= fpsRefreshTime;
                 frames = 0;
             }
@@ -108,6 +105,9 @@ public class CoreEngine {
     }
 
     private void cleanUp() {
+        m_game.dispose();
+        m_renderingEngine.dispose();
+
         Window.dispose();
     }
 

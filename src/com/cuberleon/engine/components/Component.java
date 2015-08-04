@@ -1,5 +1,6 @@
 package com.cuberleon.engine.components;
 
+import com.cuberleon.engine.core.Debug;
 import com.cuberleon.engine.core.Node;
 import com.cuberleon.engine.core.Transform;
 import com.cuberleon.engine.rendering.RenderingEngine;
@@ -12,6 +13,7 @@ public abstract class Component {
     public void input(float time) {}
     public void update(float time) {}
     public void render(Shader shader, RenderingEngine renderingEngine) {}
+    public void dispose() {}
 
     public Transform getTransform() {
         return getNode().getTransform();
@@ -22,11 +24,8 @@ public abstract class Component {
     }
 
     protected Node getNode() {
-        if (m_node == null) {
-            System.err.println("Fatal ERROR: calling Component.getNode() method when Node wasn't assigned");
-            new Exception().printStackTrace();
-            System.exit(1);
-        }
+        if (m_node == null)
+            Debug.fatalError("calling Component.getNode() method when Node wasn't assigned");
         return m_node;
     }
 

@@ -2,9 +2,10 @@ package com.cuberleon.engine.rendering;
 
 import com.cuberleon.engine.components.Camera;
 import com.cuberleon.engine.components.Light;
+import com.cuberleon.engine.core.Debug;
 import com.cuberleon.engine.core.Node;
 import com.cuberleon.engine.core.Vector3f;
-import com.cuberleon.engine.rendering.shaders.FAmbientShader;
+import com.cuberleon.engine.rendering.shaders.Shader;
 
 import java.util.ArrayList;
 
@@ -18,10 +19,12 @@ public class RenderingEngine extends MappedValues {
     private ArrayList<Light> m_lights;
     private Light m_activeLight;
 
+    private Shader m_ambientShader;
+
     public RenderingEngine() {
         m_lights = new ArrayList<>();
 
-        System.out.println("INFO: OpenGL version " + getOpenGLVersion());
+        Debug.info("OpenGL version " + getOpenGLVersion());
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -38,17 +41,18 @@ public class RenderingEngine extends MappedValues {
         addInteger("diffuse", 0);
         addInteger("normalMap", 1);
 
+        m_ambientShader = new Shader("forward-ambient");
         addVector3f("ambientLight", new Vector3f(0.03f, 0.03f, 0.03f));
     }
 
-    public void render(Node node) {
+    public void render(Node root) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         m_lights.clear();
 
-        node.addToRenderingEngine(this);
+        root.addToRenderingEngine(this);
 
-        node.render(FAmbientShader.getInstance(), this);
+        root.render(m_ambientShader, this);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE);
@@ -57,7 +61,7 @@ public class RenderingEngine extends MappedValues {
 
         for (Light light : m_lights) {
             m_activeLight = light;
-            node.render(light.getShader(), this);
+            root.render(light.getShader(), this);
         }
 
         glDepthMask(true);
@@ -67,16 +71,18 @@ public class RenderingEngine extends MappedValues {
         Window.render();
     }
 
+    public void dispose() {
+        if (m_ambientShader != null)
+            m_ambientShader.dispose();
+    }
+
     public static String getOpenGLVersion() {
         return glGetString(GL_VERSION);
     }
 
     public Camera getMainCamera() {
-        if (m_mainCamera == null) {
-            System.err.println("Fatal ERROR: there is no Camera in the scene graph");
-            new Exception().printStackTrace();
-            System.exit(1);
-        }
+        if (m_mainCamera == null)
+            Debug.fatalError("there is no Camera in the scene graph");
 
         return m_mainCamera;
     }
