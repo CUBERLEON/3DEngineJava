@@ -15,10 +15,10 @@ uniform float m_specularPower;
 include "lighting.glh"
 
 //lights
-uniform PointLight f_pointLight;
+uniform PointLight l_point;
 
 void main() {
 	f_normal = normalize(f_normalInterpolated);
 
-	gl_FragColor = texture(m_diffuse, f_textureCoord) * calcPointLight(f_pointLight, f_normal, f_worldPosition);
+	gl_FragColor = texture(m_diffuse, f_textureCoord) * calcPointLight(l_point, f_normal, f_worldPosition);
 }

@@ -15,10 +15,10 @@ uniform float m_specularPower;
 include "lighting.glh"
 
 //lights
-uniform DirectionalLight f_directionalLight;
+uniform DirectionalLight l_directional;
 
 void main() {
 	f_normal = normalize(f_normalInterpolated);
 
-	gl_FragColor = texture(m_diffuse, f_textureCoord) * calcDirectionalLight(f_directionalLight, f_normal, f_worldPosition);
+	gl_FragColor = texture(m_diffuse, f_textureCoord) * calcDirectionalLight(l_directional, f_normal, f_worldPosition);
 }
