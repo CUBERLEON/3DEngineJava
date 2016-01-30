@@ -12,6 +12,8 @@ public class Node {
 
     private Node m_parent;
 
+    private CoreEngine m_engine;
+
     private ArrayList<Node> m_children;
     private HashMap<String, WeakReference<Node>> m_childrenMap;
 
@@ -23,6 +25,8 @@ public class Node {
     private String m_name;
 
     public Node(String name) {
+        m_engine = null;
+
         m_children = new ArrayList<>();
         m_childrenMap = new HashMap<>();
 
@@ -39,6 +43,7 @@ public class Node {
             Debug.error("cannot add second " + component.getClass().getName() + " Component to the Node('" + m_name + "')");
         else {
             component.setNode(this);
+
             m_componentsMap.put(component.getClass().getName(), new WeakReference<>(component));
             m_components.add(component);
         }
@@ -95,6 +100,7 @@ public class Node {
         else {
             child.setParent(this);
             child.getTransform().setParent(m_transform);
+            child.setEngine(m_engine);
 
             m_childrenMap.put(child.getName(), new WeakReference<>(child));
             m_children.add(child);
@@ -182,14 +188,6 @@ public class Node {
             child.dispose();
     }
 
-    public void addToRenderingEngine(RenderingEngine renderingEngine) {
-        for (Component component : m_components)
-            component.addToRenderingEngine(renderingEngine);
-
-        for (Node child : m_children)
-            child.addToRenderingEngine(renderingEngine);
-    }
-
     public void setParent(Node parent) {
         m_parent = parent;
     }
@@ -204,5 +202,15 @@ public class Node {
 
     public Transform getTransform() {
         return m_transform;
+    }
+
+    public void setEngine(CoreEngine engine) {
+        if (engine != m_engine) {
+            for (Component component : m_components)
+                component.addToEngine(engine);
+
+            for (Node child : m_children)
+                child.setEngine(engine);
+        }
     }
 }

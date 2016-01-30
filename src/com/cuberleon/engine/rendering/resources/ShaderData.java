@@ -35,13 +35,13 @@ public class ShaderData {
         glDeleteProgram(m_program);
         m_uniforms.clear();
         m_uniformLocations.clear();
-        Debug.info("ShaderData(" + m_program + ") disposed");
+        Debug.info("ShaderData(" + m_program + ") was disposed");
     }
 
     @Override
     protected void finalize() throws Throwable {
         try {
-            Debug.info("ShaderData(" + m_program + ") deleted (finalize)");
+            Debug.info("ShaderData(" + m_program + ") was deleted (finalize)");
             glDeleteProgram(m_program);
         } catch (Throwable t) {
             throw t;

@@ -1,4 +1,4 @@
-#version 330
+#version 400
 
 in vec2 f_textureCoord;
 in vec3 f_normalInterpolated; vec3 f_normal;

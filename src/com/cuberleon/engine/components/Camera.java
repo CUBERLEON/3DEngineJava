@@ -20,11 +20,12 @@ public abstract class Camera extends Component {
     }
 
     @Override
-    public void addToRenderingEngine(RenderingEngine renderingEngine) {
-        renderingEngine.addCamera(this);
+    public void addToEngine(CoreEngine engine) {
+        engine.getRenderingEngine().addCamera(this);
     }
 
     public Matrix4f getViewProjectionTransform() {
+        Transform t = getTransform();
         Matrix4f cameraTranslation = new Matrix4f().initTranslation(getTransform().getRealPosition().getMul(-1));
         Matrix4f cameraRotation = new Matrix4f().initRotation(getTransform().getRealRotation()).transpose();
 

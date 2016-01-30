@@ -17,13 +17,13 @@ public class TextureData {
 
     public void dispose() {
         glDeleteBuffers(m_id);
-        Debug.info("TextureData(" + m_id + ") disposed");
+        Debug.info("TextureData(" + m_id + ") was disposed");
     }
 
     @Override
     protected void finalize() throws Throwable {
         try {
-            Debug.info("TextureData(" + m_id + ") deleted (finalize)");
+            Debug.info("TextureData(" + m_id + ") was deleted (finalize)");
             glDeleteBuffers(m_id);
         } catch (Throwable t) {
             throw t;

@@ -1,5 +1,6 @@
 package com.cuberleon.engine.components;
 
+import com.cuberleon.engine.core.CoreEngine;
 import com.cuberleon.engine.core.Vector3f;
 import com.cuberleon.engine.rendering.RenderingEngine;
 import com.cuberleon.engine.rendering.shaders.Shader;
@@ -16,8 +17,8 @@ public abstract class Light extends Component {
     }
 
     @Override
-    public void addToRenderingEngine(RenderingEngine renderingEngine) {
-        renderingEngine.addLight(this);
+    public void addToEngine(CoreEngine engine) {
+        engine.getRenderingEngine().addLight(this);
     }
 
     @Override

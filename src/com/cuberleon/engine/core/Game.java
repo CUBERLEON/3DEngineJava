@@ -4,7 +4,7 @@ import com.cuberleon.engine.rendering.RenderingEngine;
 
 public abstract class Game {
 
-    private Node m_root;
+    public Node m_root;
 
     public Game() {
         m_root = new Node("root");
@@ -30,5 +30,9 @@ public abstract class Game {
 
     public Node getRoot() {
         return m_root;
+    }
+
+    public void setEngine(CoreEngine engine) {
+        m_root.setEngine(engine);
     }
 }

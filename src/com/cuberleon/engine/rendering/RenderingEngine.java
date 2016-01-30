@@ -36,6 +36,7 @@ public class RenderingEngine extends MappedValues {
 //        glEnable(GL_DEPTH_CLAMP);
 
         glEnable(GL_TEXTURE_2D);
+//        glEnable(GL_DITHER);
 
         //sampler2D GLSL locations
         addInteger("diffuse", 0);
@@ -47,10 +48,6 @@ public class RenderingEngine extends MappedValues {
 
     public void render(Node root) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        m_lights.clear();
-
-        root.addToRenderingEngine(this);
 
         root.render(m_ambientShader, this);
 

@@ -37,6 +37,7 @@ public class CoreEngine {
         }
 
         m_game.init();
+        m_game.setEngine(this);
 
         run();
     }
@@ -125,5 +126,9 @@ public class CoreEngine {
 
     public void setFPSUnlimited(boolean fpsUnlimited) {
         m_fpsUnlimited = fpsUnlimited;
+    }
+
+    public RenderingEngine getRenderingEngine() {
+        return m_renderingEngine;
     }
 }

@@ -1,5 +1,6 @@
 package com.cuberleon.engine.components;
 
+import com.cuberleon.engine.core.CoreEngine;
 import com.cuberleon.engine.core.Debug;
 import com.cuberleon.engine.core.Node;
 import com.cuberleon.engine.core.Transform;
@@ -29,5 +30,5 @@ public abstract class Component {
         return m_node;
     }
 
-    public void addToRenderingEngine(RenderingEngine renderingEngine) {}
+    public void addToEngine(CoreEngine engine) {}
 }

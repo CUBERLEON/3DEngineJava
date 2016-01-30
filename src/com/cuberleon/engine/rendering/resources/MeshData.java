@@ -22,7 +22,7 @@ public class MeshData {
     public void dispose() {
         glDeleteBuffers(m_vbo);
         glDeleteBuffers(m_ibo);
-        Debug.info("MeshData(" + m_vbo + ", " + m_ibo + ") was diposed");
+        Debug.info("MeshData(" + m_vbo + ", " + m_ibo + ") was disposed");
     }
 
     @Override

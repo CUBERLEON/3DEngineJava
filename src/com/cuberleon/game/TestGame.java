@@ -17,7 +17,8 @@ public class TestGame extends Game {
         m_directionalLight = new DirectionalLight(new Vector3f(1, 1, 1), 0.4f);
         m_pointLights = new PointLight[] { new PointLight(new Vector3f(1, 1, 0), 3.0f, new Attenuation(0, 0, 1)),
                                            new PointLight(new Vector3f(0, 1, 1), 3.0f, new Attenuation(0, 0, 1))};
-        m_spotLights = new SpotLight[] { new SpotLight(new Vector3f(1, 1, 1), 2.0f, new Attenuation(0.5f, 0.15f, 0), (float)Math.cos(Math.toRadians(15.0f)))};
+        m_spotLights = new SpotLight[] { new SpotLight(new Vector3f(1, 1, 1), 2.0f, new Attenuation(0.5f, 0.15f, 0), (float)Math.cos(Math.toRadians(15.0f))),
+                                         new SpotLight(new Vector3f(1, 1, 1), 2.0f, new Attenuation(0.5f, 0.15f, 0), (float)Math.cos(Math.toRadians(15.0f)))};
 
         Input.setCursor(false);
 
@@ -35,13 +36,13 @@ public class TestGame extends Game {
 
         Material material1 = new Material();
         material1.addTexture("diffuse", new Texture("models/barrels/diffuse_rust.jpg"));
-        material1.addFloat("specularIntensity", 1);
+        material1.addFloat("specularIntensity", 1.5f);
         material1.addFloat("specularPower", 4);
 
         Material material2 = new Material();
         material2.addTexture("diffuse", new Texture("models/test/test.png"));
-        material2.addFloat("specularIntensity", 1);
-        material2.addFloat("specularPower", 8);
+        material2.addFloat("specularIntensity", 0.8f);
+        material2.addFloat("specularPower", 4);
 
         getRoot().addChild(new Node("main_plane").addComponents(new MeshRenderer(planeMesh, material2)));
 
@@ -73,19 +74,22 @@ public class TestGame extends Game {
 
         pointLightObjects.add(new Node("point_light_1").addComponents(m_pointLights[0]));
         pointLightObjects.add(new Node("point_light_2").addComponents(m_pointLights[1]));
-        spotLightObjects.add(new Node("spot_light").addComponents(m_spotLights[0]));
+        spotLightObjects.add(new Node("spot_light1").addComponents(m_spotLights[0]));
+        spotLightObjects.add(new Node("spot_light2").addComponents(m_spotLights[1]));
 
-        pointLightObjects.get(0).getTransform().setPosition(new Vector3f(0.0f, 4.0f, -3.0f));
-        pointLightObjects.get(1).getTransform().setPosition(new Vector3f(3.0f, 4.0f, 0.0f));
+        pointLightObjects.get(0).getTransform().setPosition(new Vector3f(0.0f, 2.0f, -3.0f));
+        pointLightObjects.get(1).getTransform().setPosition(new Vector3f(3.0f, 2.0f, 0.0f));
         spotLightObjects.get(0).getTransform().setPosition(new Vector3f(0, 3, -2))
                                               .setRotation(new Quaternion().initAxisDeg(new Vector3f(1, 0, 0), -150));
+        spotLightObjects.get(1).getTransform().setPosition(new Vector3f(4, 3, -4))
+                                              .setRotation(new Quaternion().initAxisDeg(new Vector3f(1, 0, 0), -120));
         directionalLightObject.getTransform().setRotation(new Quaternion().initEulerXDeg(-45));
 
         getRoot().addChildren(pointLightObjects);
         getRoot().addChildren(spotLightObjects);
-        getRoot().addChild(directionalLightObject);
+//        getRoot().addChild(directionalLightObject);
 
-        getRoot().removeChild(spotLightObjects.get(0));
+//        getRoot().removeChild(spotLightObjects.get(0));
 
         //camera
         Node cameraObject = new Node("camera");
@@ -93,17 +97,18 @@ public class TestGame extends Game {
 //        test3.addChild(cameraObject);
 //        cameraObject.addChild(test1);
 
-        cameraObject.getTransform().setPosition(new Vector3f(5, 5, 5))
-                                   .setRotation(new Quaternion().initEulerYDeg(45));
-        cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.01f, 1000.0f));
-        cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100));
-        cameraObject.removeComponent(OrthographicCamera.class);
+        cameraObject.getTransform().setPosition(new Vector3f(0, 2, 2))
+                                   .setRotation(new Quaternion().initEulerXDeg(-50));
+        cameraObject.addComponent(new PerspectiveCamera((float) Math.toRadians(60), Window.getWidth() / (float) Window.getHeight(), 0.1f, 100.0f));
+//        cameraObject.addComponent(new OrthographicCamera(-10, 10, -10, 10, -100, 100));
+//        cameraObject
+// .removeComponent(OrthographicCamera.class);
 
         //Math tests
 //        Vector3f in = new Vector3f(23, 13, -17);
 //        float angle = 100;
 //        Vector3f axis = new Vector3f(111, -3, 5);
-
+//
 //        System.out.println("Quat>Angles>Mat4:" + new Matrix4f().initRotationDeg(new Quaternion().initAxisDeg(axis, angle).toEulerAnglesDeg()));
 //        System.out.println("Quat>Mat4:" + new Matrix4f().initRotation(new Quaternion().initAxisDeg(axis, angle)));
 //
@@ -117,28 +122,30 @@ public class TestGame extends Game {
 //        System.out.println("Quat>Mat4:" + new Matrix4f().initRotation(new Quaternion().initEulerDeg(0, 45, 90)));
     }
 
-//    private int k = 0;
+    private int k = 0;
 
-//    @Override
-//    public void input(float time) {
-//        if (Input.getKeyDown(Input.KEY_C))
-//            k = (k + 1) % m_pointLights.length;
-//
-//        if (Input.getKey(Input.KEY_UP))
-//            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, 0, -time * 3.0f));
-//        if (Input.getKey(Input.KEY_DOWN))
-//            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, 0, time * 3.0f));
-//        if (Input.getKey(Input.KEY_LEFT))
-//            m_pointLights[k].getTransform().getPosition().add(new Vector3f(-time * 3.0f, 0, 0));
-//        if (Input.getKey(Input.KEY_RIGHT))
-//            m_pointLights[k].getTransform().getPosition().add(new Vector3f(time * 3.0f, 0, 0));
-//        if (Input.getKey(Input.KEY_SPACE))
-//            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, time * 3.0f, 0));
-//        if (Input.getKey(Input.KEY_LSHIFT))
-//            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, -time * 3.0f, 0));
-//        if (Input.getKey(Input.KEY_ADD))
-//            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() + time * 3.0f);
-//        if (Input.getKey(Input.KEY_SUBTRACT))
-//            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() - time * 3.0f);
-//    }
+    @Override
+    public void input(float time) {
+        m_root.input(time);
+
+        if (Input.getKeyDown(Input.KEY_C))
+            k = (k + 1) % m_pointLights.length;
+
+        if (Input.getKey(Input.KEY_UP))
+            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, 0, -time * 3.0f));
+        if (Input.getKey(Input.KEY_DOWN))
+            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, 0, time * 3.0f));
+        if (Input.getKey(Input.KEY_LEFT))
+            m_pointLights[k].getTransform().getPosition().add(new Vector3f(-time * 3.0f, 0, 0));
+        if (Input.getKey(Input.KEY_RIGHT))
+            m_pointLights[k].getTransform().getPosition().add(new Vector3f(time * 3.0f, 0, 0));
+        if (Input.getKey(Input.KEY_SPACE))
+            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, time * 3.0f, 0));
+        if (Input.getKey(Input.KEY_LSHIFT))
+            m_pointLights[k].getTransform().getPosition().add(new Vector3f(0, -time * 3.0f, 0));
+        if (Input.getKey(Input.KEY_ADD))
+            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() + time * 3.0f);
+        if (Input.getKey(Input.KEY_SUBTRACT))
+            m_pointLights[k].setIntensity(m_pointLights[k].getIntensity() - time * 3.0f);
+    }
 }
